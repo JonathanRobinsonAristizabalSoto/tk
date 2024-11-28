@@ -1,0 +1,44 @@
+<!-- partials/header.html -->
+
+<header class="flex justify-between items-center p-2 bg-color5 relative h-15">
+    <div class="logo_header">
+        <a href="../../index.html">
+            <img src="../assets/images/logoticket.png" alt="Logo TicketPro+" class="w-16 p-2 transition-transform duration-600 hover:rotate-360">
+        </a>
+    </div>
+    <div class="titulo_header text-center flex-1">
+        <h1 class="text-2xl text-color1 font-lato font-bold">TICKET PRO +</h1>
+    </div>
+    <div class="menu-container flex flex-col items-center cursor-pointer p-2 z-50">
+        <div class="menu-icon flex flex-col justify-between w-7 h-5" id="menu-icon">
+            <span class="bg-color1 h-1 rounded transition-transform duration-300"></span>
+            <span class="bg-color1 h-1 rounded transition-transform duration-300"></span>
+            <span class="bg-color1 h-1 rounded transition-transform duration-300"></span>
+        </div>
+        <span class="menu-text text-color1 text-xs mt-1">Menú</span>
+    </div>
+    <nav id="menu-nav" class="hidden flex-col items-center bg-white absolute top-16 right-4 p-4 rounded shadow-lg">
+        <a href="../../index.html" class="block px-4 py-1 text-gray-700 hover:text-color6 relative group font-semibold">
+            Home
+            <span class="block h-0.5 bg-color6 absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 group-hover:w-3/4 transition-all duration-300"></span>
+        </a>
+        <a href="../auth/login.html" class="block px-4 py-1 text-gray-700 hover:text-color6 relative group font-semibold">
+            Iniciar sesión
+            <span class="block h-0.5 bg-color6 absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 group-hover:w-3/4 transition-all duration-300"></span>
+        </a>
+        <a href="../auth/register.html" class="block px-4 py-1 text-gray-700 hover:text-color6 relative group font-semibold">
+            Registrarse
+            <span class="block h-0.5 bg-color6 absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 group-hover:w-3/4 transition-all duration-300"></span>
+        </a>
+        <a href="../pages/info/about.html" class="block px-4 py-1 text-gray-700 hover:text-color6 relative group font-semibold">
+            Nosotros
+            <span class="block h-0.5 bg-color6 absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 group-hover:w-3/4 transition-all duration-300"></span>
+        </a>
+        <a href="../pages/info/contact.html" class="block px-4 py-1 text-gray-700 hover:text-color6 relative group font-semibold">
+            Contacto
+            <span class="block h-0.5 bg-color6 absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 group-hover:w-3/4 transition-all duration-300"></span>
+        </a>
+    </nav>
+</header>
+
+<script src="../assets/js/menu.js"></script>

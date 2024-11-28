@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio de sesión - TicketPro+</title>
+    <!-- Enlace a los estilos CSS -->
+    <link rel="stylesheet" href="../../src/assets/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Enlace a Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <!-- Fuentes de Google -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700&display=swap"
+        rel="stylesheet">
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="../assets/js/jquery.min.js"></script>
+</head>
+
+<body class="flex flex-col min-h-screen font-poppins bg-color1">
+    <!-- Incluir el header -->
+    <div id="header-placeholder"></div>
+
+    <main class="flex flex-col items-center justify-center flex-1 p-5">
+        <!-- formulario de inicio de sesión -->
+        <div class="w-full max-w-md p-6 rounded-lg shadow-md login-container bg-color4">
+            <center>
+                <h2
+                    class="mb-4 text-xl font-bold sm:text-2xl md:text-2xl lg:text-xl xl:text-lg tv:text-base text-color1">
+                    INICIA SESION</h2>
+            </center>
+
+            <form id="loginForm">
+                <!-- Selector de tipo de documento -->
+                <label for="typeDocument" class="block mt-2 text-base font-medium sm:text-sm md:text-base lg:text-base xl:text-base tv:text-base text-color1">Tipo de documento:</label>
+                <select id="typeDocument" name="typeDocument" required class="block w-full p-1 mt-2 text-xs border-gray-300 rounded-md shadow-sm focus:ring-color5 focus:border-color5 sm:text-sm md:text-sm lg:text-sm xl:text-sm tv:text-sm">
+                    <option value="CC">Cédula de Ciudadanía</option>
+                    <option value="TI">Tarjeta de Identidad</option>
+                    <option value="CE">Cédula de Extranjería</option>
+                    <option value="PS">Pasaporte</option>
+                    <option value="DNI">Documento Nacional de Identificación</option>
+                </select>
+            
+                <!-- Campo de número de documento -->
+                <label for="documento" class="block mt-2 text-xs font-medium sm:text-sm md:text-sm lg:text-sm xl:text-sm tv:text-sm text-color1">Número de documento:</label>
+                <input type="text" id="documento" name="documento" placeholder=" Ingresa tu documento" required pattern="\d+" class="block w-full p-1 mt-2 text-xs border-gray-300 rounded-md shadow-sm focus:ring-color5 focus:border-color5 sm:text-sm md:text-sm lg:text-sm xl:text-sm tv:text-sm">
+            
+                <!-- Campo de contraseña -->
+                <label for="password" class="block mt-2 text-xs font-medium sm:text-sm md:text-sm lg:text-sm xl:text-sm tv:text-sm text-color1">Contraseña:</label>
+                <div class="relative">
+                    <input type="password" id="password" name="password" required placeholder=" Ingresa tu contraseña" class="block w-full p-1 pr-10 mt-2 text-xs border-gray-300 rounded-md shadow-sm focus:ring-color5 focus:border-color5 sm:text-sm md:text-sm lg:text-sm xl:text-sm tv:text-sm">
+                    <i class="fas fa-eye absolute right-3 top-1.5 cursor-pointer text-color5" id="togglePassword"></i>
+                </div>
+            
+                <!-- Selector de tipo de usuario -->
+                <label for="user-type" class="block mt-2 text-xs font-medium sm:text-sm md:text-sm lg:text-sm xl:text-sm tv:text-sm text-color1">Tipo de usuario:</label>
+                <select id="user-type" name="user-type" required class="block w-full p-1 mt-2 text-xs border-gray-300 rounded-md shadow-sm focus:ring-color5 focus:border-color5 sm:text-sm md:text-sm lg:text-sm xl:text-sm tv:text-sm">
+                    <option value="1">Administrador</option>
+                    <option value="2">Supervisor</option>
+                    <option value="3">Soporte</option>
+                    <option value="4">Operador</option>
+                    <option value="5">Usuario</option>
+                </select>
+                
+                <!-- Captcha -->
+                <div class="flex justify-center my-5">
+                    <div class="g-recaptcha" data-sitekey="6LdpSHwpAAAAABpEL1Pus7OzGgEAJ8U212pSYx7z" data-action="LOGIN"></div>
+                </div>
+                
+                <!-- Acciones del formulario -->
+                <div class="flex flex-col items-center mt-4 space-y-2 form-actions">
+                    <button type="submit" class="w-1/2 py-2 text-xs text-white rounded-md bg-color5 hover:bg-color3 sm:text-sm md:text-base lg:text-base xl:text-base tv:text-lg">Iniciar sesión</button>
+                    <a href="./register.html" class="mt-2 text-xs text-center text-color1 hover:text-color5 sm:text-sm md:text-base lg:text-base xl:text-base tv:text-base">Registrarse</a>
+                    <span class="block h-0.5 bg-color6 absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 group-hover:w-full transition-all duration-300"></span>
+                    <a href="./password_recovery.html" class="mt-2 text-xs text-center text-color1 hover:text-color5 sm:text-sm md:text-base lg:text-base xl:text-base tv:text-base">Olvidé mi contraseña</a>
+                    <span class="block h-0.5 bg-color6 absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 group-hover:w-full transition-all duration-300"></span>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <!-- Incluir el pie de página -->
+    <div id="footer-placeholder"></div>
+
+    <script src="../assets/js/loadPartials.js"></script>
+    <script src="../assets/js/togglePassword.js"></script>
+    <script src="../assets/js/auth_session.js"></script>
+</body>
+
+</html>

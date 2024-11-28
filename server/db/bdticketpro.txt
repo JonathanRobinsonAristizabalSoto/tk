@@ -1,0 +1,241 @@
+-- Eliminar la base de datos si existe
+DROP DATABASE IF EXISTS `ticketpro`;
+
+-- Crear la base de datos
+CREATE DATABASE IF NOT EXISTS `ticketpro`;
+USE `ticketpro`;
+
+-- Estructura de tabla para la tabla `Roles`
+CREATE TABLE Roles (
+    id_rol INT PRIMARY KEY AUTO_INCREMENT,
+    nombre ENUM('Administrador', 'Supervisor', 'Soporte', 'Operador', 'Usuario') NOT NULL UNIQUE,
+    descripcion TEXT,
+    estado ENUM('Activo', 'Inactivo') NOT NULL DEFAULT 'Activo',
+    
+    -- Campos de auditoría
+    fecha_creacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Estructura de tabla para la tabla `Permisos`
+CREATE TABLE Permisos (
+    id_permiso INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(255) NOT NULL UNIQUE,  -- Nombre del permiso
+    descripcion TEXT,
+    fecha_creacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Estructura de tabla intermedia `RolPermisos`
+CREATE TABLE RolPermisos (
+    id_rol INT,
+    id_permiso INT,
+    fecha_asignacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id_rol, id_permiso),
+    FOREIGN KEY (id_rol) REFERENCES Roles(id_rol),
+    FOREIGN KEY (id_permiso) REFERENCES Permisos(id_permiso)
+);
+
+-- Estructura de tabla para la tabla `Usuarios`
+CREATE TABLE Usuarios (
+    id_usuario INT AUTO_INCREMENT PRIMARY KEY,                  
+    tipo_documento VARCHAR(255) NOT NULL,                      
+    documento VARCHAR(255) NOT NULL UNIQUE,                    
+    nombre VARCHAR(255) NOT NULL,                              
+    apellido VARCHAR(255) NOT NULL,                            
+    email VARCHAR(255) NOT NULL UNIQUE,                        
+    telefono VARCHAR(20),                                    
+    departamento VARCHAR(255),                                
+    municipio VARCHAR(255),                                  
+    password VARCHAR(255) NOT NULL,                            
+    id_rol INT NOT NULL,                                     
+    
+    FOREIGN KEY (id_rol) REFERENCES Roles(id_rol),            
+
+    estado ENUM('Activo', 'Inactivo') NOT NULL DEFAULT 'Activo', 
+    fecha_registro DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    INDEX (email),
+    INDEX (documento)
+);
+
+-- Estructura de tabla para la tabla `Tipologias`
+CREATE TABLE Tipologias (
+    id_tipologia INT AUTO_INCREMENT PRIMARY KEY,                    
+    tipologia ENUM('Formacion', 'Consultas', 'Certificacion', 'PQRSF', 'Otro') NOT NULL, 
+    subtipologia VARCHAR(255) NOT NULL,                            
+    id_rol INT,                                                      
+    estado_tipologia ENUM('Activo', 'Inactivo') NOT NULL DEFAULT 'Activo',
+    fecha_creacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    
+    -- Clave foránea
+    FOREIGN KEY (id_rol) REFERENCES Roles(id_rol),
+    
+    -- Índice para mejorar rendimiento
+    INDEX (subtipologia)
+);
+
+-- Estructura de tabla para la tabla `Programas`
+CREATE TABLE Programas (
+    id_programa INT AUTO_INCREMENT PRIMARY KEY,
+    codigo VARCHAR(50) NOT NULL,
+    version VARCHAR(50) NOT NULL,
+    nombre VARCHAR(255) NOT NULL UNIQUE,
+    descripcion TEXT,
+    duracion INT NOT NULL, -- Duración en horas
+    linea_tecnologica VARCHAR(255) NOT NULL,
+    red_tecnologica VARCHAR(255) NOT NULL,
+    red_de_conocimiento VARCHAR(255) NOT NULL,
+    modalidad VARCHAR(255) NOT NULL,
+    id_tipologia INT NOT NULL,
+    
+    -- Clave foránea
+    FOREIGN KEY (id_tipologia) REFERENCES Tipologias(id_tipologia),
+
+    -- Estado del programa
+    estado ENUM('Activo', 'Inactivo') NOT NULL DEFAULT 'Activo',
+
+    -- Campos de auditoría
+    fecha_creacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+
+-- Estructura de tabla para la tabla `Ticket`
+CREATE TABLE Ticket (
+    id_ticket INT AUTO_INCREMENT PRIMARY KEY,                   
+    id_usuario INT NOT NULL,                                    
+    numero_ticket VARCHAR(50) NOT NULL,                         
+    descripcion TEXT NOT NULL,                                 
+    prioridad ENUM('Alta', 'Media', 'Baja') NOT NULL,           
+    estado ENUM('Abierto', 'Progreso', 'Pendiente', 'Resuelto', 'Cerrado') NOT NULL, 
+    id_rol INT,                                                 
+    id_programa INT,                                          
+    id_tipologia INT,                                          
+    
+    -- Claves foráneas
+    FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario), 
+    FOREIGN KEY (id_rol) REFERENCES Roles(id_rol),            
+    FOREIGN KEY (id_programa) REFERENCES Programas(id_programa), 
+    FOREIGN KEY (id_tipologia) REFERENCES Tipologias(id_tipologia), 
+
+    -- Campos de auditoría
+    fecha_creacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, 
+    fecha_actualizacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP 
+);
+
+
+-- Estructura de tabla para la tabla `Comentario`
+CREATE TABLE Comentario (
+    id_comentario INT PRIMARY KEY AUTO_INCREMENT,
+    id_ticket INT,
+    id_usuario INT,
+    comentario TEXT NOT NULL,
+    fecha_creacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_ticket) REFERENCES Ticket(id_ticket),
+    FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario),
+    INDEX (id_ticket),
+    INDEX (id_usuario)
+);
+
+-- Estructura de tabla para la tabla `Evento`
+CREATE TABLE Evento (
+    id_evento INT PRIMARY KEY AUTO_INCREMENT,
+    id_ticket INT,
+    accion VARCHAR(255) NOT NULL,
+    id_usuario INT,
+    fecha_evento DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_ticket) REFERENCES Ticket(id_ticket),
+    FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario),
+    INDEX (id_ticket),
+    INDEX (id_usuario)
+);
+
+-- Volcado de datos para la tabla `Roles`
+INSERT INTO Roles (nombre, descripcion, estado, fecha_creacion) VALUES
+('Administrador', 'Acceso completo al sistema.', 'Activo', '2023-10-01 10:00:00'),
+('Supervisor', 'Supervisa el trabajo del soporte.', 'Activo', '2023-10-01 10:00:00'),
+('Soporte', 'Resuelve tickets y asistencia técnica.', 'Activo', '2023-10-01 10:00:00'),
+('Operador', 'Crea y gestiona tickets básicos.', 'Activo', '2023-10-01 10:00:00'),
+('Usuario', 'Crea tickets y realiza solicitudes.', 'Activo', '2023-10-01 10:00:00');
+
+-- Volcado de datos para la tabla `Permisos`
+INSERT INTO Permisos (nombre, descripcion, fecha_creacion) VALUES
+('Crear', 'Permiso para crear usuarios tipolgias programas tickets y comentarios en el sistema.', '2023-10-01 10:00:00'),
+('Ver', 'Permiso para visualizar usuarios tipolgias programas tickets y comentarios', '2023-10-01 10:00:00'),
+('Editar', 'Permiso para editar los detalles de un usuario tipolgia programa ticket y comentario', '2023-10-01 10:00:00'),
+('Eliminar', 'Permiso para eliminar una tipolgia programa ticket y comentario.', '2023-10-01 10:00:00'),
+('Activar', 'Permiso para activar un usuario tipolgia o programa.', '2023-10-01 10:00:00'),
+('Desactivar', 'Permiso para desactivar un usuario tipolgia o programa.', '2023-10-01 10:00:00');
+
+-- Asignación de permisos a los roles en la tabla intermedia `RolPermisos`
+INSERT INTO RolPermisos (id_rol, id_permiso, fecha_asignacion) VALUES
+(1, 1, '2023-10-01 10:00:00'), -- Administrador: Crear
+(1, 2, '2023-10-01 10:00:00'), -- Administrador: Ver
+(1, 3, '2023-10-01 10:00:00'), -- Administrador: Editar
+(1, 4, '2023-10-01 10:00:00'), -- Administrador: Eliminar
+(1, 5, '2023-10-01 10:00:00'), -- Administrador: Activar
+(1, 6, '2023-10-01 10:00:00'), -- Administrador: Desactivar
+(2, 2, '2023-10-01 10:00:00'), -- Supervisor: Ver
+(2, 3, '2023-10-01 10:00:00'), -- Supervisor: Editar
+(2, 5, '2023-10-01 10:00:00'), -- Supervisor: Activar
+(2, 6, '2023-10-01 10:00:00'), -- Supervisor: Desactivar
+(3, 2, '2023-10-01 10:00:00'), -- Soporte: Ver
+(3, 3, '2023-10-01 10:00:00'), -- Soporte: Editar
+(4, 1, '2023-10-01 10:00:00'), -- Operador: Crear
+(4, 2, '2023-10-01 10:00:00'), -- Operador: Ver
+(5, 1, '2023-10-01 10:00:00'), -- Usuario: Crear
+(5, 2, '2023-10-01 10:00:00'); -- Usuario: Ver
+
+
+-- Volcado de datos para la tabla `Usuarios`
+INSERT INTO Usuarios (tipo_documento, documento, nombre, apellido, email, telefono, departamento, municipio, password, id_rol, estado, fecha_registro) VALUES
+('CC', '1053810807', 'Jonathan Robinson', 'Aristizabal Soto', 'administrador@example.com', '3187542709', 'Caldas', 'Manizales', 'Admin1234', 1, 'Activo', '2024-09-07 12:00:00'),
+('CC', '87654321', 'María', 'Gómez', 'soporte@example.com', '3201234567', 'Antioquia', 'Medellín', 'Admin1234', 2, 'Activo', '2023-10-01 10:00:00'),
+('CC', '11223344', 'Carlos', 'López', 'supervisor@example.com', '3109876543', 'Bogotá', 'Bogotá', 'Admin1234', 3, 'Activo', '2023-10-02 11:00:00'),
+('CC', '55667788', 'Luis', 'Rodríguez', 'operador@example.com', '3112233445', 'Santander', 'Bucaramanga', 'Admin1234', 4, 'Activo', '2023-10-04 09:00:00'),
+('CC', '99887766', 'Ana', 'Martínez', 'usuario@example.com', '3156789012', 'Valle', 'Cali', 'Admin1234', 5, 'Activo', '2024-09-11 08:00:00');
+
+-- Volcado de datos para la tabla `Tipologias`
+INSERT INTO Tipologias (tipologia, subtipologia, id_rol, estado_tipologia, fecha_creacion) VALUES
+('Formacion', 'Solicitud de cupos', 1, 'Activo', '2023-10-01 10:00:00'),
+('Consultas', 'Apertura de programa', 1, 'Activo', '2023-10-01 10:00:00'),
+('Certificacion', 'Competencias laborales', 1, 'Activo', '2023-10-01 10:00:00'),
+('PQRSF', 'Peticiones', 1, 'Activo', '2023-10-01 10:00:00'),
+('PQRSF', 'Quejas', 1, 'Activo', '2023-10-01 10:00:00'),
+('PQRSF', 'Reclamos', 1, 'Activo', '2023-10-01 10:00:00'),
+('PQRSF', 'Sugerencias', 1, 'Activo', '2023-10-01 10:00:00'),
+('PQRSF', 'Felicitaciones', 1, 'Activo', '2023-10-01 10:00:00'),
+('Otro', 'Otras solicitudes', 1, 'Activo', '2023-10-01 10:00:00');
+
+-- Volcado de datos para la tabla `Programas`
+INSERT INTO Programas (id_programa, codigo, version, nombre, descripcion, duracion, linea_tecnologica, red_tecnologica, red_de_conocimiento, modalidad, id_tipologia, estado, fecha_creacion) VALUES
+(1, '22620442', '3', 'BASICO OPERATIVO TRABAJO SEGURO EN ALTURAS', 'Capacitación para trabajos en altura.', 48, 'MATERIALES HERRAMIENTAS', 'MATERIALES PARA LA CONSTRUCCIÓN', 'Construcción', 'Presencial', 1, 'Activo', NOW()),
+(2, '22620443', '2', 'ADMINISTRATIVO PARA JEFES DE AREA TRABAJO SEGURO EN ALTURAS', 'Capacitación para trabajos en altura.', 10, 'MATERIALES HERRAMIENTAS', 'MATERIALES PARA LA CONSTRUCCIÓN', 'Construcción', 'Presencial', 1, 'Activo', NOW()),
+(3, '22620444', '1', 'GESTION DEL RIESGO EN ALTURAS', 'Capacitación en gestión del riesgo.', 6, 'MATERIALES HERRAMIENTAS', 'MATERIALES PARA LA CONSTRUCCIÓN', 'Construcción', 'Presencial', 1, 'Activo', NOW());
+
+-- Volcado de datos para la tabla `Ticket`
+INSERT INTO Ticket (id_usuario, numero_ticket, descripcion, prioridad, estado, id_rol, fecha_creacion, fecha_actualizacion, id_programa, id_tipologia) VALUES
+-- Usuario 4, Operador
+(4, 'A1B2C3', 'Necesito 5 cupos para el curso básico de formación.', 'Alta', 'Abierto', NULL, '2023-10-01 10:00:00', '2023-10-01 10:00:00', 1, 1),
+(4, 'D4E5F6', 'Consulta sobre la disponibilidad del curso avanzado.', 'Media', 'Progreso', NULL, '2023-10-02 11:00:00', '2023-10-02 11:00:00', 2, 2),
+(4, 'J1K2L3', 'Solicito información adicional sobre la capacitación en construcción.', 'Baja', 'Resuelto', NULL, '2023-10-04 09:00:00', '2023-10-04 09:00:00', 1, 1),
+(4, 'M4N5O6', 'Requerimiento para curso de seguridad en alturas.', 'Alta', 'Cerrado', NULL, '2023-10-05 14:00:00', '2023-10-05 14:00:00', 2, 2),
+
+
+-- Usuario 1, Administrador
+(1, 'G7H8I9', 'Certificación para el curso de trabajo en alturas.', 'Alta', 'Pendiente', NULL, '2023-10-03 12:00:00', '2023-10-03 12:00:00', 3, 3);
+
+-- Volcado de datos para la tabla `Comentario`
+INSERT INTO Comentario (id_comentario, id_ticket, comentario, fecha_creacion, id_usuario) VALUES
+(1, 1, 'Confirmo que el cupo está disponible. Por favor, procedan con la inscripción.', '2023-10-01', 1),
+(2, 2, 'El curso avanzado está disponible. Te enviaré los detalles por correo.', '2023-10-02', 2),
+(3, 3, 'La certificación será enviada una vez que finalices el curso.', '2023-10-03', 3),
+(4, 4, 'Información adicional se enviará a tu dirección de correo.', '2023-10-04', 4),
+(5, 5, 'El curso de seguridad en alturas está programado para el próximo mes.', '2023-10-05', 5);
+
+
+-- Volcado de datos para la tabla `Evento`
+INSERT INTO Evento (id_ticket, accion, id_usuario, fecha_evento) VALUES
+(1, 'Ticket Creado', 1, '2023-10-01 10:00:00'),
+(1, 'Ticket En progreso', 1, '2023-10-02 11:00:00'),
+(1, 'Ticket Pendiente', 1, '2023-10-03 12:00:00'),
+(1, 'Ticket Resuelto', 1, '2023-10-04 09:00:00'),
+(1, 'Ticket Cerrado', 1, '2023-10-05 14:00:00');

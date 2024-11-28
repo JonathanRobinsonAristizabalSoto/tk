@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - TicketPro+</title>
+    <!-- Enlace a los estilos CSS -->
+    <link rel="stylesheet" href="../../src/assets/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Enlace a Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <!-- Fuentes de Google -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700&display=swap"
+        rel="stylesheet">
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="../assets/js/jquery.min.js"></script>
+</head>
+
+<body class="flex flex-col min-h-screen font-poppins bg-color1">
+    <!-- Incluir el header -->
+    <div id="header-placeholder"></div>
+
+    <main class="flex flex-col items-center justify-center flex-1 p-5">
+        <!-- Contenedor del formulario de registro -->
+        <div class="w-full max-w-4xl p-6 rounded-lg shadow-md bg-color4">
+            <center>
+                <h2
+                    class="mb-4 text-xl font-bold sm:text-2xl md:text-2xl lg:text-xl xl:text-lg tv:text-lg text-color1">
+                    REGISTRARSE</h2>
+            </center>
+            <form action="./register.php" method="post" class="grid grid-cols-1 lg:grid-cols-2 gap-x-4">
+                <!-- Selector de tipo de documento -->
+                <div>
+                    <label for="typeDocument"
+                        class="block mt-2 text-xs font-medium sm:text-sm md:text-sm lg:text-sm xl:text-sm tv:text-sm text-color1">Tipo
+                        de documento:</label>
+                    <select id="typeDocument" name="typeDocument" required
+                        class="block w-full p-1 mt-2 text-xs border-gray-300 rounded-md shadow-sm focus:ring-color5 focus:border-color5 sm:text-sm md:text-sm lg:text-sm xl:text-sm tv:text-sm">
+                        <option value="CC">Cédula de Ciudadanía</option>
+                        <option value="TI">Tarjeta de Identidad</option>
+                        <option value="CE">Cédula de Extranjería</option>
+                        <option value="PS">Pasaporte</option>
+                        <option value="DNI">Documento Nacional de Identificación</option>
+                    </select>
+                </div>
+
+                <!-- Campo de número de documento -->
+                <div>
+                    <label for="documento"
+                        class="block mt-2 text-xs font-medium sm:text-sm md:text-sm lg:text-sm xl:text-sm tv:text-sm text-color1">Documento:</label>
+                    <input type="text" id="documento" name="documento" required placeholder="Documento"
+                        class="block w-full p-1 mt-2 text-xs border-gray-300 rounded-md shadow-sm focus:ring-color5 focus:border-color5 sm:text-sm md:text-sm lg:text-sm xl:text-sm tv:text-sm">
+                </div>
+
+                <!-- Campo de nombre -->
+                <div>
+                    <label for="nombre"
+                        class="block mt-2 text-xs font-medium sm:text-sm md:text-sm lg:text-sm xl:text-sm tv:text-sm text-color1">Nombre:</label>
+                    <input type="text" id="nombre" name="nombre" required placeholder="Nombre"
+                        class="block w-full p-1 mt-2 text-xs border-gray-300 rounded-md shadow-sm focus:ring-color5 focus:border-color5 sm:text-sm md:text-sm lg:text-sm xl:text-sm tv:text-sm">
+                </div>
+
+                <!-- Campo de apellido -->
+                <div>
+                    <label for="apellido"
+                        class="block mt-2 text-xs font-medium sm:text-sm md:text-sm lg:text-sm xl:text-sm tv:text-sm text-color1">Apellidos:</label>
+                    <input type="text" id="apellido" name="apellido" required placeholder="Apellido"
+                        class="block w-full p-1 mt-2 text-xs border-gray-300 rounded-md shadow-sm focus:ring-color5 focus:border-color5 sm:text-sm md:text-sm lg:text-sm xl:text-sm tv:text-sm">
+                </div>
+
+                <!-- Campo de correo electrónico -->
+                <div>
+                    <label for="email"
+                        class="block mt-2 text-xs font-medium sm:text-sm md:text-sm lg:text-sm xl:text-sm tv:text-sm text-color1">Correo
+                        electrónico:</label>
+                    <input type="email" id="email" name="email" required placeholder="Correo electrónico"
+                        class="block w-full p-1 mt-2 text-xs border-gray-300 rounded-md shadow-sm focus:ring-color5 focus:border-color5 sm:text-sm md:text-sm lg:text-sm xl:text-sm tv:text-sm">
+                </div>
+
+                <!-- Campo de teléfono -->
+                <div>
+                    <label for="telefono"
+                        class="block mt-2 text-xs font-medium sm:text-sm md:text-sm lg:text-sm xl:text-sm tv:text-sm text-color1">Teléfono:</label>
+                    <input type="tel" id="telefono" name="telefono" required placeholder="Teléfono"
+                        class="block w-full p-1 mt-2 text-xs border-gray-300 rounded-md shadow-sm focus:ring-color5 focus:border-color5 sm:text-sm md:text-sm lg:text-sm xl:text-sm tv:text-sm">
+                </div>
+
+                <!-- Campo de departamento y municipio -->
+                <div id="departamento-municipio-placeholder" class="lg:col-span-2"></div>
+
+                <!-- Campo de contraseña -->
+                <div>
+                    <label for="password"
+                        class="block mt-2 text-xs font-medium sm:text-sm md:text-sm lg:text-sm xl:text-sm tv:text-sm text-color1">Contraseña:</label>
+                    <div class="relative">
+                        <input type="password" id="password" name="password" required placeholder="Contraseña"
+                            class="block w-full p-1 pr-10 mt-2 text-xs border-gray-300 rounded-md shadow-sm focus:ring-color5 focus:border-color5 sm:text-sm md:text-sm lg:text-sm xl:text-sm tv:text-sm">
+                        <i class="fas fa-eye absolute right-3 top-1.5 cursor-pointer text-color5"
+                            id="togglePassword"></i>
+                    </div>
+                </div>
+
+                <!-- Confirmar contraseña -->
+                <div>
+                    <label for="confirm-password"
+                        class="block mt-2 text-xs font-medium sm:text-sm md:text-sm lg:text-sm xl:text-sm tv:text-sm text-color1">Confirmar
+                        contraseña:</label>
+                    <div class="relative">
+                        <input type="password" id="confirm-password" name="confirm-password" required
+                            placeholder="Confirmar contraseña"
+                            class="block w-full p-1 pr-10 mt-2 text-xs border-gray-300 rounded-md shadow-sm focus:ring-color5 focus:border-color5 sm:text-sm md:text-sm lg:text-sm xl:text-sm tv:text-sm">
+                        <i class="fas fa-eye absolute right-3 top-1.5 cursor-pointer text-color5"
+                            id="toggleConfirmPassword"></i>
+                    </div>
+                </div>
+
+                <p
+                    class="my-4 text-center text-xs sm:text-sm md:text-sm lg:text-sm xl:text-sm tv:text-sm text-color6 lg:col-span-2">
+                    La contraseña debe tener al menos 6 caracteres, una letra mayúscula y un símbolo.</p>
+
+                <!-- Tipo de usuario -->
+                <div class="lg:col-span-2 flex flex-col items-center mb-4">
+                    <label for="tipoUsuario"
+                        class="block text-xs font-medium sm:text-sm md:text-sm lg:text-sm xl:text-sm tv:text-sm text-color2">Tipo
+                        de usuario:</label>
+                    <select id="tipoUsuario" name="tipoUsuario" required
+                        class="block w-1/2 p-1 mt-2 text-xs border-gray-300 rounded-md shadow-sm focus:ring-color5 focus:border-color5 sm:text-sm md:text-sm lg:text-sm xl:text-sm tv:text-sm">
+                        <option value="1">Administrador</option>
+                        <option value="2">Supervisor</option>
+                        <option value="3">Soporte</option>
+                        <option value="4">Operador</option>
+                        <option value="5">Usuario</option>
+                    </select>
+                </div>
+
+                <!-- Acciones del formulario -->
+                <div class="lg:col-span-2 flex flex-col items-center mt-4 space-y-2 form-actions">
+                    <button type="submit"
+                        class="w-1/2 py-2 text-xs text-white rounded-md bg-color5 hover:bg-color3 sm:text-sm md:text-base lg:text-base xl:text-base tv:text-base">Registrarse</button>
+                    <a href="./login.html"
+                        class="mt-2 text-xs text-center text-color1 hover:text-color5 sm:text-sm md:text-base lg:text-base xl:text-base tv:text-base">Volver
+                        al inicio de sesión</a>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <!-- Incluir el pie de página -->
+    <div id="footer-placeholder"></div>
+
+    <script src="../assets/js/loadPartials.js"></script>
+    <script src="../assets/js/togglePassword.js"></script>
+</body>
+
+</html>
