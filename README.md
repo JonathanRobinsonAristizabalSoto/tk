@@ -49,7 +49,7 @@ client/                                      # Código del lado del cliente
 ├── package-lock.json                        # Dependencias del proyecto
 ├── package.json                             # Dependencias del proyecto
 ├── postcss.config.js                        # Configuración de PostCSS
-├── README.md                               # Descripción del cliente
+├── README.md                                # Descripción del cliente
 ├── tailwind.config.js                       # Configuración de Tailwind CSS
 server/                                      # Código del lado del servidor
 ├── config/                                  # Configuraciones del servidor
@@ -65,4 +65,5 @@ server/                                      # Código del lado del servidor
 ├── .gitignore                               # 
 ├── composer.json                            # Dependencias de PHP
 ├── [README.md]                              # Descripción del servidor
-README.md                                  # Descripción y estructura del proyecto
+README.md                                    # Descripción y estructura del proyecto
+index.html                                   # Controlador de enrutamiento básico para una aplicación web

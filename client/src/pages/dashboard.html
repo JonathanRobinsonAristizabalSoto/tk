@@ -13,60 +13,67 @@
     <!-- Enlace a Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <!-- Fuentes de Google -->
-    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700&display=swap"
+        rel="stylesheet">
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <script src="/client/src/assets/js/jquery.min.js"></script>
 </head>
 
 <body class="flex flex-col min-h-screen font-poppins bg-color1">
     <!-- Encabezado -->
-    <header class="flex justify-between items-center p-4 bg-color5 relative h-20 shadow-lg">
-        <div class="logo_header">
-            <a href="/client/src/assets/images/logoticket.png">
-                <img src="/client/src/assets/images/logoticket.png" alt="Logo TicketPro+" class="w-20 p-2 transition-transform duration-500 hover:rotate-360">
-            </a>
+    <header class="flex justify-between relative items-center p-4 bg-color5  h-20 shadow-lg">
+        <!-- Botón para mostrar/ocultar el sidebar -->
+        <button id="sidebar-toggle" class="lg:hidden p-3 bg-transparent border border-color5 rounded-lg text-color1 focus:outline-none z-50">
+            <i class="fas fa-bars"></i>
+            <span class="sr-only">Panel</span>
+        </button>
+        
+        <div class="flex-1 flex justify-center">
+            <img src="/client/src/assets/images/logoH.png" alt="Logo TicketPro+" class="p-2 w-28 xs:w-28 sm:w-28 md:w-32 lg:w-32 xl:w-36 lg:ml-76 xl:ml-76">
         </div>
-        <div class="titulo_header text-center flex-1">
-            <h1 class="text-2xl text-color1 font-lato font-bold tracking-wide">TICKET PRO +</h1>
-        </div>
-        <div class="menu-container flex flex-col items-center cursor-pointer p-2 z-50">
-            <div class="menu-icon flex flex-col justify-between w-8 h-6" id="menu-icon">
-                <span class="bg-color1 h-1 rounded transition-transform duration-300"></span>
-                <span class="bg-color1 h-1 rounded transition-transform duration-300"></span>
-                <span class="bg-color1 h-1 rounded transition-transform duration-300"></span>
+        
+        <div class="flex items-center cursor-pointer p-2 z-50" id="header-menu-button">
+            <div class="flex justify-center items-center w-8 h-6">
+                <i id="header-dashboard-icon" class="fas fa-chevron-down text-white"></i>
             </div>
         </div>
         <!-- Menú móvil -->
-        <nav id="menu-nav" class="hidden flex-col items-center bg-white absolute top-16 right-4 p-4 rounded shadow-lg z-50">
-            <a href="/client/src/pages/info/perfil.html" class="block px-4 py-1 text-gray-700 hover:text-color6 relative group font-semibold">Mi perfil</a>
-            <a href="/client/src/pages/info/configuracion.php" class="block px-4 py-1 text-gray-700 hover:text-color6 relative group font-semibold">Configuración</a>
-            <form action="" method="post" class="w-full text-center mt-2">
-                <button type="submit" name="cerrar_sesion" class="w-full px-4 py-1 text-gray-700 hover:text-color6 relative group font-semibold">Salir</button>
+        <nav id="header-menu-nav" class="hidden flex-col items-center bg-white absolute top-16 right-4 p-4 rounded shadow-lg z-50">
+            <a href="/client/src/pages/info/profile.html" class="block px-4 py-1 text-gray-700 hover:text-color6 relative group font-semibold text-sm sm:text-sm md:text-sm lg:text-sm xl:text-base"> <i class="fas fa-user mr-2"></i> Mi Perfil
+            </a>
+            <a href="/client/src/pages/info/settings.php"
+                class="block px-4 py-1 text-gray-700 hover:text-color6 relative group font-semibold text-sm sm:text-sm md:text-sm lg:text-sm xl:text-base"> <i class="fas fa-cog mr-2"></i> Configuraciones
+            </a>
+            <form action="/server/php/logout.php" method="post">
+                <button type="submit" name="logout"
+                    class="block px-4 py-1 text-gray-700 hover:text-color6 relative group font-semibold text-sm sm:text-sm md:text-sm lg:text-sm xl:text-base">
+                    <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                </button>
             </form>
         </nav>
     </header>
 
-    <!-- Botón para mostrar/ocultar el sidebar -->
-    <button id="sidebar-toggle" class="lg:hidden p-3 bg-color5 text-color1 top-4 left-4 z-50 rounded-full focus:outline-none">Panel</button>
-
     <!-- Panel Lateral Fijo -->
     <aside id="sidebar" class="sidebar bg-color4 p-6 w-60 lg:w-60 fixed lg:block hidden z-40 h-screen overflow-y-auto">
         <ul class="space-y-4">
-            <div class="flex items-center space-x-2 p-4 rounded">
-                <h2 class="text-2xl font-normal text-color1 flex items-center">
+            <div class="flex items-center space-x-2 p-4 rounded mt-14">
+                <h2 class="text-xl font-normal text-color1 flex items-center">
                     <i class="fa-solid fa-shekel-sign text-color5 mr-2"></i>TICKET PRO
                 </h2>
             </div>
-            
+
             <!-- Menú desplegable -->
             <li class="relative group">
-                <button id="menu-button" class="block p-3 text-color1  w-full text-left rounded-lg flex items-center space-x-2 transition duration-300">
+                <button id="sidebar-menu-button"
+                    class="block p-3 text-color1 w-full text-left rounded-lg flex items-center space-x-2 transition duration-300">
                     <div class="">
-                        <span class="text-color1 text-xl font-light  ">Dashboard</span>
-                        <i id="dashboard-icon" class="fas fa-chevron-down text-color1 hover:text-color6 mx-1"></i>
+                        <span class="text-color1 text-base sm:text-sm md:text-sm lg:text-sm xl:text-base font-light">Dashboard</span>
+                        <i id="sidebar-dashboard-icon"
+                            class="fas fa-chevron-down text-color1 hover:text-color6 mx-1"></i>
                     </div>
                 </button>
-                <ul id="submenu" class="hidden bg-color4 p-3 w-full mt-2 rounded-lg">
+                <ul id="sidebar-submenu" class="hidden bg-color4 p-3 w-full mt-2 rounded-lg">
                     <li><a href="/client/src/pages/usuarios.html" class="block p-2 text-color1 hover:text-color6 rounded-lg"><i class="fas fa-user"></i> Usuarios</a></li>
                     <li><a href="/client/src/pages/tipologias.html" class="block p-2 text-color1 hover:text-color6 rounded-lg"><i class="fas fa-layer-group"></i> Tipologías</a></li>
                     <li><a href="/client/src/pages/programas.html" class="block p-2 text-color1 hover:text-color6 rounded-lg"><i class="fas fa-laptop"></i> Programas</a></li>
@@ -79,7 +86,7 @@
     <!-- Contenido Principal -->
     <main class="flex flex-1 relative bg-gray-50 p-6 lg:ml-64">
         <section class="flex-1">
-            <h2 class="text-2xl font-semibold text-color1 mb-6">Miss Tickets</h2>
+            <h2 class="text-2xl font-semibold text-color4 mb-6 text-center">Mis Tickets</h2>
             <!-- Aquí puedes agregar más contenido como tablas, gráficos o tarjetas -->
         </section>
     </main>
@@ -88,15 +95,25 @@
     <script src="/client/src/assets/js/menu.js"></script>
     <script>
         // Mostrar y ocultar el sidebar
-        document.getElementById('sidebar-toggle').addEventListener('click', function() {
+        document.getElementById('sidebar-toggle').addEventListener('click', function () {
             document.getElementById('sidebar').classList.toggle('hidden');
         });
 
-        // Mostrar y ocultar el menú desplegable
-        document.getElementById('menu-button').addEventListener('click', function() {
-            var submenu = document.getElementById('submenu');
-            var dashboardIcon = document.getElementById('dashboard-icon');
-            
+        // Mostrar y ocultar el menú desplegable del header
+        document.getElementById('header-menu-button').addEventListener('click', function () {
+            var submenu = document.getElementById('header-menu-nav');
+            var dashboardIcon = document.getElementById('header-dashboard-icon');
+
+            submenu.classList.toggle('hidden');
+            dashboardIcon.classList.toggle('fa-chevron-down');
+            dashboardIcon.classList.toggle('fa-chevron-up');
+        });
+
+        // Mostrar y ocultar el menú desplegable del sidebar
+        document.getElementById('sidebar-menu-button').addEventListener('click', function () {
+            var submenu = document.getElementById('sidebar-submenu');
+            var dashboardIcon = document.getElementById('sidebar-dashboard-icon');
+
             submenu.classList.toggle('hidden');
             dashboardIcon.classList.toggle('fa-chevron-down');
             dashboardIcon.classList.toggle('fa-chevron-up');
