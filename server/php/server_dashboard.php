@@ -4,8 +4,13 @@ header('Content-Type: application/json');
 require_once("../config/config.php");
 
 // Verifica si el usuario está autenticado
-if (!isset($_SESSION['documento'])) {
-    echo json_encode(['success' => false, 'message' => 'No autenticado']);
+if (!isset($_SESSION['documento']) || empty($_SESSION['documento'])) {
+    // Si no está autenticado, devolver respuesta y sugerir redirección
+    echo json_encode([
+        'success' => false,
+        'message' => 'No autenticado',
+        'redirect' => '/TicketProApp/client/index.html'
+    ]);
     exit;
 }
 
@@ -22,9 +27,17 @@ try {
             'foto' => $usuario['foto']
         ]);
     } else {
-        echo json_encode(['success' => false, 'message' => 'Usuario no encontrado']);
+        echo json_encode([
+            'success' => false,
+            'message' => 'Usuario no encontrado',
+            'redirect' => '/TicketProApp/client/index.html'
+        ]);
     }
 } catch (PDOException $e) {
-    echo json_encode(['success' => false, 'message' => 'Error de conexión: ' . $e->getMessage()]);
+    echo json_encode([
+        'success' => false,
+        'message' => 'Error de conexión: ' . $e->getMessage(),
+        'redirect' => '/TicketProApp/client/index.html'
+    ]);
 }
 ?>

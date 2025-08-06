@@ -18,9 +18,9 @@ document.addEventListener("DOMContentLoaded", function () {
             })
             .then((data) => {
                 if (data.success) {
-                    window.location.href = "/TicketProApp/client/src/pages/dashboard.html"; // Redirigir al dashboard o página principal
+                    window.location.href = "/TicketProApp/server/php/dashboard.php"; // Redirigir al dashboard protegido
                 } else {
-                    alert(data.message); // Mostrar mensaje de error
+                    alert(data.message);
                 }
             })
             .catch((error) => {

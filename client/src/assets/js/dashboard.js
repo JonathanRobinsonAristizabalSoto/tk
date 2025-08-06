@@ -98,88 +98,155 @@ document.addEventListener("DOMContentLoaded", function () {
                 document.getElementById('username-mobile').textContent = data.nombre;
             }
             if (data.success && data.foto) {
-                document.querySelectorAll('img[alt="Foto de perfil"]').forEach(img => {
-                    img.src = '../' + data.foto;
-                });
+                // Solo actualiza la foto del usuario logueado en header y menú móvil
+                const imgWeb = document.getElementById('profile-img-web');
+                const imgMobile = document.getElementById('profile-img-mobile');
+                if (imgWeb) imgWeb.src = '/TicketProApp/client/src/' + data.foto;
+                if (imgMobile) imgMobile.src = '/TicketProApp/client/src/' + data.foto;
             }
         });
 
+    // --- USUARIOS MODULE ---
     function renderUsuariosModule(isMobile) {
-    const mainContent = document.getElementById('main-content');
-    // Ajuste de tamaño de texto según pantalla
-    let textoSize = "text-xs";
-    let nombreSize = "text-base font-bold";
-    let emailSize = "text-xs";
-    let rolSize = "text-xs";
-    let infoSize = "text-xs";
-    const width = window.innerWidth;
-    if (width < 640) {
-        textoSize = "text-xs";
-        nombreSize = "text-base font-bold";
-        emailSize = "text-[10px]";
-        rolSize = "text-[10px]";
-        infoSize = "text-[10px]";
-    } else if (width < 768) {
-        textoSize = "text-sm";
-        nombreSize = "text-sm font-bold";
-        emailSize = "text-sm";
-        rolSize = "text-sm";
-        infoSize = "text-sm";
-    } else if (width < 1024) {
-        textoSize = "text-base";
-        nombreSize = "text-base font-bold";
-        emailSize = "text-base";
-        rolSize = "text-base";
-        infoSize = "text-base";
-    } else if (width < 1280) {
-        textoSize = "text-base";
-        nombreSize = "text-lg font-bold";
-        emailSize = "text-lg";
-        rolSize = "text-lg";
-        infoSize = "text-lg";
-    } else {
-        textoSize = "text-base";
-        nombreSize = "text-lg font-bold";
-        emailSize = "text-lg";
-        rolSize = "text-lg";
-        infoSize = "text-lg";
-    }
+        const mainContent = document.getElementById('main-content');
+        let textoSize = "text-xs";
+        let nombreSize = "text-base font-bold";
+        const width = window.innerWidth;
+        if (width < 640) {
+            textoSize = "text-xs";
+            nombreSize = "text-base font-bold";
+        } else if (width < 768) {
+            textoSize = "text-sm";
+            nombreSize = "text-sm font-bold";
+        } else if (width < 1024) {
+            textoSize = "text-base";
+            nombreSize = "text-base font-bold";
+        } else {
+            textoSize = "text-base";
+            nombreSize = "text-lg font-bold";
+        }
 
-    mainContent.innerHTML = `
-        <div class="flex justify-between items-center">
-            <h2 class="text-2xl font-semibold text-color4 text-center ${nombreSize}">Usuarios</h2>
-            <div class="flex gap-2">
-                <button id="btnVistaTarjetas" class="bg-color5 text-white p-2 rounded shadow hover:bg-green-600 transition" title="Vista tarjetas">
-                    <i class="fas fa-th-large"></i>
-                </button>
-                ${!isMobile ? `
-                <button id="btnVistaTabla" class="bg-color6 text-white p-2 rounded shadow hover:bg-orange-600 transition" title="Vista tabla">
-                    <i class="fa-solid fa-list"></i>
-                </button>
-                ` : ''}
+        mainContent.innerHTML = `
+        <div class="flex flex-col gap-2 mb-4">
+            <div class="flex justify-center mb-2">
+                <h2 class="text-2xl font-semibold text-color4 text-center ${nombreSize}">Usuarios</h2>
+            </div>
+            <div class="flex flex-row items-center gap-2">
+
+                <div class="flex-shrink-0">
+                    <button id="openModal" class="bg-color5 text-white px-4 py-2 rounded ${textoSize} flex items-center gap-2">
+                        <i class="fas fa-user-plus"></i>
+                        <span>Agregar Usuario</span>
+                    </button>
+                </div>
+
+                <div class="flex-grow flex justify-center">
+                    <input
+                        type="text"
+                        id="busquedaUsuarios"
+                        placeholder="Buscar usuario..."
+                        class="border border-gray-300 focus:border-color5 rounded px-3 py-2 ${textoSize} w-full sm:w-80 text-center"
+                        autocomplete="off"
+                    >
+                </div>
+
+                <div class="flex-shrink-0 flex justify-end gap-2 mx-12" style="min-width:100px;">
+                    <button id="btnVistaTarjetas" class="bg-color5 text-white p-2 rounded shadow hover:bg-green-600 transition" title="Vista tarjetas">
+                        <i class="fas fa-th-large"></i>
+                    </button>
+                    ${!isMobile ? `
+                    <button id="btnVistaTabla" class="bg-color6 text-white p-2 rounded shadow hover:bg-orange-600 transition" title="Vista tabla">
+                        <i class="fa-solid fa-list"></i>
+                    </button>
+                    ` : ''}
+                </div>
             </div>
         </div>
-        <button id="openModal" class="mb-4 bg-color5 text-white p-2 rounded ${textoSize}">Agregar Usuario</button>
         <div id="dataTable"></div>
-    `;
-    iniciarModuloUsuarios('tarjetas');
-    document.getElementById('btnVistaTarjetas').addEventListener('click', () => iniciarModuloUsuarios('tarjetas'));
-    const btnTabla = document.getElementById('btnVistaTabla');
-    if (btnTabla) btnTabla.addEventListener('click', () => iniciarModuloUsuarios('tabla'));
-    document.getElementById('openModal').addEventListener('click', () => toggleModal('modalCrear', true));
-}
+        `;
+
+        let textoBusqueda = "";
+
+        function iniciarModuloUsuariosConFiltro(vista, filtro = "") {
+            if (typeof window.iniciarModuloUsuarios === "function") {
+                window.iniciarModuloUsuarios(vista, filtro);
+            } else {
+                iniciarModuloUsuarios(vista, filtro);
+            }
+        }
+
+        document.getElementById('busquedaUsuarios').addEventListener('input', function () {
+            textoBusqueda = this.value.trim().toLowerCase();
+            iniciarModuloUsuariosConFiltro('tarjetas', textoBusqueda);
+        });
+
+        document.getElementById('btnVistaTarjetas').addEventListener('click', () => iniciarModuloUsuariosConFiltro('tarjetas', textoBusqueda));
+        const btnTabla = document.getElementById('btnVistaTabla');
+        if (btnTabla) btnTabla.addEventListener('click', () => iniciarModuloUsuariosConFiltro('tabla', textoBusqueda));
+        document.getElementById('openModal').addEventListener('click', () => toggleModal('modalCrear', true));
+
+        // Inicializar con filtro vacío
+        iniciarModuloUsuariosConFiltro('tarjetas', "");
+    }
 
     // Mostrar módulo usuarios automáticamente si hay mensaje pendiente en localStorage
     if (localStorage.getItem("usuariosMensaje")) {
         renderUsuariosModule(window.innerWidth < 768);
+        setSidebarActive('sidebar-usuarios-btn');
         return;
+    }
+
+    // --- RESALTAR MODULO ACTIVO EN SIDEBAR ---
+    function setSidebarActive(id) {
+        document.querySelectorAll('.sidebar-link').forEach(link => {
+            link.classList.remove('border-2', 'border-color6', 'text-color6', 'bg-color6', 'text-white');
+            link.classList.add('text-color1');
+        });
+        const activeLink = document.getElementById(id);
+        if (activeLink) {
+            activeLink.classList.add('border-2', 'border-color6', 'text-color6');
+            activeLink.classList.remove('text-color1', 'bg-color6', 'text-white');
+        }
     }
 
     // Mostrar módulo usuarios en el main al hacer clic en el botón de usuarios
     document.getElementById('sidebar-usuarios-btn').addEventListener('click', function (e) {
         e.preventDefault();
+        setSidebarActive('sidebar-usuarios-btn');
         renderUsuariosModule(window.innerWidth < 768);
     });
+
+    // Resaltar Roles
+    const rolesBtn = document.getElementById('sidebar-roles-btn');
+    if (rolesBtn) {
+        rolesBtn.addEventListener('click', function () {
+            setSidebarActive('sidebar-roles-btn');
+        });
+    }
+
+    // Resaltar Tickets
+    const ticketsBtn = document.getElementById('sidebar-tickets-btn');
+    if (ticketsBtn) {
+        ticketsBtn.addEventListener('click', function () {
+            setSidebarActive('sidebar-tickets-btn');
+        });
+    }
+
+    // Resaltar Tipologías
+    const tipologiasBtn = document.getElementById('sidebar-tipologias-btn');
+    if (tipologiasBtn) {
+        tipologiasBtn.addEventListener('click', function () {
+            setSidebarActive('sidebar-tipologias-btn');
+        });
+    }
+
+    // Resaltar Programas
+    const programasBtn = document.getElementById('sidebar-programas-btn');
+    if (programasBtn) {
+        programasBtn.addEventListener('click', function () {
+            setSidebarActive('sidebar-programas-btn');
+        });
+    }
 
     // Cerrar modal de crear usuario
     document.getElementById('closeModalCrear').addEventListener('click', function () {

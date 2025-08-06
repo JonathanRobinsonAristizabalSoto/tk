@@ -1,4 +1,4 @@
-function iniciarModuloUsuarios(vista) {
+function iniciarModuloUsuarios(vista, filtro = "") {
   if (!vista) {
     vista = localStorage.getItem('usuariosVista') || 'tabla';
   } else {
@@ -234,6 +234,13 @@ function iniciarModuloUsuarios(vista) {
       .then((data) => {
         if (data.success) {
           modalEditar.classList.add("hidden");
+          // Solo actualiza la imagen del usuario editado si hay nueva foto
+          if (data.foto) {
+            const img = document.querySelector(`img[data-user-id="${formData.get("id_usuario")}"]`);
+            if (img) {
+              img.src = "/TicketProApp/client/src/" + data.foto + "?t=" + new Date().getTime();
+            }
+          }
           window.location.reload();
         } else {
           mostrarMensaje("error", data.message);
@@ -284,17 +291,26 @@ function iniciarModuloUsuarios(vista) {
     dataTable.innerHTML = "";
     const width = window.innerWidth;
     let vistaActual = localStorage.getItem('usuariosVista') || 'tabla';
-    let tarjetasPorFila = 4; // máximo 4 por fila
+    let tarjetasPorFila = 4;
     let textoSize = "text-xs";
     let nombreSize = "text-sm font-bold";
     let emailSize = "text-xs";
     let rolSize = "text-xs";
     let infoSize = "text-xs";
-    let tarjetasPorPagina = 8; // máximo 8 por página en tarjetas
+    let tarjetasPorPagina = 8;
 
-    // SIEMPRE 4 columnas por fila en tarjetas, 8 por página (2 filas)
     tarjetasPorFila = 4;
     tarjetasPorPagina = 8;
+
+    // FILTRO: filtra usuariosData si hay filtro
+    let usuariosFiltrados = usuariosData;
+    if (filtro && filtro.length > 0) {
+      usuariosFiltrados = usuariosData.filter(usuario =>
+        (usuario.nombre && usuario.nombre.toLowerCase().includes(filtro)) ||
+        (usuario.apellido && usuario.apellido.toLowerCase().includes(filtro)) ||
+        (usuario.email && usuario.email.toLowerCase().includes(filtro))
+      );
+    }
 
     if (vistaActual === 'tarjetas') {
       usuariosPorPagina = tarjetasPorPagina;
@@ -302,7 +318,7 @@ function iniciarModuloUsuarios(vista) {
 
       const inicio = (paginaActual - 1) * usuariosPorPagina;
       const fin = inicio + usuariosPorPagina;
-      const usuariosMostrar = usuariosData.slice(inicio, fin);
+      const usuariosMostrar = usuariosFiltrados.slice(inicio, fin);
 
       usuariosMostrar.forEach((usuario) => {
         const isActivo = usuario.estado === "Activo";
@@ -316,7 +332,7 @@ function iniciarModuloUsuarios(vista) {
         card.className = `bg-white border border-gray-200 rounded-lg shadow-sm p-3 flex flex-col items-center ${textoSize}`;
         card.innerHTML = `
         <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-full overflow-hidden border-2 border-color5 mb-2">
-          <img src="../${usuario.foto || 'assets/images/perfiles/default.png'}" alt="Foto de perfil" class="object-cover w-full h-full">
+          <img src="/TicketProApp/client/src/${usuario.foto || 'assets/images/perfiles/default.png'}" alt="Foto de perfil" class="object-cover w-full h-full" data-user-id="${usuario.id_usuario}">
         </div>
         <div class="${nombreSize} text-color4 text-center">${usuario.nombre} ${usuario.apellido}</div>
         <div class="${rolSize} text-color6 text-center"> ${usuario.rol_nombre || "Usuario"}</div>
@@ -338,11 +354,11 @@ function iniciarModuloUsuarios(vista) {
         dataTable.appendChild(card);
       });
     } else if (vistaActual === 'tabla') {
-      usuariosPorPagina = 10; // máximo 10 por página en tabla
+      usuariosPorPagina = 10;
       dataTable.className = "overflow-x-auto";
       const inicio = (paginaActual - 1) * usuariosPorPagina;
       const fin = inicio + usuariosPorPagina;
-      const usuariosMostrar = usuariosData.slice(inicio, fin);
+      const usuariosMostrar = usuariosFiltrados.slice(inicio, fin);
 
       let tabla = document.createElement("table");
       tabla.className = "min-w-full bg-white border border-gray-200 rounded-lg shadow-sm text-xs sm:text-sm";
@@ -390,7 +406,7 @@ function iniciarModuloUsuarios(vista) {
     `;
       dataTable.appendChild(tabla);
     }
-    renderPaginador(usuariosData.length);
+    renderPaginador(usuariosFiltrados.length);
   }
 
   function fetchUsuarios() {
@@ -512,7 +528,7 @@ function iniciarModuloUsuarios(vista) {
     })
       .then((response) => response.json())
       .then((usuario) => {
-        document.getElementById("verFoto").src = "../" + (usuario.foto || "assets/images/perfiles/default.png");
+        document.getElementById("verFoto").src = "/TicketProApp/client/src/" + (usuario.foto || "assets/images/perfiles/default.png");
         document.getElementById("verNombreCompleto").textContent = `${usuario.nombre} ${usuario.apellido}`;
         document.getElementById("verEmail").textContent = usuario.email;
         document.getElementById("verRol").textContent = usuario.rol_nombre || "Usuario";
