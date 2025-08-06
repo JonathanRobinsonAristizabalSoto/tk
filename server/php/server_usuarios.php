@@ -1,58 +1,99 @@
 <?php
 // Configuración de cabecera
 header('Content-Type: application/json');
-include 'config.php';
+require_once("../config/config.php");
 
 try {
-    $pdo = new PDO($dsn, $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
     $action = $_POST['action'] ?? '';
 
     switch ($action) {
         case 'add':
-            $placa = $_POST['placa'];
-            $tipo = $_POST['tipo'];
-            $propietario = $_POST['propietario'];
+            $tipo_documento = $_POST['tipo_documento'] ?? '';
+            $documento = $_POST['documento'] ?? '';
+            $nombre = $_POST['nombre'] ?? '';
+            $apellido = $_POST['apellido'] ?? '';
+            $email = $_POST['email'] ?? '';
+            $telefono = $_POST['telefono'] ?? '';
+            $departamento = $_POST['departamento'] ?? '';
+            $municipio = $_POST['municipio'] ?? '';
+            $password = $_POST['password'] ?? '';
+            $id_rol = $_POST['id_rol'] ?? 5;
+            $foto = $_POST['foto'] ?? 'assets/images/perfiles/default.png';
 
-            $stmt = $pdo->prepare("INSERT INTO vehiculos (placa, tipo, propietario) VALUES (?, ?, ?)");
-            $stmt->execute([$placa, $tipo, $propietario]);
-            echo json_encode(['success' => true, 'message' => 'Vehículo creado con éxito.']);
+            // Validación básica
+            if (!$tipo_documento || !$documento || !$nombre || !$apellido || !$email || !$telefono || !$departamento || !$municipio || !$password) {
+                echo json_encode(['success' => false, 'message' => 'Todos los campos son obligatorios.']);
+                exit;
+            }
+
+            // Verifica si el email o documento ya existen
+            $stmt = $pdo->prepare("SELECT id_usuario FROM usuarios WHERE email = ? OR documento = ?");
+            $stmt->execute([$email, $documento]);
+            if ($stmt->fetch()) {
+                echo json_encode(['success' => false, 'message' => 'El correo o documento ya está registrado.']);
+                exit;
+            }
+
+            $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+
+            $stmt = $pdo->prepare("INSERT INTO usuarios (tipo_documento, documento, nombre, apellido, email, telefono, departamento, municipio, foto, password, id_rol) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt->execute([$tipo_documento, $documento, $nombre, $apellido, $email, $telefono, $departamento, $municipio, $foto, $passwordHash, $id_rol]);
+            echo json_encode(['success' => true, 'message' => 'Usuario creado con éxito.']);
             break;
 
         case 'update':
-            $id_vehiculo = $_POST['id_vehiculo'];
-            $placa = $_POST['placa'];
-            $tipo = $_POST['tipo'];
-            $propietario = $_POST['propietario'];
+            $id_usuario = $_POST['id_usuario'];
+            $nombre = $_POST['nombre'] ?? '';
+            $apellido = $_POST['apellido'] ?? '';
+            $email = $_POST['email'] ?? '';
+            $telefono = $_POST['telefono'] ?? '';
+            $departamento = $_POST['departamento'] ?? '';
+            $municipio = $_POST['municipio'] ?? '';
+            $id_rol = $_POST['id_rol'] ?? 5;
 
-            $stmt = $pdo->prepare("UPDATE vehiculos SET placa = ?, tipo = ?, propietario = ? WHERE id_vehiculo = ?");
-            $stmt->execute([$placa, $tipo, $propietario, $id_vehiculo]);
-            echo json_encode(['success' => true, 'message' => 'Vehículo actualizado con éxito.']);
+            // Manejo de imagen
+            $foto = $_POST['foto_actual'] ?? 'assets/images/perfiles/default.png';
+            if (isset($_FILES['foto']) && $_FILES['foto']['error'] == UPLOAD_ERR_OK) {
+                $ext = pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION);
+                $nombreArchivo = 'assets/images/perfiles/' . uniqid('perfil_') . '.' . $ext;
+                $rutaDestino = '../../client/src/' . $nombreArchivo;
+                if (move_uploaded_file($_FILES['foto']['tmp_name'], $rutaDestino)) {
+                    $foto = $nombreArchivo;
+                }
+            }
+
+            $stmt = $pdo->prepare("UPDATE usuarios SET nombre = ?, apellido = ?, email = ?, telefono = ?, departamento = ?, municipio = ?, foto = ?, id_rol = ? WHERE id_usuario = ?");
+            $stmt->execute([$nombre, $apellido, $email, $telefono, $departamento, $municipio, $foto, $id_rol, $id_usuario]);
+            echo json_encode(['success' => true, 'message' => 'Usuario actualizado con éxito.']);
             break;
 
-        case 'delete':
-            $id_vehiculo = $_POST['id_vehiculo'];
-            $stmt = $pdo->prepare("DELETE FROM vehiculos WHERE id_vehiculo = ?");
-            $stmt->execute([$id_vehiculo]);
-            echo json_encode(['success' => true, 'message' => 'Vehículo eliminado con éxito.']);
+        case 'toggle_estado':
+            $id_usuario = $_POST['id_usuario'];
+            $estado = $_POST['estado'];
+            if ($estado !== 'Activo' && $estado !== 'Inactivo') {
+                echo json_encode(['success' => false, 'message' => 'Estado no válido.']);
+                exit;
+            }
+            $stmt = $pdo->prepare("UPDATE usuarios SET estado = ? WHERE id_usuario = ?");
+            $stmt->execute([$estado, $id_usuario]);
+            echo json_encode(['success' => true, 'message' => "Usuario " . ($estado === 'Activo' ? "habilitado" : "inhabilitado") . " con éxito."]);
             break;
 
         case 'fetch':
-            if (isset($_POST['id_vehiculo'])) {
-                $id_vehiculo = $_POST['id_vehiculo'];
-                $stmt = $pdo->prepare("SELECT * FROM vehiculos WHERE id_vehiculo = ?");
-                $stmt->execute([$id_vehiculo]);
-                $vehiculo = $stmt->fetch(PDO::FETCH_ASSOC);
-                if ($vehiculo) {
-                    echo json_encode($vehiculo);
+            if (isset($_POST['id_usuario'])) {
+                $id_usuario = $_POST['id_usuario'];
+                $stmt = $pdo->prepare("SELECT u.*, r.nombre AS rol_nombre FROM usuarios u LEFT JOIN roles r ON u.id_rol = r.id_rol WHERE u.id_usuario = ?");
+                $stmt->execute([$id_usuario]);
+                $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+                if ($usuario) {
+                    echo json_encode($usuario);
                 } else {
-                    echo json_encode(['success' => false, 'message' => 'Vehículo no encontrado.']);
+                    echo json_encode(['success' => false, 'message' => 'Usuario no encontrado.']);
                 }
             } else {
-                $stmt = $pdo->query("SELECT * FROM vehiculos");
-                $vehiculos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                echo json_encode($vehiculos);
+                $stmt = $pdo->query("SELECT u.*, r.nombre AS rol_nombre FROM usuarios u LEFT JOIN roles r ON u.id_rol = r.id_rol");
+                $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                echo json_encode($usuarios);
             }
             break;
 
@@ -63,4 +104,3 @@ try {
 } catch (PDOException $e) {
     echo json_encode(['success' => false, 'message' => 'Error de conexión: ' . $e->getMessage()]);
 }
-?>

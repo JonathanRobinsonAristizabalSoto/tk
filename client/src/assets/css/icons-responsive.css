@@ -1,0 +1,53 @@
+/* Ajustes responsivos para la sección de preguntas frecuentes */
+@media (max-width: 640px) {
+  .faq-item {
+    padding-left: 3.2rem !important;
+  }
+
+  .faq-num {
+    width: 2.2rem !important;
+    height: 2.2rem !important;
+    font-size: 1rem !important;
+    left: -0.2rem !important;
+  }
+
+  .faq-title {
+    font-size: 1rem !important;
+  }
+
+  .faq-text {
+    font-size: 0.95rem !important;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1023px) {
+  .faq-title {
+    font-size: 1.1rem !important;
+  }
+
+  .faq-text {
+    font-size: 1rem !important;
+  }
+
+  .faq-num {
+    width: 2.5rem !important;
+    height: 2.5rem !important;
+    font-size: 1.2rem !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .faq-title {
+    font-size: 1.25rem !important;
+  }
+
+  .faq-text {
+    font-size: 1.05rem !important;
+  }
+
+  .faq-num {
+    width: 2.7rem !important;
+    height: 2.7rem !important;
+    font-size: 1.3rem !important;
+  }
+}

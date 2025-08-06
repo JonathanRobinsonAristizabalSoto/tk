@@ -1,9 +1,8 @@
 <?php
-// logout.php
-
 session_start();
 session_unset();
 session_destroy();
 
-header("Location: /client/index.html");
-exit();
+// Redirigir al inicio
+header("Location: /TicketProApp/client/index.html");
+exit;

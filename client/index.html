@@ -2,104 +2,361 @@
 <html lang="es">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
-    <!-- Enlace a los estilos CSS -->
-    <link rel="stylesheet" href="/client/src/assets/css/styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Fuentes de Google -->
-    <link
-        href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700&display=swap"
-        rel="stylesheet">
-    <!-- Enlace a Font Awesome -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-    <script src="/client/src/assets/js/jquery.min.js"></script>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Home</title>
+  <!-- Enlace a los estilos CSS -->
+  <link rel="stylesheet" href="./src/assets/css/styles.css" />
+  <link rel="stylesheet" href="./src/assets/css/icons-responsive.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <script src="./src/assets/js/jquery.min.js"></script>
+
+  <!-- Fuentes de Google: Lato, Oswald, Poppins -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Oswald:wght@200..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet" />
+  <!-- Enlace a Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+  <script src="./src/assets/js/jquery.min.js"></script>
 </head>
 
 <body class="font-poppins flex flex-col min-h-screen bg-color1">
-    <!-- Encabezado -->
-    <header class="flex justify-between items-center p-2 bg-color5 relative h-15">
-        <div class="logo_header">
-            <a href="./index.html">
-                <img src="/client/src/assets/images/logoticket.png" alt="Logo TicketPro+" class="w-16 p-2 transition-transform duration-600 hover:rotate-360">
-            </a>
+  <!-- Encabezado -->
+  <header class="flex justify-between items-center p-2 bg-color5 relative h-15">
+    <div class="logo_header">
+      <a href="./index.html">
+        <img src="./src/assets/images/logoticket.png" alt="Logo TicketPro+"
+          class="w-16 p-2 transition-transform duration-600 hover:rotate-360" />
+      </a>
+    </div>
+    <div class="titulo_header text-center flex-1">
+      <h1 class="text-xl xs:text-2xl sm:text-3xl text-color1 font-oswald whitespace-nowrap">
+        <span class="block sm:inline">
+          <span class="inline sm:hidden">SISTEMA DE GESTIÓN</span>
+          <span class="hidden sm:inline">
+            SISTEMA DE GESTIÓN
+            TICKET <span class="text-color6">PRO</span> <span class="text-color4">+</span>
+          </span>
+        </span>
+      </h1>
+    </div>
+    <div class="menu-container flex flex-col items-center cursor-pointer p-2 z-50">
+      <div class="menu-icon flex flex-col justify-between w-7 h-5" id="menu-icon">
+        <span class="bg-color1 h-1 rounded transition-transform duration-300"></span>
+        <span class="bg-color1 h-1 rounded transition-transform duration-300"></span>
+        <span class="bg-color1 h-1 rounded transition-transform duration-300"></span>
+      </div>
+      <span class="menu-text text-color1 text-xs mt-1">Menú</span>
+    </div>
+    <nav id="menu-nav"
+      class="hidden flex-col items-center bg-color1 absolute top-16 right-4 p-4 rounded-2xl shadow-xl border-2 border-color6 z-[9999]">
+      <a href="./src/auth/login.html"
+        class="block px-4 py-1 text-gray-700 hover:text-color6 relative group font-semibold flex items-center gap-2">
+        <i class="fas fa-sign-in-alt text-color5"></i>
+        Iniciar sesión
+        <span
+          class="block h-0.5 bg-color6 absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 group-hover:w-3/4 transition-all duration-300"></span>
+      </a>
+      <a href="./src/auth/register.html"
+        class="block px-4 py-1 text-gray-700 hover:text-color6 relative group font-semibold flex items-center gap-2">
+        <i class="fas fa-user-plus text-color5"></i>
+        Registrarse
+        <span
+          class="block h-0.5 bg-color6 absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 group-hover:w-3/4 transition-all duration-300"></span>
+      </a>
+      <a href="./src/pages/about.html"
+        class="block px-4 py-1 text-gray-700 hover:text-color6 relative group font-semibold flex items-center gap-2">
+        <i class="fas fa-users text-color5"></i>
+        Nosotros
+        <span
+          class="block h-0.5 bg-color6 absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 group-hover:w-3/4 transition-all duration-300"></span>
+      </a>
+      <a href="./src/pages/contact.html"
+        class="block px-4 py-1 text-gray-700 hover:text-color6 relative group font-semibold flex items-center gap-2">
+        <i class="fas fa-envelope text-color5"></i>
+        Contacto
+        <span
+          class="block h-0.5 bg-color6 absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 group-hover:w-3/4 transition-all duration-300"></span>
+      </a>
+    </nav>
+  </header>
+
+  <main class="flex-1 flex flex-col p-0 bg-color1">
+    <!-- Sección Hero: Bienvenida + Imagen -->
+    <section
+      class="relative flex flex-col-reverse lg:flex-row items-center justify-center gap-4 lg:gap-20 w-full min-h-screen py-2 xs:py-4 sm:py-10 px-3 xs:px-6 sm:px-12 md:px-20 bg-white shadow-lg rounded-none m-0 transition-all duration-700"
+      style="font-family: 'Poppins', 'Lato', 'Oswald', sans-serif">
+      <!-- Contenedor Derecho: Imagen (primero en móvil, derecha en web) -->
+      <div
+        class="flex-1 flex justify-center items-center w-full max-w-xs xs:max-w-sm sm:max-w-md md:max-w-lg lg:max-w-2xl mt-0 mb-0 lg:mt-0 lg:mb-0">
+        <img src="./src/assets/images/estudiantes.jpg" alt="TicketPro+ Ilustración"
+          class="w-60 xs:w-72 sm:w-80 md:w-96 lg:w-[22rem] xl:w-[26rem] 2xl:w-[30rem] rounded-2xl border border-color2 bg-color1 object-cover shadow-xl"
+          style="aspect-ratio: 1/1; min-width: 0; min-height: 0" />
+      </div>
+      <!-- Contenedor Izquierdo: Titulo con parrafo -->
+      <div
+        class="flex-1 flex flex-col justify-center items-center lg:items-start max-w-xs xs:max-w-sm sm:max-w-md md:max-w-xl text-center lg:text-left z-10 mt-0 mb-0 h-full">
+        <h1
+          class="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-7xl xl:text-[5rem] font-oswald font-black text-color5 leading-tight mb-2 sm:mb-3 tracking-tight">
+          BIENVENIDOS A <span class="text-color6">TICKET PRO+</span>
+        </h1>
+        <p
+          class="text-xs xs:text-sm sm:text-base md:text-lg font-poppins font-normal sm:font-medium md:font-semibold text-color3 mb-4 sm:mb-5 text-justify lg:text-left mt-1 sm:mt-2 leading-relaxed">
+          TicketPro+ es la plataforma SENA donde cualquier persona, empresa o aliado puede enviar y consultar
+          solicitudes, PQR y otros trámites de forma fácil, rápida y segura.
+        </p>
+        <div
+          class="flex flex-col xs:flex-row items-center justify-center lg:justify-start gap-2 sm:gap-3 w-full mt-2 mb-0">
+          <a href="./src/auth/login.html"
+            class="flex items-center px-4 py-2 bg-color6 text-white rounded-lg shadow-md hover:bg-color3 transition text-sm xs:text-base font-medium text-center w-full xs:w-auto min-w-[120px] justify-center">
+            Iniciar sesión
+          </a>
+          <a href="./src/auth/register.html"
+            class="flex items-center px-4 py-2 bg-color5 text-white rounded-lg shadow-md hover:bg-color3 transition text-sm xs:text-base font-medium text-center w-full xs:w-auto min-w-[120px] justify-center">
+            Registrarse
+          </a>
         </div>
-        <div class="titulo_header text-center flex-1">
-            <h1 class="text-2xl text-color1 font-lato font-bold">TICKET PRO +</h1>
+      </div>
+    </section>
+
+    <!-- Sección: ¿Qué puedes hacer aquí? -->
+    <section class="shadow-xl py-16 px-4 sm:px-10 bg-color2 text-color4 mb-10">
+      <h2 class="text-3xl sm:text-4xl lg:text-5xl font-oswald font-bold mb-10 text-center tracking-tight">
+        ¿Qué puedes hacer en TicketPro+?
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-5xl mx-auto">
+        <div
+          class="flex flex-col items-center bg-white/90 rounded-xl shadow-lg p-8 hover:scale-105 hover:shadow-2xl transition-all duration-300">
+          <div class="w-16 h-16 flex items-center justify-center bg-color6/10 rounded-full mb-5 shadow">
+            <i class="fas fa-ticket-alt text-color6 text-4xl"></i>
+          </div>
+          <h3 class="font-oswald font-bold text-xl mb-2 text-color5">
+            Solicitudes
+          </h3>
+          <p class="text-base text-center text-color4">
+            Envía solicitudes de cupos, programas de formación y
+            requerimientos institucionales de manera sencilla y rápida.
+          </p>
         </div>
-        <div class="menu-container flex flex-col items-center cursor-pointer p-2 z-50">
-            <div class="menu-icon flex flex-col justify-between w-7 h-5" id="menu-icon">
-                <span class="bg-color1 h-1 rounded transition-transform duration-300"></span>
-                <span class="bg-color1 h-1 rounded transition-transform duration-300"></span>
-                <span class="bg-color1 h-1 rounded transition-transform duration-300"></span>
+        <div
+          class="flex flex-col items-center bg-white/90 rounded-xl shadow-lg p-8 hover:scale-105 hover:shadow-2xl transition-all duration-300">
+          <div class="w-16 h-16 flex items-center justify-center bg-color6/10 rounded-full mb-5 shadow">
+            <i class="fas fa-question-circle text-color6 text-4xl"></i>
+          </div>
+          <h3 class="font-oswald font-bold text-xl mb-2 text-color5">PQR</h3>
+          <p class="text-base text-center text-color4">
+            Registra y consulta tus Peticiones, Quejas o Reclamos (PQR) de
+            forma ágil y segura.
+          </p>
+        </div>
+        <div
+          class="flex flex-col items-center bg-white/90 rounded-xl shadow-lg p-8 hover:scale-105 hover:shadow-2xl transition-all duration-300">
+          <div class="w-16 h-16 flex items-center justify-center bg-color6/10 rounded-full mb-5 shadow">
+            <i class="fas fa-users text-color6 text-4xl"></i>
+          </div>
+          <h3 class="font-oswald font-bold text-xl mb-2 text-color5">
+            Empresas y terceros
+          </h3>
+          <p class="text-base text-center text-color4">
+            Empresas y aliados pueden gestionar requerimientos y solicitudes
+            especiales para sus necesidades.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sección: Beneficios para Usuarios -->
+    <section class="py-16 px-4 sm:px-10 bg-color1 text-color5 mb-10">
+      <h2 class="text-3xl sm:text-4xl lg:text-5xl font-oswald font-bold mb-10 text-center tracking-tight">
+        Beneficios para ti
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-5xl mx-auto">
+        <div
+          class="bg-color4/95 text-color1 rounded-xl shadow-lg p-8 flex flex-col items-center hover:scale-105 hover:shadow-2xl transition-all duration-300">
+          <div class="w-14 h-14 flex items-center justify-center bg-color6/10 rounded-full mb-5 shadow">
+            <i class="fas fa-bolt text-color6 text-3xl"></i>
+          </div>
+          <h3 class="font-oswald font-bold text-lg mb-2">
+            Gestión eficiente
+          </h3>
+          <p class="text-base text-center">
+            Realiza tus trámites y solicitudes en línea, sin filas ni demoras.
+          </p>
+        </div>
+        <div
+          class="bg-color4/95 text-color1 rounded-xl shadow-lg p-8 flex flex-col items-center hover:scale-105 hover:shadow-2xl transition-all duration-300">
+          <div class="w-14 h-14 flex items-center justify-center bg-color6/10 rounded-full mb-5 shadow">
+            <i class="fas fa-users text-color6 text-3xl"></i>
+          </div>
+          <h3 class="font-oswald font-bold text-lg mb-2">
+            Atención integral
+          </h3>
+          <p class="text-base text-center">
+            Recibe respuesta y seguimiento a tus solicitudes por parte del
+            equipo SENA.
+          </p>
+        </div>
+        <div
+          class="bg-color4/95 text-color1 rounded-xl shadow-lg p-8 flex flex-col items-center hover:scale-105 hover:shadow-2xl transition-all duration-300">
+          <div class="w-14 h-14 flex items-center justify-center bg-color6/10 rounded-full mb-5 shadow">
+            <i class="fas fa-shield-alt text-color6 text-3xl"></i>
+          </div>
+          <h3 class="font-oswald font-bold text-lg mb-2">
+            Seguro y confiable
+          </h3>
+          <p class="text-base text-center">
+            Tus datos y solicitudes están protegidos y solo tú puedes acceder
+            a tu información.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sección: Preguntas Frecuentes -->
+    <section class="w-full flex justify-center items-center bg-color2 text-color4 shadow-lg mb-0">
+      <div class="w-full max-w-5xl py-12 px-2 sm:px-4 lg:px-8">
+        <!-- Contenedor 1: Título y párrafo -->
+        <div class="max-w-3xl mx-auto mb-10 px-2">
+          <h2 class="text-2xl sm:text-3xl lg:text-4xl font-oswald font-bold mb-4 text-center">
+            Preguntas Frecuentes
+          </h2>
+          <p class="text-base text-color4 text-center">
+            Resuelve aquí tus dudas sobre cómo usar TicketPro+ y los servicios que ofrece.
+          </p>
+        </div>
+
+        <!-- Contenedor 2: Preguntas en dos columnas responsivas -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-10">
+          <!-- Pregunta 1 -->
+          <div
+            class="relative flex items-center bg-white/90 rounded-xl shadow-md p-6 mb-4 overflow-x-visible w-full max-w-xs mx-auto sm:max-w-none"
+            style="padding-left:3.2rem;">
+            <div
+              class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12 bg-color6 text-white rounded-full flex items-center justify-center font-bold text-lg sm:text-xl md:text-2xl shadow z-50 ring-4 ring-white">
+              1
             </div>
-            <span class="menu-text text-color1 text-xs mt-1">Menú</span>
+            <div class="w-full min-w-0">
+              <h4 class="font-oswald font-semibold text-base sm:text-lg md:text-xl mb-1 text-color5 text-center">
+                ¿Quién puede usar TicketPro+?
+              </h4>
+              <p class="text-sm sm:text-base md:text-base text-color4 text-justify w-full">
+                Aprendices, instructores, empresas, aliados y cualquier
+                tercero que requiera servicios o información del SENA.
+              </p>
+            </div>
+          </div>
+          <!-- Pregunta 2 -->
+          <div
+            class="relative flex items-center bg-white/90 rounded-xl shadow-md p-5 mb-4 overflow-x-visible w-full max-w-xs mx-auto sm:max-w-none"
+            style="padding-left:3.2rem;">
+            <div
+              class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12 bg-color6 text-white rounded-full flex items-center justify-center font-bold text-lg sm:text-xl md:text-2xl shadow z-50 ring-4 ring-white">
+              2
+            </div>
+            <div class="w-full min-w-0">
+              <h4 class="font-oswald font-semibold text-base sm:text-lg md:text-xl mb-1 text-color5 text-center">
+                ¿Cómo hago una solicitud?
+              </h4>
+              <p class="text-sm sm:text-base md:text-base text-color4 text-justify w-full">
+                Regístrate o inicia sesión, selecciona el tipo de trámite y
+                completa el formulario.
+              </p>
+            </div>
+          </div>
+          <!-- Pregunta 3 -->
+          <div
+            class="relative flex items-center bg-white/90 rounded-xl shadow-md p-5 mb-4 overflow-x-visible w-full max-w-xs mx-auto sm:max-w-none"
+            style="padding-left:3.2rem;">
+            <div
+              class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12 bg-color6 text-white rounded-full flex items-center justify-center font-bold text-lg sm:text-xl md:text-2xl shadow z-50 ring-4 ring-white">
+              3
+            </div>
+            <div class="w-full min-w-0">
+              <h4 class="font-oswald font-semibold text-base sm:text-lg md:text-xl mb-1 text-color5 text-center">
+                ¿Puedo hacer seguimiento?
+              </h4>
+              <p class="text-sm sm:text-base md:text-base text-color4 text-justify w-full">
+                Sí, puedes consultar el estado y recibir notificaciones de
+                cada solicitud desde tu panel.
+              </p>
+            </div>
+          </div>
+          <!-- Pregunta 4 -->
+          <div
+            class="relative flex items-center bg-white/90 rounded-xl shadow-md p-5 mb-4 overflow-x-visible w-full max-w-xs mx-auto sm:max-w-none"
+            style="padding-left:3.2rem;">
+            <div
+              class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12 bg-color6 text-white rounded-full flex items-center justify-center font-bold text-lg sm:text-xl md:text-2xl shadow z-50 ring-4 ring-white">
+              4
+            </div>
+            <div class="w-full min-w-0">
+              <h4 class="font-oswald font-semibold text-base sm:text-lg md:text-xl mb-1 text-color5 text-center">
+                ¿Mis datos están seguros?
+              </h4>
+              <p class="text-sm sm:text-base md:text-base text-color4 text-justify w-full">
+                Sí, TicketPro+ cumple con altos estándares de seguridad y
+                privacidad.
+              </p>
+            </div>
+          </div>
+          <!-- Pregunta 5 -->
+          <div
+            class="relative flex items-center bg-white/90 rounded-xl shadow-md p-5 mb-4 overflow-x-visible w-full max-w-xs mx-auto sm:max-w-none"
+            style="padding-left:3.2rem;">
+            <div
+              class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12 bg-color6 text-white rounded-full flex items-center justify-center font-bold text-lg sm:text-xl md:text-2xl shadow z-50 ring-4 ring-white">
+              5
+            </div>
+            <div class="w-full min-w-0">
+              <h4 class="font-oswald font-semibold text-base sm:text-lg md:text-xl mb-1 text-color5 text-center">
+                ¿Puedo registrar PQR?
+              </h4>
+              <p class="text-sm sm:text-base md:text-base text-color4 text-justify w-full">
+                Sí, puedes registrar y consultar tus Peticiones, Quejas o
+                Reclamos fácilmente.
+              </p>
+            </div>
+          </div>
+          <!-- Pregunta 6 -->
+          <div
+            class="relative flex items-center bg-white/90 rounded-xl shadow-md p-5 mb-4 overflow-x-visible w-full max-w-xs mx-auto sm:max-w-none"
+            style="padding-left:3.2rem;">
+            <div
+              class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12 bg-color6 text-white rounded-full flex items-center justify-center font-bold text-lg sm:text-xl md:text-2xl shadow z-50 ring-4 ring-white">
+              6
+            </div>
+            <div class="w-full min-w-0">
+              <h4 class="font-oswald font-semibold text-base sm:text-lg md:text-xl mb-1 text-color5 text-center">
+                ¿Tiene costo?
+              </h4>
+              <p class="text-sm sm:text-base md:text-base text-color4 text-justify w-full">
+                El uso de TicketPro+ es gratuito para todos los usuarios del
+                SENA.
+              </p>
+            </div>
+          </div>
         </div>
-        <nav id="menu-nav" class="hidden flex-col items-center bg-white absolute top-16 right-4 p-4 rounded shadow-lg">
-            <a href="/client/src/auth/login.html" class="block px-4 py-1 text-gray-700 hover:text-color6 relative group font-semibold">
-                Iniciar sesión
-                <span
-                    class="block h-0.5 bg-color6 absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 group-hover:w-3/4 transition-all duration-300"></span>
-            </a>
-            <a href="/client/src/auth/register.html" class="block px-4 py-1 text-gray-700 hover:text-color6 relative group font-semibold">
-                Registrarse
-                <span
-                    class="block h-0.5 bg-color6 absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 group-hover:w-3/4 transition-all duration-300"></span>
-            </a>
-            <a href="/client/src/pages/info/about.html" class="block px-4 py-1 text-gray-700 hover:text-color6 relative group font-semibold">
-                Nosotros
-                <span
-                    class="block h-0.5 bg-color6 absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 group-hover:w-3/4 transition-all duration-300"></span>
-            </a>
-            <a href="/client/src/pages/info/contact.html" class="block px-4 py-1 text-gray-700 hover:text-color6 relative group font-semibold">
-                Contacto
-                <span
-                    class="block h-0.5 bg-color6 absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 group-hover:w-3/4 transition-all duration-300"></span>
-            </a>
-        </nav>
-    </header>
+      </div>
+    </section>
+  </main>
 
-    <main class="flex-1 flex flex-col items-center justify-center p-5">
-        <section class="contenedor_index flex flex-col items-center justify-center w-full sm:w-11/12 md:w-10/12 lg:w-9/12 xl:w-8/12 2xl:w-7/12 text-center mx-auto">
-            <section class="Seccion_bienvenida bg-color5 text-color1 p-5 rounded w-full mb-5">
-                <h2 class="text-xl sm:text-2xl md:text-2xl lg:text-3xl font-lato font-bold">Bienvenido a TicketPro+</h2>
-                <p class="text-base sm:text-lg md:text-xl lg:text-xl font-poppins font-normal">Gestione sus solicitudes y tickets de manera eficiente con nuestra plataforma.</p>
-            </section>
-            <section class="seccion_informacion bg-color2 text-color4 p-5 rounded w-full mb-5">
-                <h3 class="text-xl sm:text-2xl md:text-2xl lg:text-3xl font-lato font-bold">¿Qué ofrecemos?</h3>
-                <p class="text-base sm:text-lg md:text-xl lg:text-xl font-poppins font-normal">
-                    TicketPro+ es la solución ideal para gestionar solicitudes de soporte técnico,
-                    seguimiento de tickets y mucho más. Nuestra plataforma está diseñada para
-                    facilitar la comunicación entre usuarios y administradores.
-                </p>
-            </section>
-        </section>
-    </main>
+  <!-- Incluir el pie de página -->
+  <div id="footer-placeholder"></div>
 
-    <!-- Pie de página -->
-    <footer class="bg-color5 text-color1 p-4 text-center text-xs sm:text-sm md:text-base lg:text-base flex flex-col items-center space-y-2">
-        <div class="enlaces-legales font-semibold flex flex-wrap justify-center gap-4 text-color4">
-            <a href="/client/src/pages/legal/politicas.html" class="relative group">
-                Política de privacidad
-                <span class="block h-0.5 bg-color6 absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 group-hover:w-full transition-all duration-300"></span>
-            </a>
-            <a href="/client/src/pages/legal/cookies.html" class="relative group">
-                Política de cookies
-                <span class="block h-0.5 bg-color6 absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 group-hover:w-full transition-all duration-300"></span>
-            </a>
-        </div>
-        <p class="m-0 text-sm">&copy; 2024 TicketPro Todos los derechos reservados</p>
-        <div class="redes-sociales flex justify-center gap-4 mt-2">
-            <a href="https://www.facebook.com" target="_blank" class="text-color1 text-lg hover:text-color4"><i class="fab fa-facebook"></i></a>
-            <a href="https://www.twitter.com" target="_blank" class="text-color1 text-lg hover:text-color4"><i class="fab fa-twitter"></i></a>
-            <a href="https://www.instagram.com" target="_blank" class="text-color1 text-lg hover:text-color4"><i class="fab fa-instagram"></i></a>
-            <a href="https://www.linkedin.com" target="_blank" class="text-color1 text-lg hover:text-color4"><i class="fab fa-linkedin"></i></a>
-        </div>
-    </footer>
-    <script src="/client/src/assets/js/menu.js"></script>
+    <!-- modales para politicas de privacidad y cookies -->
+  <div id="modal-privacidad-placeholder"></div>
+  <div id="modal-cookies-placeholder"></div>
+
+  <!-- Script para cargar y gestionar los modales de privacidad y cookies -->
+  <script src="./src/assets/js/modal-priv-cookies.js"></script>
+
+  <!-- Script para cargar los parciales de header y footer -->
+  <script src="./src/assets/js/loadPartials.js"></script>
+  
+  
+  <script src="./src/assets/js/menu.js"></script>
 </body>
 
 </html>

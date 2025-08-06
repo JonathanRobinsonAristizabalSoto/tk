@@ -1,0 +1,58 @@
+<div id="modal-cookies" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+  <div class="bg-white rounded-2xl shadow-2xl w-[95%] max-w-lg p-4 sm:p-8 relative border-2 border-color3 animate-fadeIn transition-all duration-300">
+    <button onclick="cerrarModalCookies()" class="absolute top-3 right-3 sm:top-4 sm:right-4 text-color6 text-2xl hover:text-color4 transition" aria-label="Cerrar">
+      <i class="fas fa-times-circle"></i>
+    </button>
+    <div class="flex items-center gap-3 mb-4">
+      <i class="fas fa-cookie-bite text-color6 text-2xl sm:text-3xl"></i>
+      <h2 class="text-xl sm:text-2xl font-oswald text-color4">Política de Cookies</h2>
+    </div>
+    <div class="text-color4 text-xs sm:text-sm max-h-72 sm:max-h-80 overflow-y-auto pr-1 sm:pr-2 font-poppins">
+      <p class="mb-3">
+        <span class="font-bold text-color6">TicketPro+</span> utiliza cookies propias y de terceros para mejorar tu experiencia y analizar el uso de nuestro sitio.
+      </p>
+      <ul class="list-disc pl-5 sm:pl-6 mb-3 space-y-1">
+        <li><span class="text-color6"><i class="fas fa-check-circle mr-2"></i></span> Las cookies recuerdan tus preferencias y personalizan tu navegación.</li>
+        <li><span class="text-color6"><i class="fas fa-chart-line mr-2"></i></span> Analizamos el uso del sitio para ofrecerte un mejor servicio.</li>
+        <li><span class="text-color6"><i class="fas fa-user-secret mr-2"></i></span> No te identificamos personalmente sin tu consentimiento.</li>
+        <li><span class="text-color6"><i class="fas fa-cog mr-2"></i></span> Puedes eliminar o bloquear las cookies desde tu navegador.</li>
+      </ul>
+      <div class="bg-color1/60 rounded-lg p-3 mb-3 flex items-start gap-2">
+        <i class="fas fa-cookie text-color6 mt-1"></i>
+        <div>
+          <span class="font-semibold text-color4">¿Qué tipos de cookies usamos?</span>
+          <br>
+          <span>Cookies técnicas, de análisis y de personalización.</span>
+        </div>
+      </div>
+      <div class="bg-color1/60 rounded-lg p-3 mb-3 flex items-start gap-2">
+        <i class="fas fa-envelope-open-text text-color6 mt-1"></i>
+        <div>
+          <span class="font-semibold text-color4">¿Tienes dudas?</span>
+          <br>
+          <span>Escríbenos a <a href="mailto:soporte@ticketpro.com" class="text-color6 underline">soporte@ticketpro.com</a> para más información.</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-2 mt-4 text-xs sm:text-sm">
+        <i class="fas fa-info-circle text-color6"></i>
+        <span>Puedes gestionar tus preferencias de cookies en cualquier momento.</span>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+function abrirModalCookies() {
+  document.getElementById('modal-cookies').classList.remove('hidden');
+  document.body.style.overflow = 'hidden'; // Congela el scroll del fondo
+}
+function cerrarModalCookies() {
+  document.getElementById('modal-cookies').classList.add('hidden');
+  document.body.style.overflow = ''; // Restaura el scroll
+}
+document.addEventListener('click', function(e) {
+  const modal = document.getElementById('modal-cookies');
+  if (modal && !modal.classList.contains('hidden') && e.target === modal) {
+    cerrarModalCookies();
+  }
+});
+</script>

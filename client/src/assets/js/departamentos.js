@@ -84,30 +84,79 @@ var ciudadesPorDepartamento = {
 };
 
 
-var departamentoSelect = document.getElementById("departamento");
-var municipioSelect = document.getElementById("municipio");
+// Función para cargar departamentos y municipios en cualquier select
+function cargarDepartamentosMunicipios(deptoId, muniId, selectedDepto = "", selectedMuni = "") {
+    var departamentoSelect = document.getElementById(deptoId);
+    var municipioSelect = document.getElementById(muniId);
 
-// Mostrar campo de departamento vacío
-var emptyDepartamentoOption = document.createElement("option");
-emptyDepartamentoOption.text = "";
-emptyDepartamentoOption.value = "";
-departamentoSelect.appendChild(emptyDepartamentoOption);
+    if (!departamentoSelect || !municipioSelect) return;
 
-departamentoSelect.addEventListener("change", function() {
-    var selectedDepartamento = this.value;
-    municipioSelect.innerHTML = ""; // Limpiar las opciones actuales
+    // Limpiar y cargar departamentos
+    departamentoSelect.innerHTML = "";
+    var emptyDepartamentoOption = document.createElement("option");
+    emptyDepartamentoOption.text = "Selecciona un departamento";
+    emptyDepartamentoOption.value = "";
+    departamentoSelect.appendChild(emptyDepartamentoOption);
 
-    // Mostrar campo de municipio vacío
+    Object.keys(ciudadesPorDepartamento).forEach(function (depto) {
+        var option = document.createElement("option");
+        option.text = depto;
+        option.value = depto;
+        if (depto === selectedDepto) option.selected = true;
+        departamentoSelect.appendChild(option);
+    });
+
+    // Limpiar y cargar municipios
+    municipioSelect.innerHTML = "";
     var emptyMunicipioOption = document.createElement("option");
     emptyMunicipioOption.text = "Selecciona un municipio";
     emptyMunicipioOption.value = "";
     municipioSelect.appendChild(emptyMunicipioOption);
 
-    // Agregar los municipios correspondientes al departamento seleccionado
-    ciudadesPorDepartamento[selectedDepartamento].forEach(function(municipio) {
-        var option = document.createElement("option");
-        option.text = municipio;
-        option.value = municipio;
-        municipioSelect.appendChild(option);
-    });
+    if (selectedDepto && ciudadesPorDepartamento[selectedDepto]) {
+        ciudadesPorDepartamento[selectedDepto].forEach(function (municipio) {
+            var option = document.createElement("option");
+            option.text = municipio;
+            option.value = municipio;
+            if (municipio === selectedMuni) option.selected = true;
+            municipioSelect.appendChild(option);
+        });
+    }
+
+    // Evento para actualizar municipios al cambiar departamento
+    departamentoSelect.onchange = function () {
+        var selectedDepartamento = this.value;
+        municipioSelect.innerHTML = "";
+        var emptyMunicipioOption = document.createElement("option");
+        emptyMunicipioOption.text = "Selecciona un municipio";
+        emptyMunicipioOption.value = "";
+        municipioSelect.appendChild(emptyMunicipioOption);
+
+        if (selectedDepartamento && ciudadesPorDepartamento[selectedDepartamento]) {
+            ciudadesPorDepartamento[selectedDepartamento].forEach(function (municipio) {
+                var option = document.createElement("option");
+                option.text = municipio;
+                option.value = municipio;
+                municipioSelect.appendChild(option);
+            });
+        }
+    };
+}
+
+// Inicializa cuando se abre el modal de crear
+document.addEventListener("click", function (e) {
+    if (e.target && e.target.id === "openModal") {
+        setTimeout(function () {
+            cargarDepartamentosMunicipios("departamentoCrear", "municipioCrear");
+        }, 100);
+    }
+});
+
+// Inicializa cuando se abre el modal de editar
+document.addEventListener("click", function (e) {
+    if (e.target && e.target.classList.contains("fa-edit")) {
+        setTimeout(function () {
+            cargarDepartamentosMunicipios("departamentoEditar", "municipioEditar");
+        }, 100);
+    }
 });

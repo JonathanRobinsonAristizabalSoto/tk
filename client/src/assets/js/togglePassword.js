@@ -6,4 +6,11 @@ $(document).ready(function () {
         $passwordField.attr('type', type);
         $(this).toggleClass('fa-eye fa-eye-slash');
     });
+
+    $('#toggleConfirmPassword').on('click', function () {
+        const $confirmPasswordField = $(this).prev('input');
+        const type = $confirmPasswordField.attr('type') === 'password' ? 'text' : 'password';
+        $confirmPasswordField.attr('type', type);
+        $(this).toggleClass('fa-eye fa-eye-slash');
+    });
 });

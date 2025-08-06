@@ -18,26 +18,30 @@ client/                                      # Código del lado del cliente
 │   │   │   └── logoticket2.png              # Imagen del logo secundario
 │   │   └── js/                              # Archivos JavaScript para la lógica del cliente                        
 │   │       ├── auth_session.js              #
-│   │       ├── dashboard.js                 # 
-│   │       ├── programas.js                 # 
-│   │       ├── tickets.js                   # 
-│   │       ├── tipologias.js                # 
-│   │       ├── usuarios.js                  # 
-│   │       ├── departamentos.js             # 
-│   │       ├── jquery.min.js                # 
-│   │       ├── loadPartials.js              # 
+│   │       ├── dashboard.js                 #
+│   │       ├── departamentos.js             #
+│   │       ├── jquery.min.js                #
+│   │       ├── loadPartials.js              #
 │   │       ├── menu.js                      #
-│   │       └── togglePassword.js            #
+│   │       ├── modal-priv-cookies.js        # 
+│   │       ├── programas.js                 #
+│   │       ├── sidebar.js                   # 
+│   │       ├── tickets.js                   # 
+│   │       ├── tipologias.js                #
+│   │       ├── togglePassword.js            # 
+│   │       └── usuarios.js                  # 
 │   ├── auth/                                #
 │   │   ├── login.html                       # 
 │   │   ├── register.html                    # 
 │   │   ├── password_recovery.html           #
 │   ├── pages/                               # Páginas HTML principales
-│   │   ├── info/                            # Carpeta para las páginas de "Nosotros" y "Contacto"
-│   │   │   ├── about.html                   # Página de "Nosotros"
-│   │   │   └── contact.html                 # Página de "Contacto"
+│   │   ├── about.html                       # Página de "Nosotros"
+│   │   ├── contact.html                     # Página de "Contacto"
 │   │   ├── dashboard.html                   #
+│   │   ├── modal-cookies.html               #
+│   │   ├── modal-privacidad.html            #
 │   │   ├── programas.html                   #
+│   │   ├── sidebar.html                     #
 │   │   ├── tickets.html                     #
 │   │   ├── tipologias.html                  # 
 │   │   └── usuarios.html                    # Página de perfil del usuario
@@ -54,11 +58,13 @@ client/                                      # Código del lado del cliente
 server/                                      # Código del lado del servidor
 ├── config/                                  # Configuraciones del servidor
 │   └── config.php                           # Configuración de conexión a la base de datos
+├── db/                                      # 
+│   └── ticketpro.sql                        #
 ├── php/                                     # Controladores para manejar la lógica de negocio
-│   ├── server_login.php                     # 
-│   └── server_register.php                  # 
 │   ├── server_dashboard.php                 # 
+│   ├── server_login.php                     #
 │   ├── server_programas.php                 # 
+│   ├── server_register.php                  # 
 │   ├── server_tickets.php                   # 
 │   ├── server_tipologias.php                # 
 │   └── server_usuarios.php                  # 

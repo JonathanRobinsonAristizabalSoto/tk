@@ -13,6 +13,7 @@ module.exports = {
         color4: '#413f4c',       // Gris oscuro
         color5: '#00ab00',       // Verde
         color6: '#ff893a',       // Naranja
+        color7: '#ff3a3a',       // Rojo
       },
       screens: {
         'xs': '320px',    // Móvil más pequeño
@@ -25,6 +26,7 @@ module.exports = {
       fontFamily: {
         lato: ['Lato', 'sans-serif'],
         poppins: ['Poppins', 'sans-serif'],
+        oswald: ['Oswald', 'sans-serif'], // <--- Agregado para títulos
       },
       fontWeight: {
         'thin': 100,

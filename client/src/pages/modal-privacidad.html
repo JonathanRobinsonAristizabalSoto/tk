@@ -1,0 +1,58 @@
+<div id="modal-privacidad" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+  <div class="bg-white rounded-2xl shadow-2xl w-[95%] max-w-lg p-4 sm:p-8 relative border-2 border-color3 animate-fadeIn transition-all duration-300">
+    <button onclick="cerrarModalPrivacidad()" class="absolute top-3 right-3 sm:top-4 sm:right-4 text-color6 text-2xl hover:text-color4 transition" aria-label="Cerrar">
+      <i class="fas fa-times-circle"></i>
+    </button>
+    <div class="flex items-center gap-3 mb-4">
+      <i class="fas fa-user-shield text-color6 text-2xl sm:text-3xl"></i>
+      <h2 class="text-xl sm:text-2xl font-oswald text-color4 ">Política de Privacidad</h2>
+    </div>
+    <div class="text-color4 text-xs sm:text-sm max-h-72 sm:max-h-80 overflow-y-auto pr-1 sm:pr-2 font-poppins">
+      <p class="mb-3">
+        <span class="font-bold text-color6">TicketPro+</span> se compromete a proteger tu privacidad y tus datos personales. Esta política explica cómo recopilamos, usamos y protegemos tu información.
+      </p>
+      <ul class="list-disc pl-5 sm:pl-6 mb-3 space-y-1">
+        <li><span class="text-color6"><i class="fas fa-user-lock mr-2"></i></span> Solo solicitamos los datos necesarios para brindarte nuestros servicios.</li>
+        <li><span class="text-color6"><i class="fas fa-shield-alt mr-2"></i></span> Tus datos están protegidos con altos estándares de seguridad.</li>
+        <li><span class="text-color6"><i class="fas fa-user-edit mr-2"></i></span> Puedes modificar o eliminar tu información en cualquier momento.</li>
+        <li><span class="text-color6"><i class="fas fa-ban mr-2"></i></span> No compartimos tus datos con terceros sin tu consentimiento, salvo obligación legal.</li>
+      </ul>
+      <div class="bg-color1/60 rounded-lg p-3 mb-3 flex items-start gap-2">
+        <i class="fas fa-question-circle text-color6 mt-1"></i>
+        <div>
+          <span class="font-semibold text-color4">¿Para qué usamos tus datos?</span>
+          <br>
+          <span>Para gestionar tu cuenta, responder tus solicitudes y mejorar tu experiencia en TicketPro+.</span>
+        </div>
+      </div>
+      <div class="bg-color1/60 rounded-lg p-3 mb-3 flex items-start gap-2">
+        <i class="fas fa-user-check text-color6 mt-1"></i>
+        <div>
+          <span class="font-semibold text-color4">Tus derechos:</span>
+          <br>
+          <span>Puedes acceder, corregir o eliminar tus datos personales escribiéndonos a <a href="mailto:soporte@ticketpro.com" class="text-color6 underline">soporte@ticketpro.com</a>.</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-2 mt-4 text-xs sm:text-sm">
+        <i class="fas fa-info-circle text-color6"></i>
+        <span>Para más información, revisa nuestra política completa o contáctanos.</span>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+function abrirModalPrivacidad() {
+  document.getElementById('modal-privacidad').classList.remove('hidden');
+  document.body.style.overflow = 'hidden'; // Congela el scroll del fondo
+}
+function cerrarModalPrivacidad() {
+  document.getElementById('modal-privacidad').classList.add('hidden');
+  document.body.style.overflow = ''; // Restaura el scroll
+}
+document.addEventListener('click', function(e) {
+  const modal = document.getElementById('modal-privacidad');
+  if (modal && !modal.classList.contains('hidden') && e.target === modal) {
+    cerrarModalPrivacidad();
+  }
+});
+</script>

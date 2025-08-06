@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 12-09-2024 a las 09:03:47
+-- Tiempo de generación: 20-05-2025 a las 07:56:35
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -35,17 +35,6 @@ CREATE TABLE `comentario` (
   `fecha_creacion` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Volcado de datos para la tabla `comentario`
---
-
-INSERT INTO `comentario` (`id_comentario`, `id_ticket`, `id_usuario`, `comentario`, `fecha_creacion`) VALUES
-(1, 1, 1, 'Confirmo que el cupo está disponible. Por favor, procedan con la inscripción.', '2023-10-01 00:00:00'),
-(2, 2, 2, 'El curso avanzado está disponible. Te enviaré los detalles por correo.', '2023-10-02 00:00:00'),
-(3, 3, 3, 'La certificación será enviada una vez que finalices el curso.', '2023-10-03 00:00:00'),
-(4, 4, 4, 'Información adicional se enviará a tu dirección de correo.', '2023-10-04 00:00:00'),
-(5, 5, 5, 'El curso de seguridad en alturas está programado para el próximo mes.', '2023-10-05 00:00:00');
-
 -- --------------------------------------------------------
 
 --
@@ -60,17 +49,6 @@ CREATE TABLE `evento` (
   `fecha_evento` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Volcado de datos para la tabla `evento`
---
-
-INSERT INTO `evento` (`id_evento`, `id_ticket`, `accion`, `id_usuario`, `fecha_evento`) VALUES
-(1, 1, 'Ticket Creado', 1, '2023-10-01 10:00:00'),
-(2, 1, 'Ticket En progreso', 1, '2023-10-02 11:00:00'),
-(3, 1, 'Ticket Pendiente', 1, '2023-10-03 12:00:00'),
-(4, 1, 'Ticket Resuelto', 1, '2023-10-04 09:00:00'),
-(5, 1, 'Ticket Cerrado', 1, '2023-10-05 14:00:00');
-
 -- --------------------------------------------------------
 
 --
@@ -83,18 +61,6 @@ CREATE TABLE `permisos` (
   `descripcion` text DEFAULT NULL,
   `fecha_creacion` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `permisos`
---
-
-INSERT INTO `permisos` (`id_permiso`, `nombre`, `descripcion`, `fecha_creacion`) VALUES
-(1, 'Crear', 'Permiso para crear usuarios tipolgias programas tickets y comentarios en el sistema.', '2023-10-01 10:00:00'),
-(2, 'Ver', 'Permiso para visualizar usuarios tipolgias programas tickets y comentarios', '2023-10-01 10:00:00'),
-(3, 'Editar', 'Permiso para editar los detalles de un usuario tipolgia programa ticket y comentario', '2023-10-01 10:00:00'),
-(4, 'Eliminar', 'Permiso para eliminar una tipolgia programa ticket y comentario.', '2023-10-01 10:00:00'),
-(5, 'Activar', 'Permiso para activar un usuario tipolgia o programa.', '2023-10-01 10:00:00'),
-(6, 'Desactivar', 'Permiso para desactivar un usuario tipolgia o programa.', '2023-10-01 10:00:00');
 
 -- --------------------------------------------------------
 
@@ -118,15 +84,6 @@ CREATE TABLE `programas` (
   `fecha_creacion` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Volcado de datos para la tabla `programas`
---
-
-INSERT INTO `programas` (`id_programa`, `codigo`, `version`, `nombre`, `descripcion`, `duracion`, `linea_tecnologica`, `red_tecnologica`, `red_de_conocimiento`, `modalidad`, `id_tipologia`, `estado`, `fecha_creacion`) VALUES
-(1, '22620442', '3', 'BASICO OPERATIVO TRABAJO SEGURO EN ALTURAS', 'Capacitación para trabajos en altura.', 48, 'MATERIALES HERRAMIENTAS', 'MATERIALES PARA LA CONSTRUCCIÓN', 'Construcción', 'Presencial', 1, 'Activo', '2024-09-12 02:03:38'),
-(2, '22620443', '2', 'ADMINISTRATIVO PARA JEFES DE AREA TRABAJO SEGURO EN ALTURAS', 'Capacitación para trabajos en altura.', 10, 'MATERIALES HERRAMIENTAS', 'MATERIALES PARA LA CONSTRUCCIÓN', 'Construcción', 'Presencial', 1, 'Activo', '2024-09-12 02:03:38'),
-(3, '22620444', '1', 'GESTION DEL RIESGO EN ALTURAS', 'Capacitación en gestión del riesgo.', 6, 'MATERIALES HERRAMIENTAS', 'MATERIALES PARA LA CONSTRUCCIÓN', 'Construcción', 'Presencial', 1, 'Activo', '2024-09-12 02:03:38');
-
 -- --------------------------------------------------------
 
 --
@@ -141,17 +98,6 @@ CREATE TABLE `roles` (
   `fecha_creacion` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Volcado de datos para la tabla `roles`
---
-
-INSERT INTO `roles` (`id_rol`, `nombre`, `descripcion`, `estado`, `fecha_creacion`) VALUES
-(1, 'Administrador', 'Acceso completo al sistema.', 'Activo', '2023-10-01 10:00:00'),
-(2, 'Supervisor', 'Supervisa el trabajo del soporte.', 'Activo', '2023-10-01 10:00:00'),
-(3, 'Soporte', 'Resuelve tickets y asistencia técnica.', 'Activo', '2023-10-01 10:00:00'),
-(4, 'Operador', 'Crea y gestiona tickets básicos.', 'Activo', '2023-10-01 10:00:00'),
-(5, 'Usuario', 'Crea tickets y realiza solicitudes.', 'Activo', '2023-10-01 10:00:00');
-
 -- --------------------------------------------------------
 
 --
@@ -163,28 +109,6 @@ CREATE TABLE `rolpermisos` (
   `id_permiso` int(11) NOT NULL,
   `fecha_asignacion` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `rolpermisos`
---
-
-INSERT INTO `rolpermisos` (`id_rol`, `id_permiso`, `fecha_asignacion`) VALUES
-(1, 1, '2023-10-01 10:00:00'),
-(1, 2, '2023-10-01 10:00:00'),
-(1, 3, '2023-10-01 10:00:00'),
-(1, 4, '2023-10-01 10:00:00'),
-(1, 5, '2023-10-01 10:00:00'),
-(1, 6, '2023-10-01 10:00:00'),
-(2, 2, '2023-10-01 10:00:00'),
-(2, 3, '2023-10-01 10:00:00'),
-(2, 5, '2023-10-01 10:00:00'),
-(2, 6, '2023-10-01 10:00:00'),
-(3, 2, '2023-10-01 10:00:00'),
-(3, 3, '2023-10-01 10:00:00'),
-(4, 1, '2023-10-01 10:00:00'),
-(4, 2, '2023-10-01 10:00:00'),
-(5, 1, '2023-10-01 10:00:00'),
-(5, 2, '2023-10-01 10:00:00');
 
 -- --------------------------------------------------------
 
@@ -206,17 +130,6 @@ CREATE TABLE `ticket` (
   `fecha_actualizacion` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Volcado de datos para la tabla `ticket`
---
-
-INSERT INTO `ticket` (`id_ticket`, `id_usuario`, `numero_ticket`, `descripcion`, `prioridad`, `estado`, `id_rol`, `id_programa`, `id_tipologia`, `fecha_creacion`, `fecha_actualizacion`) VALUES
-(1, 4, 'A1B2C3', 'Necesito 5 cupos para el curso básico de formación.', 'Alta', 'Abierto', NULL, 1, 1, '2023-10-01 10:00:00', '2023-10-01 10:00:00'),
-(2, 4, 'D4E5F6', 'Consulta sobre la disponibilidad del curso avanzado.', 'Media', 'Progreso', NULL, 2, 2, '2023-10-02 11:00:00', '2023-10-02 11:00:00'),
-(3, 4, 'J1K2L3', 'Solicito información adicional sobre la capacitación en construcción.', 'Baja', 'Resuelto', NULL, 1, 1, '2023-10-04 09:00:00', '2023-10-04 09:00:00'),
-(4, 4, 'M4N5O6', 'Requerimiento para curso de seguridad en alturas.', 'Alta', 'Cerrado', NULL, 2, 2, '2023-10-05 14:00:00', '2023-10-05 14:00:00'),
-(5, 1, 'G7H8I9', 'Certificación para el curso de trabajo en alturas.', 'Alta', 'Pendiente', NULL, 3, 3, '2023-10-03 12:00:00', '2023-10-03 12:00:00');
-
 -- --------------------------------------------------------
 
 --
@@ -231,21 +144,6 @@ CREATE TABLE `tipologias` (
   `estado_tipologia` enum('Activo','Inactivo') NOT NULL DEFAULT 'Activo',
   `fecha_creacion` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `tipologias`
---
-
-INSERT INTO `tipologias` (`id_tipologia`, `tipologia`, `subtipologia`, `id_rol`, `estado_tipologia`, `fecha_creacion`) VALUES
-(1, 'Formacion', 'Solicitud de cupos', 1, 'Activo', '2023-10-01 10:00:00'),
-(2, 'Consultas', 'Apertura de programa', 1, 'Activo', '2023-10-01 10:00:00'),
-(3, 'Certificacion', 'Competencias laborales', 1, 'Activo', '2023-10-01 10:00:00'),
-(4, 'PQRSF', 'Peticiones', 1, 'Activo', '2023-10-01 10:00:00'),
-(5, 'PQRSF', 'Quejas', 1, 'Activo', '2023-10-01 10:00:00'),
-(6, 'PQRSF', 'Reclamos', 1, 'Activo', '2023-10-01 10:00:00'),
-(7, 'PQRSF', 'Sugerencias', 1, 'Activo', '2023-10-01 10:00:00'),
-(8, 'PQRSF', 'Felicitaciones', 1, 'Activo', '2023-10-01 10:00:00'),
-(9, 'Otro', 'Otras solicitudes', 1, 'Activo', '2023-10-01 10:00:00');
 
 -- --------------------------------------------------------
 
@@ -268,17 +166,6 @@ CREATE TABLE `usuarios` (
   `estado` enum('Activo','Inactivo') NOT NULL DEFAULT 'Activo',
   `fecha_registro` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `usuarios`
---
-
-INSERT INTO `usuarios` (`id_usuario`, `tipo_documento`, `documento`, `nombre`, `apellido`, `email`, `telefono`, `departamento`, `municipio`, `password`, `id_rol`, `estado`, `fecha_registro`) VALUES
-(1, 'CC', '1053810807', 'Jonathan Robinson', 'Aristizabal Soto', 'administrador@example.com', '3187542709', 'Caldas', 'Manizales', 'Administrador1234', 1, 'Activo', '2024-09-07 12:00:00'),
-(2, 'CC', '87654321', 'María', 'Gómez', 'soporte@example.com', '3201234567', 'Antioquia', 'Medellín', 'Soporte1234', 2, 'Activo', '2023-10-01 10:00:00'),
-(3, 'CC', '11223344', 'Carlos', 'López', 'supervisor@example.com', '3109876543', 'Bogotá', 'Bogotá', 'Supervisor1234', 3, 'Activo', '2023-10-02 11:00:00'),
-(4, 'CC', '55667788', 'Luis', 'Rodríguez', 'operador@example.com', '3112233445', 'Santander', 'Bucaramanga', 'Operador1234', 4, 'Activo', '2023-10-04 09:00:00'),
-(5, 'CC', '99887766', 'Ana', 'Martínez', 'usuario@example.com', '3156789012', 'Valle', 'Cali', 'Usuario1234', 5, 'Activo', '2024-09-11 08:00:00');
 
 --
 -- Índices para tablas volcadas
@@ -344,8 +231,8 @@ ALTER TABLE `ticket`
 --
 ALTER TABLE `tipologias`
   ADD PRIMARY KEY (`id_tipologia`),
-  ADD KEY `id_rol` (`id_rol`),
-  ADD KEY `subtipologia` (`subtipologia`);
+  ADD KEY `subtipologia` (`subtipologia`),
+  ADD KEY `id_rol` (`id_rol`);
 
 --
 -- Indices de la tabla `usuarios`
@@ -354,9 +241,9 @@ ALTER TABLE `usuarios`
   ADD PRIMARY KEY (`id_usuario`),
   ADD UNIQUE KEY `documento` (`documento`),
   ADD UNIQUE KEY `email` (`email`),
-  ADD KEY `id_rol` (`id_rol`),
   ADD KEY `email_2` (`email`),
-  ADD KEY `documento_2` (`documento`);
+  ADD KEY `documento_2` (`documento`),
+  ADD KEY `id_rol` (`id_rol`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
@@ -366,49 +253,49 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `comentario`
 --
 ALTER TABLE `comentario`
-  MODIFY `id_comentario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_comentario` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `evento`
 --
 ALTER TABLE `evento`
-  MODIFY `id_evento` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_evento` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `permisos`
 --
 ALTER TABLE `permisos`
-  MODIFY `id_permiso` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_permiso` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `programas`
 --
 ALTER TABLE `programas`
-  MODIFY `id_programa` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_programa` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `roles`
 --
 ALTER TABLE `roles`
-  MODIFY `id_rol` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_rol` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `ticket`
 --
 ALTER TABLE `ticket`
-  MODIFY `id_ticket` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_ticket` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `tipologias`
 --
 ALTER TABLE `tipologias`
-  MODIFY `id_tipologia` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id_tipologia` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Restricciones para tablas volcadas
@@ -466,3 +353,570 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+
+
+
+
+otras tablas
+
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 27-05-2025 a las 18:42:09
+-- Versión del servidor: 10.4.32-MariaDB
+-- Versión de PHP: 8.2.12
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Base de datos: `nki`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `alineaciones`
+--
+
+CREATE TABLE `alineaciones` (
+  `id` int(11) NOT NULL,
+  `partido_id` int(11) DEFAULT NULL,
+  `jugador_id` int(11) DEFAULT NULL,
+  `titular` tinyint(1) DEFAULT NULL,
+  `suplente` tinyint(1) DEFAULT NULL,
+  `minuto_ingreso` int(11) DEFAULT NULL,
+  `minuto_salida` int(11) DEFAULT NULL,
+  `goles` int(11) DEFAULT 0,
+  `asistencias` int(11) DEFAULT 0,
+  `tarjetas_amarillas` int(11) DEFAULT 0,
+  `tarjetas_rojas` int(11) DEFAULT 0,
+  `sustitucion` tinyint(1) DEFAULT 0,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
+  `created_by` int(11) DEFAULT NULL,
+  `updated_by` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Alineaciones de partidos';
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `archivos`
+--
+
+CREATE TABLE `archivos` (
+  `id` int(11) NOT NULL,
+  `entidad` varchar(50) NOT NULL,
+  `entidad_id` int(11) NOT NULL,
+  `nombre_original` varchar(255) DEFAULT NULL,
+  `ruta` varchar(255) NOT NULL,
+  `tipo` varchar(50) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `created_by` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Archivos y documentos relacionados a entidades';
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `asistencia`
+--
+
+CREATE TABLE `asistencia` (
+  `id` int(11) NOT NULL,
+  `entrenamiento_id` int(11) DEFAULT NULL,
+  `jugador_id` int(11) DEFAULT NULL,
+  `presente` tinyint(1) DEFAULT NULL,
+  `motivo_ausencia` text DEFAULT NULL,
+  `hora_entrada` time DEFAULT NULL,
+  `hora_salida` time DEFAULT NULL,
+  `comentarios` text DEFAULT NULL,
+  `tipo_ausencia` varchar(20) DEFAULT 'No justificada',
+  `entrenador_id` int(11) DEFAULT NULL,
+  `tutor_id` int(11) DEFAULT NULL,
+  `fecha_respuesta` timestamp NULL DEFAULT NULL,
+  `respuesta_tutor` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `created_by` int(11) DEFAULT NULL,
+  `updated_by` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Asistencia de jugadores a entrenamientos';
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `categorias`
+--
+
+CREATE TABLE `categorias` (
+  `id` int(11) NOT NULL,
+  `nombre` varchar(50) NOT NULL,
+  `descripcion` text DEFAULT NULL,
+  `edad_minima` int(11) NOT NULL CHECK (`edad_minima` >= 0),
+  `edad_maxima` int(11) NOT NULL CHECK (`edad_maxima` >= `edad_minima`),
+  `estado_id` int(11) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `created_by` int(11) DEFAULT NULL,
+  `updated_by` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Categorías de jugadores';
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `configuracion_pagos`
+--
+
+CREATE TABLE `configuracion_pagos` (
+  `id` int(11) NOT NULL,
+  `metodo_pago_id` int(11) DEFAULT NULL,
+  `api_key` varchar(255) DEFAULT NULL,
+  `estado_id` int(11) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
+  `created_by` int(11) DEFAULT NULL,
+  `updated_by` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Configuración de pasarelas de pago';
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `entrenadores`
+--
+
+CREATE TABLE `entrenadores` (
+  `id` int(11) NOT NULL,
+  `nombre` varchar(100) NOT NULL,
+  `apellido` varchar(100) NOT NULL,
+  `tipo_documento_id` int(11) NOT NULL,
+  `documento` varchar(50) NOT NULL,
+  `genero_id` int(11) NOT NULL,
+  `telefono` varchar(20) DEFAULT NULL,
+  `correo` varchar(100) DEFAULT NULL,
+  `direccion` text DEFAULT NULL,
+  `fecha_nacimiento` date DEFAULT NULL,
+  `fecha_ingreso` date DEFAULT NULL,
+  `especialidad` varchar(50) DEFAULT NULL,
+  `experiencia` text DEFAULT NULL,
+  `nivel_educativo` varchar(100) DEFAULT NULL,
+  `estado_id` int(11) DEFAULT NULL,
+  `foto` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `created_by` int(11) DEFAULT NULL,
+  `updated_by` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Entrenadores del club';
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `entrenamientos`
+--
+
+CREATE TABLE `entrenamientos` (
+  `id` int(11) NOT NULL,
+  `fecha` date DEFAULT NULL,
+  `hora` time DEFAULT NULL,
+  `objetivo` text DEFAULT NULL,
+  `duracion` int(11) DEFAULT NULL CHECK (`duracion` > 0),
+  `ubicacion` varchar(100) DEFAULT NULL,
+  `descripcion` text DEFAULT NULL,
+  `intensidad` varchar(20) DEFAULT NULL,
+  `tipo_entrenamiento` varchar(20) DEFAULT NULL,
+  `estado_id` int(11) DEFAULT NULL,
+  `entrenador_id` int(11) DEFAULT NULL,
+  `notas` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `created_by` int(11) DEFAULT NULL,
+  `updated_by` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Entrenamientos programados';
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `estadisticas`
+--
+
+CREATE TABLE `estadisticas` (
+  `id` int(11) NOT NULL,
+  `partido_id` int(11) DEFAULT NULL,
+  `jugador_id` int(11) DEFAULT NULL,
+  `goles` int(11) DEFAULT 0,
+  `asistencias` int(11) DEFAULT 0,
+  `minutos_jugados` int(11) DEFAULT NULL,
+  `tarjetas_amarillas` int(11) DEFAULT 0,
+  `tarjetas_rojas` int(11) DEFAULT 0,
+  `tiros` int(11) DEFAULT 0,
+  `tiros_al_arco` int(11) DEFAULT 0,
+  `pases` int(11) DEFAULT 0,
+  `posesion` decimal(5,2) DEFAULT 0.00,
+  `tiros_de_esquina` int(11) DEFAULT 0,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
+  `created_by` int(11) DEFAULT NULL,
+  `updated_by` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Estadísticas individuales por partido';
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `estados`
+--
+
+CREATE TABLE `estados` (
+  `id` int(11) NOT NULL,
+  `nombre` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Catálogo de estados generales';
+
+--
+-- Volcado de datos para la tabla `estados`
+--
+
+INSERT INTO `estados` (`id`, `nombre`) VALUES
+(1, 'Activo'),
+(5, 'Cancelado'),
+(6, 'Completado'),
+(7, 'Fallido'),
+(2, 'Inactivo'),
+(10, 'No disponible'),
+(4, 'Pagado'),
+(3, 'Pendiente'),
+(8, 'Reembolsado'),
+(9, 'Vencido');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `eventos`
+--
+
+CREATE TABLE `eventos` (
+  `id` int(11) NOT NULL,
+  `nombre` varchar(100) DEFAULT NULL,
+  `descripcion` text DEFAULT NULL,
+  `fecha` date DEFAULT NULL,
+  `hora` time DEFAULT NULL,
+  `lugar` varchar(255) DEFAULT NULL,
+  `organizador_id` int(11) DEFAULT NULL,
+  `estado_id` int(11) DEFAULT NULL,
+  `tipo` varchar(20) DEFAULT 'Otro',
+  `capacidad` int(11) DEFAULT NULL CHECK (`capacidad` >= 0),
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Eventos del club';
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `generos`
+--
+
+CREATE TABLE `generos` (
+  `id` int(11) NOT NULL,
+  `nombre` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Catálogo de géneros';
+
+--
+-- Volcado de datos para la tabla `generos`
+--
+
+INSERT INTO `generos` (`id`, `nombre`) VALUES
+(2, 'Femenino'),
+(1, 'Masculino'),
+(3, 'Otro');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `historial_acciones`
+--
+
+CREATE TABLE `historial_acciones` (
+  `id` int(11) NOT NULL,
+  `usuario_id` int(11) DEFAULT NULL,
+  `tabla` varchar(50) DEFAULT NULL,
+  `accion` varchar(50) DEFAULT NULL,
+  `descripcion` text DEFAULT NULL,
+  `fecha` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Auditoría de acciones de usuarios';
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `historial_pagos`
+--
+
+CREATE TABLE `historial_pagos` (
+  `id` int(11) NOT NULL,
+  `pago_id` int(11) DEFAULT NULL,
+  `fecha_actualizacion` timestamp NOT NULL DEFAULT current_timestamp(),
+  `monto` decimal(10,2) DEFAULT NULL,
+  `estado_id` int(11) DEFAULT NULL,
+  `created_by` int(11) DEFAULT NULL,
+  `updated_by` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Historial de cambios en pagos';
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `indumentaria`
+--
+
+CREATE TABLE `indumentaria` (
+  `id` int(11) NOT NULL,
+  `tipo` varchar(50) DEFAULT 'Otro',
+  `descripcion` varchar(100) DEFAULT NULL,
+  `talla` varchar(10) DEFAULT 'S',
+  `cantidad` int(11) DEFAULT NULL CHECK (`cantidad` >= 0),
+  `fecha_ingreso` date DEFAULT NULL,
+  `estado_id` int(11) DEFAULT NULL,
+  `tipo_uniforme` varchar(20) DEFAULT 'Entrenamiento',
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
+  `created_by` int(11) DEFAULT NULL,
+  `updated_by` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Catálogo de indumentaria';
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `inventario`
+--
+
+CREATE TABLE `inventario` (
+  `id` int(11) NOT NULL,
+  `item_id` int(11) DEFAULT NULL,
+  `cantidad` int(11) DEFAULT NULL CHECK (`cantidad` >= 0),
+  `fecha_ingreso` date DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
+  `created_by` int(11) DEFAULT NULL,
+  `updated_by` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Movimientos de inventario';
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `jugadores`
+--
+
+CREATE TABLE `jugadores` (
+  `id` int(11) NOT NULL,
+  `nombre` varchar(100) NOT NULL,
+  `apellido` varchar(100) NOT NULL,
+  `tipo_documento_id` int(11) NOT NULL,
+  `documento` varchar(50) NOT NULL,
+  `genero_id` int(11) NOT NULL,
+  `fecha_nacimiento` date NOT NULL,
+  `fecha_ingreso` date NOT NULL,
+  `posicion_id` int(11) NOT NULL,
+  `dorsal` int(11) NOT NULL CHECK (`dorsal` > 0),
+  `estatura` decimal(5,2) DEFAULT NULL,
+  `peso` decimal(5,2) DEFAULT NULL,
+  `categoria_id` int(11) NOT NULL,
+  `estado_id` int(11) DEFAULT NULL,
+  `foto` varchar(255) DEFAULT NULL,
+  `habilidades` text DEFAULT NULL,
+  `telefono` varchar(20) DEFAULT NULL,
+  `direccion` varchar(255) DEFAULT NULL,
+  `tutor_id` int(11) DEFAULT NULL,
+  `pie_habil` varchar(20) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `created_by` int(11) DEFAULT NULL,
+  `updated_by` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Jugadores del club';
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `metodos_pago`
+--
+
+CREATE TABLE `metodos_pago` (
+  `id` int(11) NOT NULL,
+  `nombre` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Catálogo de métodos de pago';
+
+--
+-- Volcado de datos para la tabla `metodos_pago`
+--
+
+INSERT INTO `metodos_pago` (`id`, `nombre`) VALUES
+(1, 'Efectivo'),
+(6, 'Otro'),
+(4, 'PayPal'),
+(5, 'PSE'),
+(3, 'Tarjeta'),
+(2, 'Transferencia');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `noticias`
+--
+
+CREATE TABLE `noticias` (
+  `id` int(11) NOT NULL,
+  `titulo` varchar(100) DEFAULT NULL,
+  `contenido` text DEFAULT NULL,
+  `fecha_publicacion` timestamp NOT NULL DEFAULT current_timestamp(),
+  `autor_id` int(11) DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Noticias y comunicados';
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `notificaciones`
+--
+
+CREATE TABLE `notificaciones` (
+  `id` int(11) NOT NULL,
+  `asistencia_id` int(11) DEFAULT NULL,
+  `tutor_id` int(11) DEFAULT NULL,
+  `mensaje` text DEFAULT NULL,
+  `fecha_envio` timestamp NOT NULL DEFAULT current_timestamp(),
+  `leido` tinyint(1) DEFAULT 0,
+  `fecha_lectura` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `created_by` int(11) DEFAULT NULL,
+  `updated_by` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Notificaciones enviadas a tutores';
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `pagos`
+--
+
+CREATE TABLE `pagos` (
+  `id` int(11) NOT NULL,
+  `tutor_id` int(11) NOT NULL,
+  `jugador_id` int(11) NOT NULL,
+  `monto` decimal(10,2) NOT NULL CHECK (`monto` >= 0),
+  `metodo_pago_id` int(11) NOT NULL,
+  `referencia` varchar(50) DEFAULT NULL,
+  `fecha_pago` datetime DEFAULT current_timestamp(),
+  `estado_id` int(11) DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
+  `created_by` int(11) DEFAULT NULL,
+  `updated_by` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Pagos realizados por tutores';
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `partidos`
+--
+
+CREATE TABLE `partidos` (
+  `id` int(11) NOT NULL,
+  `fecha` date DEFAULT NULL,
+  `hora` time DEFAULT NULL,
+  `resultado_local` int(11) DEFAULT NULL,
+  `resultado_visitante` int(11) DEFAULT NULL,
+  `lugar` varchar(255) DEFAULT NULL,
+  `descripcion` text DEFAULT NULL,
+  `estado_id` int(11) DEFAULT NULL,
+  `equipo_local` varchar(100) DEFAULT NULL,
+  `equipo_visitante` varchar(100) DEFAULT NULL,
+  `goles_local` int(11) DEFAULT NULL,
+  `goles_visitante` int(11) DEFAULT NULL,
+  `video_url` varchar(255) DEFAULT NULL,
+  `comentarios` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `created_by` int(11) DEFAULT NULL,
+  `updated_by` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Partidos jugados o programados';
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `pedidos`
+--
+
+CREATE TABLE `pedidos` (
+  `id` int(11) NOT NULL,
+  `usuario_id` int(11) DEFAULT NULL,
+  `producto_id` int(11) DEFAULT NULL,
+  `servicio_id` int(11) DEFAULT NULL,
+  `cantidad` int(11) DEFAULT NULL CHECK (`cantidad` > 0),
+  `total` decimal(10,2) DEFAULT NULL CHECK (`total` >= 0),
+  `estado_id` int(11) DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
+  `created_by` int(11) DEFAULT NULL,
+  `updated_by` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Pedidos de productos o servicios';
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `permisos`
+--
+
+CREATE TABLE `permisos` (
+  `id` int(11) NOT NULL,
+  `nombre` varchar(100) NOT NULL,
+  `descripcion` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
+  `created_by` int(11) DEFAULT NULL,
+  `updated_by` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Catálogo de permisos del sistema';
+
+--
+-- Volcado de datos para la tabla `permisos`
+--
+
+INSERT INTO `permisos` (`id`, `nombre`, `descripcion`, `created_at`, `updated_at`, `created_by`, `updated_by`) VALUES
+(1, 'Ver Usuarios', 'Puede ver usuarios', '2025-05-27 16:41:11', NULL, NULL, NULL),
+(2, 'Crear Usuarios', 'Puede crear usuarios', '2025-05-27 16:41:11', NULL, NULL, NULL),
+(3, 'Editar Usuarios', 'Puede editar usuarios', '2025-05-27 16:41:11', NULL, NULL, NULL),
+(4, 'Eliminar Usuarios', 'Puede eliminar usuarios', '2025-05-27 16:41:11', NULL, NULL, NULL),
+(5, 'Ver Entrenamientos', 'Puede ver entrenamientos', '2025-05-27 16:41:11', NULL, NULL, NULL),
+(6, 'Crear Entrenamientos', 'Puede crear entrenamientos', '2025-05-27 16:41:11', NULL, NULL, NULL),
+(7, 'Editar Entrenamientos', 'Puede editar entrenamientos', '2025-05-27 16:41:11', NULL, NULL, NULL),
+(8, 'Eliminar Entrenamientos', 'Puede eliminar entrenamientos', '2025-05-27 16:41:11', NULL, NULL, NULL),
+(9, 'Ver Partidos', 'Puede ver partidos', '2025-05-27 16:41:11', NULL, NULL, NULL),
+(10, 'Crear Partidos', 'Puede crear partidos', '2025-05-27 16:41:11', NULL, NULL, NULL),
+(11, 'Editar Partidos', 'Puede editar partidos', '2025-05-27 16:41:11', NULL, NULL, NULL),
+(12, 'Eliminar Partidos', 'Puede eliminar partidos', '2025-05-27 16:41:11', NULL, NULL, NULL),
+(13, 'Ver Estadisticas', 'Puede ver estadísticas', '2025-05-27 16:41:11', NULL, NULL, NULL),
+(14, 'Crear Estadisticas', 'Puede crear estadísticas', '2025-05-27 16:41:11', NULL, NULL, NULL),
+(15, 'Editar Estadisticas', 'Puede editar estadísticas', '2025-05-27 16:41:11', NULL, NULL, NULL),
+(16, 'Eliminar Estadisticas', 'Puede eliminar estadísticas', '2025-05-27 16:41:11', NULL, NULL, NULL),
+(17, 'Ver Pagos', 'Puede ver pagos', '2025-05-27 16:41:11', NULL, NULL, NULL),
+(18, 'Crear Pagos', 'Puede crear pagos', '2025-05-27 16:41:11', NULL, NULL, NULL),
+(19, 'Editar Pagos', 'Puede editar pagos', '2025-05-27 16:41:11', NULL, NULL, NULL),
+(20, 'Eliminar Pagos', 'Puede eliminar pagos', '2025-05-27 16:41:11', NULL, NULL, NULL);
+
+-- --------------------------------------------------------
