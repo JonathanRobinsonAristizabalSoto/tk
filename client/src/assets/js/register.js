@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const formData = new FormData(form);
 
     try {
-      const response = await fetch("/TicketProApp/server/php/server_register.php", {
+      const response = await fetch("/TicketProApp/server/controller/RegisterController.php", {
         method: "POST",
         body: formData,
       });

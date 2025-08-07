@@ -1,9 +1,18 @@
 <?php
-
-header('Access-Control-Allow-Origin: *');
+// Ajusta el origen a tu frontend real
+header('Access-Control-Allow-Origin: http://localhost'); // Cambia por tu dominio si es diferente
+header('Access-Control-Allow-Credentials: true');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
 header('Content-Type: application/json');
+
+// Manejo de preflight OPTIONS
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
+
+session_start();
 
 try {
     require_once("../config/config.php");
@@ -19,7 +28,6 @@ try {
         $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($usuario && password_verify($password, $usuario['password'])) {
-            session_start();
             $_SESSION['documento'] = $usuario['documento'];
             $_SESSION['nombre'] = $usuario['nombre'];
             $_SESSION['id_rol'] = $usuario['id_rol'];

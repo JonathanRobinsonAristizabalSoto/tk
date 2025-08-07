@@ -6,9 +6,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const formData = new FormData(loginForm);
 
-        fetch("/TicketProApp/server/php/server_login.php", {
+        fetch("/TicketProApp/server/controller/LoginController.php", {
             method: "POST",
             body: formData,
+            credentials: "include" // <-- Esto permite enviar/recibir cookies de sesión
         })
             .then((response) => {
                 if (!response.ok) {
@@ -18,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
             })
             .then((data) => {
                 if (data.success) {
-                    window.location.href = "/TicketProApp/server/php/dashboard.php"; // Redirigir al dashboard protegido
+                    window.location.href = "/TicketProApp/client/src/pages/dashboard.html";
                 } else {
                     alert(data.message);
                 }

@@ -1,10 +1,17 @@
+/**
+ * Inicializa el módulo de usuarios: renderiza vistas, maneja eventos de CRUD, paginación y mensajes.
+ * @param {string} vista - Vista inicial ('tabla' o 'tarjetas')
+ * @param {string} filtro - Filtro de búsqueda (opcional)
+ */
 function iniciarModuloUsuarios(vista, filtro = "") {
+  // Determina la vista a mostrar (tabla o tarjetas)
   if (!vista) {
     vista = localStorage.getItem('usuariosVista') || 'tabla';
   } else {
     localStorage.setItem('usuariosVista', vista);
   }
 
+  // Referencias a elementos del DOM
   const modalCrear = document.getElementById("modalCrear");
   const modalEditar = document.getElementById("modalEditar");
   const modalVer = document.getElementById("modalVer");
@@ -22,22 +29,28 @@ function iniciarModuloUsuarios(vista, filtro = "") {
   const mensajeTexto = document.getElementById("mensajeTexto");
   const mensajeBox = document.getElementById("mensajeBox");
   const paginador = document.getElementById("usuariosPaginador");
+
+  // Variables de estado
   let currentIdToEstado = null;
   let usuarioActualEditar = null;
   let estadoUsuarioAccion = "inhabilitar";
   let estadoUsuarioActual = "Activo";
   let usuariosData = [];
   let paginaActual = 1;
-  let usuariosPorPagina = 10; // tabla: 10 por página
+  let usuariosPorPagina = 10; // Por defecto, 10 usuarios por página en tabla
 
+  // --- EVENTOS DE MODALES ---
+  // Abrir modal de crear usuario
   if (abrirModalCrear) {
     abrirModalCrear.addEventListener("click", () => {
       modalCrear.classList.remove("hidden");
       dataFormCrear.reset();
       document.getElementById("id_usuarioCrear").value = "";
+      // Carga departamentos y municipios si la función existe
       if (typeof cargarDepartamentosMunicipios === "function") {
         cargarDepartamentosMunicipios("departamentoCrear", "municipioCrear");
       }
+      // Actualiza municipios al cambiar departamento
       const departamentoSelect = document.getElementById("departamentoCrear");
       if (departamentoSelect) {
         departamentoSelect.onchange = function () {
@@ -47,6 +60,7 @@ function iniciarModuloUsuarios(vista, filtro = "") {
     });
   }
 
+  // Cerrar modales
   if (cerrarModalCrear) cerrarModalCrear.addEventListener("click", () => modalCrear.classList.add("hidden"));
   if (cerrarModalEditar) cerrarModalEditar.addEventListener("click", () => modalEditar.classList.add("hidden"));
   if (cerrarModalVer) cerrarModalVer.addEventListener("click", () => modalVer.classList.add("hidden"));
@@ -55,13 +69,18 @@ function iniciarModuloUsuarios(vista, filtro = "") {
     currentIdToEstado = null;
   });
 
+  // --- FORMULARIOS ---
+  // Crear usuario
   if (dataFormCrear) dataFormCrear.addEventListener("submit", enviarDatosCrear);
+  // Editar usuario
   if (dataFormEditar) dataFormEditar.addEventListener("submit", enviarDatosEditar);
 
+  // --- CAMBIAR ESTADO DE USUARIO ---
   if (btnEstadoUsuarioConfirmar) {
     btnEstadoUsuarioConfirmar.addEventListener("click", () => {
       if (currentIdToEstado) {
-        fetch("/TicketProApp/server/php/server_usuarios.php", {
+        // Obtiene el usuario actual para saber su estado
+        fetch("/TicketProApp/server/controller/UsuariosController.php", {
           method: "POST",
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
           body: `action=fetch&id_usuario=${currentIdToEstado}`,
@@ -69,7 +88,8 @@ function iniciarModuloUsuarios(vista, filtro = "") {
           .then((response) => response.json())
           .then((usuario) => {
             const nuevoEstado = usuario.estado === "Activo" ? "Inactivo" : "Activo";
-            fetch("/TicketProApp/server/php/server_usuarios.php", {
+            // Cambia el estado del usuario
+            fetch("/TicketProApp/server/controller/UsuariosController.php", {
               method: "POST",
               headers: { "Content-Type": "application/x-www-form-urlencoded" },
               body: `action=toggle_estado&id_usuario=${currentIdToEstado}&estado=${nuevoEstado}`,
@@ -91,6 +111,7 @@ function iniciarModuloUsuarios(vista, filtro = "") {
     });
   }
 
+  // Cierra los modales al hacer click fuera de ellos
   window.addEventListener("click", function (event) {
     if (event.target === modalCrear) modalCrear.classList.add("hidden");
     if (event.target === modalEditar) modalEditar.classList.add("hidden");
@@ -98,9 +119,14 @@ function iniciarModuloUsuarios(vista, filtro = "") {
     if (event.target === modalEstadoUsuario) modalEstadoUsuario.classList.add("hidden");
   });
 
+  // --- FUNCIONES DE ENVÍO DE FORMULARIOS ---
+  /**
+   * Envía los datos del formulario de creación de usuario al servidor.
+   */
   function enviarDatosCrear(event) {
     event.preventDefault();
     const formData = new FormData(dataFormCrear);
+    // Normaliza los nombres de los campos para el backend
     formData.append("action", "add");
     formData.append("departamento", formData.get("departamentoCrear"));
     formData.append("municipio", formData.get("municipioCrear"));
@@ -112,6 +138,7 @@ function iniciarModuloUsuarios(vista, filtro = "") {
     formData.append("telefono", formData.get("telefonoCrear"));
     formData.append("id_rol", formData.get("rolCrear"));
     formData.append("password", formData.get("passwordCrear"));
+    // Elimina los campos originales del formData
     formData.delete("departamentoCrear");
     formData.delete("municipioCrear");
     formData.delete("tipo_documentoCrear");
@@ -124,23 +151,25 @@ function iniciarModuloUsuarios(vista, filtro = "") {
     formData.delete("passwordCrear");
     formData.delete("confirmarPasswordCrear");
 
+    // Valida que las contraseñas coincidan
     if (formData.get("password") !== dataFormCrear.confirmarPasswordCrear.value) {
       mostrarMensaje("error", "Las contraseñas no coinciden.");
       return;
     }
 
+    // Guarda mensaje de éxito en localStorage para mostrarlo tras recarga
     const cambios = [
       `Usuario creado: ${formData.get("nombre")} ${formData.get("apellido")}`,
       `Email: ${formData.get("email")}`,
       `Rol: ${document.getElementById("rolCrear").selectedOptions[0].text}`
     ];
-
     localStorage.setItem("usuariosMensaje", JSON.stringify({
       tipo: "exito",
       mensaje: `¡Usuario creado exitosamente!\n${cambios.join('\n')}`
     }));
 
-    fetch("/TicketProApp/server/php/server_usuarios.php", {
+    // Envía los datos al backend
+    fetch("/TicketProApp/server/controller/UsuariosController.php", {
       method: "POST",
       body: formData,
     })
@@ -158,8 +187,12 @@ function iniciarModuloUsuarios(vista, filtro = "") {
       });
   }
 
+  /**
+   * Envía los datos del formulario de edición de usuario al servidor.
+   */
   function enviarDatosEditar(event) {
     event.preventDefault();
+    // Bloquea edición de tipo de documento y documento
     const tipoDocSelect = document.getElementById("tipo_documentoEditar");
     const documentoInput = document.getElementById("documentoEditar");
     if (tipoDocSelect) tipoDocSelect.setAttribute("disabled", "disabled");
@@ -178,6 +211,7 @@ function iniciarModuloUsuarios(vista, filtro = "") {
     formData.append("telefono", formData.get("telefonoEditar"));
     formData.append("id_rol", formData.get("rolEditar"));
 
+    // Adjunta foto si se seleccionó una nueva
     const fotoInput = document.getElementById("fotoEditar");
     if (fotoInput && fotoInput.files && fotoInput.files[0]) {
       formData.append("foto", fotoInput.files[0]);
@@ -185,6 +219,7 @@ function iniciarModuloUsuarios(vista, filtro = "") {
       formData.append("foto_actual", usuarioActualEditar.foto);
     }
 
+    // Elimina los campos originales del formData
     formData.delete("id_usuarioEditar");
     formData.delete("departamentoEditar");
     formData.delete("municipioEditar");
@@ -196,6 +231,7 @@ function iniciarModuloUsuarios(vista, filtro = "") {
     formData.delete("telefonoEditar");
     formData.delete("rolEditar");
 
+    // Detecta cambios para mostrar mensaje
     const cambios = [];
     if (usuarioActualEditar.nombre !== dataFormEditar.nombreEditar.value) cambios.push("Nombre");
     if (usuarioActualEditar.apellido !== dataFormEditar.apellidoEditar.value) cambios.push("Apellido");
@@ -226,7 +262,8 @@ function iniciarModuloUsuarios(vista, filtro = "") {
       mensaje: mensaje
     }));
 
-    fetch("/TicketProApp/server/php/server_usuarios.php", {
+    // Envía los datos al backend
+    fetch("/TicketProApp/server/controller/UsuariosController.php", {
       method: "POST",
       body: formData,
     })
@@ -234,7 +271,7 @@ function iniciarModuloUsuarios(vista, filtro = "") {
       .then((data) => {
         if (data.success) {
           modalEditar.classList.add("hidden");
-          // Solo actualiza la imagen del usuario editado si hay nueva foto
+          // Actualiza la imagen del usuario editado si hay nueva foto
           if (data.foto) {
             const img = document.querySelector(`img[data-user-id="${formData.get("id_usuario")}"]`);
             if (img) {
@@ -251,42 +288,12 @@ function iniciarModuloUsuarios(vista, filtro = "") {
       });
   }
 
-  function renderPaginador(totalUsuarios) {
-    if (!paginador) return;
-    paginador.innerHTML = "";
-    const totalPaginas = Math.ceil(totalUsuarios / usuariosPorPagina);
-    if (totalPaginas <= 1) return;
 
-    let html = `<nav class="flex justify-center items-center gap-1">`;
-    html += `<button class="px-2 py-1 rounded bg-color5 text-white text-xs font-semibold hover:bg-color6 transition ${paginaActual === 1 ? "opacity-50 cursor-not-allowed" : ""}" ${paginaActual === 1 ? "disabled" : ""} id="btnPagAnterior">Anterior</button>`;
-    for (let i = 1; i <= totalPaginas; i++) {
-      html += `<button class="px-2 py-1 rounded ${i === paginaActual ? "bg-color6 text-white" : "bg-white text-color5 border border-color5"} text-xs font-semibold hover:bg-color5 hover:text-white transition" data-pagina="${i}">${i}</button>`;
-    }
-    html += `<button class="px-2 py-1 rounded bg-color5 text-white text-xs font-semibold hover:bg-color6 transition ${paginaActual === totalPaginas ? "opacity-50 cursor-not-allowed" : ""}" ${paginaActual === totalPaginas ? "disabled" : ""} id="btnPagSiguiente">Siguiente</button>`;
-    html += `</nav>`;
-    paginador.innerHTML = html;
 
-    document.getElementById("btnPagAnterior")?.addEventListener("click", () => {
-      if (paginaActual > 1) {
-        paginaActual--;
-        renderUsuarios();
-      }
-    });
-    document.getElementById("btnPagSiguiente")?.addEventListener("click", () => {
-      const totalPaginas = Math.ceil(usuariosData.length / usuariosPorPagina);
-      if (paginaActual < totalPaginas) {
-        paginaActual++;
-        renderUsuarios();
-      }
-    });
-    paginador.querySelectorAll("button[data-pagina]").forEach(btn => {
-      btn.addEventListener("click", () => {
-        paginaActual = parseInt(btn.getAttribute("data-pagina"));
-        renderUsuarios();
-      });
-    });
-  }
-
+  // --- RENDER DE USUARIOS ---
+  /**
+   * Renderiza la lista de usuarios en la vista seleccionada (tabla o tarjetas).
+   */
   function renderUsuarios() {
     dataTable.innerHTML = "";
     const width = window.innerWidth;
@@ -302,7 +309,7 @@ function iniciarModuloUsuarios(vista, filtro = "") {
     tarjetasPorFila = 4;
     tarjetasPorPagina = 8;
 
-    // FILTRO: filtra usuariosData si hay filtro
+    // Filtra usuarios si hay filtro de búsqueda
     let usuariosFiltrados = usuariosData;
     if (filtro && filtro.length > 0) {
       usuariosFiltrados = usuariosData.filter(usuario =>
@@ -312,6 +319,7 @@ function iniciarModuloUsuarios(vista, filtro = "") {
       );
     }
 
+    // Vista tarjetas
     if (vistaActual === 'tarjetas') {
       usuariosPorPagina = tarjetasPorPagina;
       dataTable.className = `grid grid-cols-1 sm:grid-cols-4 gap-4`;
@@ -354,6 +362,8 @@ function iniciarModuloUsuarios(vista, filtro = "") {
         dataTable.appendChild(card);
       });
     } else if (vistaActual === 'tabla') {
+
+      // Vista tabla
       usuariosPorPagina = 10;
       dataTable.className = "overflow-x-auto";
       const inicio = (paginaActual - 1) * usuariosPorPagina;
@@ -361,7 +371,7 @@ function iniciarModuloUsuarios(vista, filtro = "") {
       const usuariosMostrar = usuariosFiltrados.slice(inicio, fin);
 
       let tabla = document.createElement("table");
-      tabla.className = "min-w-full bg-white border border-gray-200 rounded-lg shadow-sm text-xs sm:text-sm";
+      tabla.className = "min-w-full bg-white border border-gray-200 rounded-lg shadow-sm text-xs sm:text-xs";
       tabla.innerHTML = `
       <thead>
         <tr>
@@ -409,8 +419,53 @@ function iniciarModuloUsuarios(vista, filtro = "") {
     renderPaginador(usuariosFiltrados.length);
   }
 
+  // --- PAGINADOR ---
+  /**
+   * Renderiza el paginador de usuarios según la cantidad total.
+   */
+  function renderPaginador(totalUsuarios) {
+    if (!paginador) return;
+    paginador.innerHTML = "";
+    const totalPaginas = Math.ceil(totalUsuarios / usuariosPorPagina);
+    if (totalPaginas <= 1) return;
+
+    let html = `<nav class="flex justify-center items-center gap-1 m-1">`;
+    html += `<button class="px-2 py-1 rounded bg-color5 text-white text-xs font-semibold hover:bg-color6 transition ${paginaActual === 1 ? "opacity-50 cursor-not-allowed" : ""}" ${paginaActual === 1 ? "disabled" : ""} id="btnPagAnterior">Anterior</button>`;
+    for (let i = 1; i <= totalPaginas; i++) {
+      html += `<button class="px-2 py-1 rounded ${i === paginaActual ? "bg-color6 text-white" : "bg-white text-color5 border border-color5"} text-xs font-semibold hover:bg-color5 hover:text-white transition" data-pagina="${i}">${i}</button>`;
+    }
+    html += `<button class="px-2 py-1 rounded bg-color5 text-white text-xs font-semibold hover:bg-color6 transition ${paginaActual === totalPaginas ? "opacity-50 cursor-not-allowed" : ""}" ${paginaActual === totalPaginas ? "disabled" : ""} id="btnPagSiguiente">Siguiente</button>`;
+    html += `</nav>`;
+    paginador.innerHTML = html;
+
+    // Eventos de paginación
+    document.getElementById("btnPagAnterior")?.addEventListener("click", () => {
+      if (paginaActual > 1) {
+        paginaActual--;
+        renderUsuarios();
+      }
+    });
+    document.getElementById("btnPagSiguiente")?.addEventListener("click", () => {
+      const totalPaginas = Math.ceil(usuariosData.length / usuariosPorPagina);
+      if (paginaActual < totalPaginas) {
+        paginaActual++;
+        renderUsuarios();
+      }
+    });
+    paginador.querySelectorAll("button[data-pagina]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        paginaActual = parseInt(btn.getAttribute("data-pagina"));
+        renderUsuarios();
+      });
+    });
+  }
+
+  // --- CARGA DE USUARIOS DESDE EL SERVIDOR ---
+  /**
+   * Obtiene la lista de usuarios desde el backend y la renderiza.
+   */
   function fetchUsuarios() {
-    fetch("/TicketProApp/server/php/server_usuarios.php", {
+    fetch("/TicketProApp/server/controller/UsuariosController.php", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: "action=fetch",
@@ -421,6 +476,7 @@ function iniciarModuloUsuarios(vista, filtro = "") {
         paginaActual = 1;
         renderUsuarios();
 
+        // Muestra mensaje guardado en localStorage (por ejemplo, tras crear o editar)
         const mensajeGuardado = localStorage.getItem("usuariosMensaje");
         if (mensajeGuardado) {
           const obj = JSON.parse(mensajeGuardado);
@@ -433,8 +489,12 @@ function iniciarModuloUsuarios(vista, filtro = "") {
       });
   }
 
+  // --- FUNCIONES GLOBALES PARA ACCIONES DE USUARIO ---
+  /**
+   * Abre el modal de edición y carga los datos del usuario seleccionado.
+   */
   window.editUsuario = function (id) {
-    fetch("/TicketProApp/server/php/server_usuarios.php", {
+    fetch("/TicketProApp/server/controller/UsuariosController.php", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: `action=fetch&id_usuario=${id}`,
@@ -442,6 +502,7 @@ function iniciarModuloUsuarios(vista, filtro = "") {
       .then((response) => response.json())
       .then((usuario) => {
         usuarioActualEditar = usuario;
+        // Carga departamentos y municipios si la función existe
         if (typeof cargarDepartamentosMunicipios === "function") {
           cargarDepartamentosMunicipios(
             "departamentoEditar",
@@ -465,14 +526,9 @@ function iniciarModuloUsuarios(vista, filtro = "") {
         document.getElementById("apellidoEditar").value = usuario.apellido;
         document.getElementById("emailEditar").value = usuario.email;
         document.getElementById("telefonoEditar").value = usuario.telefono || "";
-        if (document.getElementById("tipo_documentoEditar")) {
-          document.getElementById("tipo_documentoEditar").value = usuario.tipo_documento;
-          document.getElementById("tipo_documentoEditar").setAttribute("disabled", "disabled");
-        }
-        if (document.getElementById("documentoEditar")) {
-          document.getElementById("documentoEditar").value = usuario.documento;
-          document.getElementById("documentoEditar").setAttribute("readonly", "readonly");
-        }
+
+        // Ya NO es necesario ocultar campos de tipo de documento y documento, porque ya no existen en el HTML
+
         if (document.getElementById("fotoEditar")) {
           document.getElementById("fotoEditar").value = "";
         }
@@ -489,9 +545,12 @@ function iniciarModuloUsuarios(vista, filtro = "") {
       });
   };
 
+  /**
+   * Abre el modal de confirmación para cambiar el estado del usuario (habilitar/inhabilitar).
+   */
   window.confirmEstadoUsuario = function (id) {
     currentIdToEstado = id;
-    fetch("/TicketProApp/server/php/server_usuarios.php", {
+    fetch("/TicketProApp/server/controller/UsuariosController.php", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: `action=fetch&id_usuario=${id}`,
@@ -520,8 +579,11 @@ function iniciarModuloUsuarios(vista, filtro = "") {
       });
   };
 
+  /**
+   * Abre el modal de visualización de usuario y muestra sus datos.
+   */
   window.viewUsuario = function (id, id_rol) {
-    fetch("/TicketProApp/server/php/server_usuarios.php", {
+    fetch("/TicketProApp/server/controller/UsuariosController.php", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: `action=fetch&id_usuario=${id}&id_rol=${id_rol}`,
@@ -538,6 +600,7 @@ function iniciarModuloUsuarios(vista, filtro = "") {
         document.getElementById("verMunicipio").textContent = usuario.municipio || "";
         modalVer.classList.remove("hidden");
       });
+    // Permite cerrar el modal desde los botones de cierre
     if (document.getElementById("closeModalVer")) {
       document.getElementById("closeModalVer").onclick = () => modalVer.classList.add("hidden");
     }
@@ -546,6 +609,10 @@ function iniciarModuloUsuarios(vista, filtro = "") {
     }
   };
 
+  // --- MENSAJES EMERGENTES ---
+  /**
+   * Muestra un mensaje emergente de éxito o error.
+   */
   function mostrarMensaje(tipo, mensaje) {
     mensajeTexto.innerHTML = mensaje;
     if (tipo === "exito") {
@@ -569,5 +636,7 @@ function iniciarModuloUsuarios(vista, filtro = "") {
     }, 2200);
   }
 
+  // --- INICIALIZACIÓN ---
+  // Carga los usuarios al iniciar el módulo
   fetchUsuarios();
 }

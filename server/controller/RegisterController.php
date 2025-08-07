@@ -1,20 +1,24 @@
 <?php
-// Configuración de cabeceras para CORS
 header('Content-Type: application/json');
 require_once("../config/config.php");
 
+// Función para sanitizar datos
+function limpiar($valor) {
+    return htmlspecialchars(trim($valor), ENT_QUOTES, 'UTF-8');
+}
+
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    // Recibe los datos del formulario
-    $tipo_documento = $_POST["typeDocument"] ?? '';
-    $documento = $_POST["documento"] ?? '';
-    $nombre = $_POST["nombre"] ?? '';
-    $apellido = $_POST["apellido"] ?? '';
-    $email = $_POST["email"] ?? '';
-    $telefono = $_POST["telefono"] ?? '';
-    $departamento = $_POST["departamento"] ?? '';
-    $municipio = $_POST["municipio"] ?? '';
-    $password = $_POST["password"] ?? '';
-    $rol = $_POST["tipoUsuario"] ?? 5; // Por defecto usuario
+    // Recibe y sanitiza los datos del formulario
+    $tipo_documento = limpiar($_POST["typeDocument"] ?? '');
+    $documento      = limpiar($_POST["documento"] ?? '');
+    $nombre         = limpiar($_POST["nombre"] ?? '');
+    $apellido       = limpiar($_POST["apellido"] ?? '');
+    $email          = limpiar($_POST["email"] ?? '');
+    $telefono       = limpiar($_POST["telefono"] ?? '');
+    $departamento   = limpiar($_POST["departamento"] ?? '');
+    $municipio      = limpiar($_POST["municipio"] ?? '');
+    $password       = $_POST["password"] ?? ''; // No sanitizar la contraseña
+    $rol            = intval($_POST["tipoUsuario"] ?? 5); // Por defecto usuario
 
     // Imagen de perfil por defecto
     $foto = 'assets/images/perfiles/default.png';
@@ -25,6 +29,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         !$email || !$telefono || !$departamento || !$municipio || !$password
     ) {
         echo json_encode(["success" => false, "message" => "Todos los campos son obligatorios."]);
+        exit;
+    }
+
+    // Validación de email
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        echo json_encode(["success" => false, "message" => "El correo electrónico no es válido."]);
+        exit;
+    }
+
+    // Validación de longitud de contraseña
+    if (strlen($password) < 6) {
+        echo json_encode(["success" => false, "message" => "La contraseña debe tener al menos 6 caracteres."]);
         exit;
     }
 
