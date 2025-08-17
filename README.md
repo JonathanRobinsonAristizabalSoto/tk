@@ -50,7 +50,10 @@ client/                                      # Carpeta Frontend: archivos y recu
 ├── package-lock.json                        # Archivo de bloqueo de dependencias npm, garantiza la instalación exacta de versiones usadas en el frontend
 ├── package.json                             # Configuración del proyecto frontend y scripts de npm
 ├── postcss.config.js                        # Configuración de PostCSS para procesar y optimizar CSS
-├── tailwind.config.js                       # Configuración personalizada de Tailwind CSS 
+├── tailwind.config.js                       # Configuración personalizada de Tailwind CSS
+db/                                          # Archivos de base de datos
+├── ticketpro.sql                            # Script SQL para crear y poblar la base de datos
+└── bdticketpro.txt                          # Script alternativo o respaldo para la estructura y datos de la base de datos 
 server/                                      # Carpeta backend: lógica de negocio, controladores PHP, configuración y base de datos 
 ├── config/                                  # Configuración del backend 
 │   └── config.php                           # Archivo de configuración de la base de datos y cabeceras CORS 
@@ -60,9 +63,6 @@ server/                                      # Carpeta backend: lógica de negoc
 │   ├── LogoutController.php                 # Controlador para cerrar la sesión del usuario
 │   ├── RegisterController.php               # Controlador para registro de nuevos usuarios
 │   └── UsuariosController.php               # Controlador para gestión de usuarios: crear, actualizar, consultar y cambiar estado
-├── db/                                      # Archivos de base de datos
-│   ├── ticketpro.sql                        # Script SQL para crear y poblar la base de datos
-│   └── bdticketpro.txt                      # Script alternativo o respaldo para la estructura y datos de la base de datos
 ├── model/                                   # Modelos del backend en PHP (acceso y lógica de datos)
 │   ├── Usuario.php                          # Modelo para la entidad Usuario
 ├── .gitignore                               # Archivo para excluir archivos y carpetas del control de versiones Git
