@@ -8,10 +8,12 @@ USE ticketpro;
 -- Estructura de tabla para la tabla roles
 CREATE TABLE roles (
     id_rol INT PRIMARY KEY AUTO_INCREMENT,
-    nombre ENUM('Administrador', 'Supervisor', 'Soporte', 'Operador', 'Usuario') NOT NULL UNIQUE,
+    nombre ENUM('Administrador', 'Soporte', 'Usuario') NOT NULL UNIQUE,
     descripcion TEXT,
     estado ENUM('Activo', 'Inactivo') NOT NULL DEFAULT 'Activo',
-    fecha_creacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+    eliminado BOOLEAN NOT NULL DEFAULT 0,
+    fecha_creacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    fecha_actualizacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- Estructura de tabla para la tabla permisos
@@ -19,7 +21,9 @@ CREATE TABLE permisos (
     id_permiso INT PRIMARY KEY AUTO_INCREMENT,
     nombre VARCHAR(255) NOT NULL UNIQUE,
     descripcion TEXT,
-    fecha_creacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+    eliminado BOOLEAN NOT NULL DEFAULT 0,
+    fecha_creacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    fecha_actualizacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- Estructura de tabla intermedia rolpermisos
@@ -27,6 +31,7 @@ CREATE TABLE rolpermisos (
     id_rol INT,
     id_permiso INT,
     fecha_asignacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    eliminado BOOLEAN NOT NULL DEFAULT 0,
     PRIMARY KEY (id_rol, id_permiso),
     FOREIGN KEY (id_rol) REFERENCES roles(id_rol),
     FOREIGN KEY (id_permiso) REFERENCES permisos(id_permiso)
@@ -35,7 +40,7 @@ CREATE TABLE rolpermisos (
 -- Estructura de tabla para la tabla usuarios
 CREATE TABLE usuarios (
     id_usuario INT AUTO_INCREMENT PRIMARY KEY,
-    tipo_documento VARCHAR(255) NOT NULL,
+    tipo_documento ENUM('CC', 'TI', 'CE', 'PS', 'DNI', 'NIT') NOT NULL,
     documento VARCHAR(255) NOT NULL UNIQUE,
     nombre VARCHAR(255) NOT NULL,
     apellido VARCHAR(255) NOT NULL,
@@ -47,7 +52,11 @@ CREATE TABLE usuarios (
     password VARCHAR(255) NOT NULL,
     id_rol INT NOT NULL,
     estado ENUM('Activo', 'Inactivo') NOT NULL DEFAULT 'Activo',
+    email_verificado BOOLEAN NOT NULL DEFAULT 0,
+    token_verificacion VARCHAR(255),
+    eliminado BOOLEAN NOT NULL DEFAULT 0,
     fecha_registro DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    fecha_actualizacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX (email),
     INDEX (documento),
     FOREIGN KEY (id_rol) REFERENCES roles(id_rol)
@@ -60,7 +69,9 @@ CREATE TABLE tipologias (
     subtipologia VARCHAR(255) NOT NULL,
     id_rol INT,
     estado_tipologia ENUM('Activo', 'Inactivo') NOT NULL DEFAULT 'Activo',
+    eliminado BOOLEAN NOT NULL DEFAULT 0,
     fecha_creacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    fecha_actualizacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX (subtipologia),
     FOREIGN KEY (id_rol) REFERENCES roles(id_rol)
 );
@@ -79,7 +90,9 @@ CREATE TABLE programas (
     modalidad VARCHAR(255) NOT NULL,
     id_tipologia INT NOT NULL,
     estado ENUM('Activo', 'Inactivo') NOT NULL DEFAULT 'Activo',
+    eliminado BOOLEAN NOT NULL DEFAULT 0,
     fecha_creacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    fecha_actualizacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (id_tipologia) REFERENCES tipologias(id_tipologia)
 );
 
@@ -94,6 +107,7 @@ CREATE TABLE ticket (
     id_rol INT,
     id_programa INT,
     id_tipologia INT,
+    eliminado BOOLEAN NOT NULL DEFAULT 0,
     fecha_creacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     fecha_actualizacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario),
@@ -102,13 +116,30 @@ CREATE TABLE ticket (
     FOREIGN KEY (id_tipologia) REFERENCES tipologias(id_tipologia)
 );
 
+-- Historial de estados de ticket
+CREATE TABLE ticket_estado_historial (
+    id_historial INT AUTO_INCREMENT PRIMARY KEY,
+    id_ticket INT NOT NULL,
+    estado_anterior ENUM('Abierto', 'Progreso', 'Pendiente', 'Resuelto', 'Cerrado'),
+    estado_nuevo ENUM('Abierto', 'Progreso', 'Pendiente', 'Resuelto', 'Cerrado'),
+    fecha_cambio DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    id_usuario INT,
+    eliminado BOOLEAN NOT NULL DEFAULT 0,
+    FOREIGN KEY (id_ticket) REFERENCES ticket(id_ticket),
+    FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario)
+);
+
 -- Estructura de tabla para la tabla comentario
 CREATE TABLE comentario (
     id_comentario INT PRIMARY KEY AUTO_INCREMENT,
     id_ticket INT,
     id_usuario INT,
     comentario TEXT NOT NULL,
+    prioridad ENUM('Alta', 'Media', 'Baja'),
+    categoria VARCHAR(255),
+    eliminado BOOLEAN NOT NULL DEFAULT 0,
     fecha_creacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    fecha_actualizacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX (id_ticket),
     INDEX (id_usuario),
     FOREIGN KEY (id_ticket) REFERENCES ticket(id_ticket),
@@ -121,19 +152,91 @@ CREATE TABLE evento (
     id_ticket INT,
     accion VARCHAR(255) NOT NULL,
     id_usuario INT,
+    categoria VARCHAR(255),
+    eliminado BOOLEAN NOT NULL DEFAULT 0,
     fecha_evento DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    fecha_actualizacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX (id_ticket),
     INDEX (id_usuario),
     FOREIGN KEY (id_ticket) REFERENCES ticket(id_ticket),
     FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario)
 );
 
+-- Tabla de adjuntos
+CREATE TABLE adjuntos (
+    id_adjunto INT PRIMARY KEY AUTO_INCREMENT,
+    id_ticket INT,
+    id_comentario INT,
+    nombre_archivo VARCHAR(255) NOT NULL,
+    ruta_archivo VARCHAR(255) NOT NULL,
+    tipo_archivo VARCHAR(50),
+    eliminado BOOLEAN NOT NULL DEFAULT 0,
+    fecha_subida DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_ticket) REFERENCES ticket(id_ticket),
+    FOREIGN KEY (id_comentario) REFERENCES comentario(id_comentario)
+);
+
+-- Tabla de notificaciones
+CREATE TABLE notificaciones (
+    id_notificacion INT PRIMARY KEY AUTO_INCREMENT,
+    id_usuario INT NOT NULL,
+    mensaje TEXT NOT NULL,
+    leido BOOLEAN NOT NULL DEFAULT 0,
+    eliminado BOOLEAN NOT NULL DEFAULT 0,
+    fecha_creacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    fecha_actualizacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario)
+);
+
+-- Tabla de auditoría
+CREATE TABLE auditoria (
+    id_auditoria INT PRIMARY KEY AUTO_INCREMENT,
+    id_usuario INT,
+    accion VARCHAR(255) NOT NULL,
+    descripcion TEXT,
+    eliminado BOOLEAN NOT NULL DEFAULT 0,
+    fecha DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario)
+);
+
+-- Tabla de restablecimiento de contraseña
+CREATE TABLE password_reset (
+    id_reset INT PRIMARY KEY AUTO_INCREMENT,
+    id_usuario INT NOT NULL,
+    token VARCHAR(255) NOT NULL,
+    expiracion DATETIME NOT NULL,
+    usado BOOLEAN NOT NULL DEFAULT 0,
+    eliminado BOOLEAN NOT NULL DEFAULT 0,
+    fecha_creacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario)
+);
+
+-- Tabla de asignación de tickets a responsables
+CREATE TABLE ticket_asignacion (
+    id_asignacion INT PRIMARY KEY AUTO_INCREMENT,
+    id_ticket INT NOT NULL,
+    id_usuario INT NOT NULL,
+    fecha_asignacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    eliminado BOOLEAN NOT NULL DEFAULT 0,
+    FOREIGN KEY (id_ticket) REFERENCES ticket(id_ticket),
+    FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario)
+);
+
+-- Tabla de logs de acceso
+CREATE TABLE acceso_log (
+    id_log INT PRIMARY KEY AUTO_INCREMENT,
+    id_usuario INT NOT NULL,
+    tipo VARCHAR(20) NOT NULL, -- 'login' o 'logout'
+    fecha DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    ip VARCHAR(45),
+    eliminado BOOLEAN NOT NULL DEFAULT 0,
+    FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario)
+);
+
 -- Volcado de datos para la tabla roles
 INSERT INTO roles (nombre, descripcion, estado, fecha_creacion) VALUES
 ('Administrador', 'Acceso completo al sistema.', 'Activo', '2023-10-01 10:00:00'),
-('Supervisor', 'Supervisa el trabajo del soporte.', 'Activo', '2023-10-01 10:00:00'),
 ('Soporte', 'Resuelve tickets y asistencia técnica.', 'Activo', '2023-10-01 10:00:00'),
-('Operador', 'Crea y gestiona tickets básicos.', 'Activo', '2023-10-01 10:00:00'),
 ('Usuario', 'Crea tickets y realiza solicitudes.', 'Activo', '2023-10-01 10:00:00');
 
 -- Volcado de datos para la tabla permisos
@@ -153,13 +256,7 @@ INSERT INTO rolpermisos (id_rol, id_permiso, fecha_asignacion) VALUES
 (1, 4, '2023-10-01 10:00:00'), -- Administrador: Eliminar
 (1, 5, '2023-10-01 10:00:00'), -- Administrador: Activar
 (1, 6, '2023-10-01 10:00:00'), -- Administrador: Desactivar
-(2, 2, '2023-10-01 10:00:00'), -- Supervisor: Ver
-(2, 3, '2023-10-01 10:00:00'), -- Supervisor: Editar
-(2, 5, '2023-10-01 10:00:00'), -- Supervisor: Activar
-(2, 6, '2023-10-01 10:00:00'), -- Supervisor: Desactivar
-(3, 2, '2023-10-01 10:00:00'), -- Soporte: Ver
-(3, 3, '2023-10-01 10:00:00'), -- Soporte: Editar
-(4, 1, '2023-10-01 10:00:00'), -- Operador: Crear
-(4, 2, '2023-10-01 10:00:00'), -- Operador: Ver
-(5, 1, '2023-10-01 10:00:00'), -- Usuario: Crear
-(5, 2, '2023-10-01 10:00:00'); -- Usuario: Ver
+(2, 2, '2023-10-01 10:00:00'), -- Soporte: Ver
+(2, 3, '2023-10-01 10:00:00'), -- Soporte: Editar
+(3, 1, '2023-10-01 10:00:00'), -- Usuario: Crear
+(3, 2, '2023-10-01 10:00:00'); -- Usuario: Ver
