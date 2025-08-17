@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - TicketPro+</title>
     <!-- Enlace a los estilos CSS -->
-    <link rel="stylesheet" href="/TicketProApp/client/src/assets/css/styles.css">
+    <link rel="stylesheet" href="/tk/client/src/assets/css/styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <!-- Enlace a Font Awesome -->
@@ -17,7 +17,7 @@
         href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
         rel="stylesheet">
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-    <script src="/TicketProApp/client/src/assets/js/jquery.min.js"></script>
+    <script src="/tk/client/src/assets/js/jquery.min.js"></script>
 </head>
 
 <body class="flex flex-col min-h-screen font-poppins bg-color1">
@@ -31,14 +31,14 @@
         </button>
         <!-- Logo centrado -->
         <div class="flex-1 flex justify-center items-center">
-            <img src="/TicketProApp/client/src/assets/images/logoH.png" alt="Logo TicketPro+" class="p-2 w-28">
+            <img src="/tk/client/src/assets/images/logoH.png" alt="Logo TicketPro+" class="p-2 w-28">
         </div>
         <!-- Saludo, foto y menú (web) -->
         <div class="hidden md:flex items-center space-x-4 absolute right-4 top-1/2 -translate-y-1/2 z-50">
             <span class="text-white font-base text-base">Hola, <span id="username">Usuario</span></span>
             <div
                 class="w-10 h-10 rounded-full overflow-hidden border-2 border-white flex items-center justify-center bg-gray-200">
-                <img src="/TicketProApp/client/src/assets/images/perfiles/default.png" alt="Foto de perfil"
+                <img src="/tk/client/src/assets/images/perfiles/default.png" alt="Foto de perfil"
                     id="profile-img-web" class="object-cover w-full h-full">
             </div>
             <div class="flex items-center cursor-pointer p-2" id="header-menu-button">
@@ -55,7 +55,7 @@
                         id="username-mobile">Usuario</span></span>
                 <div
                     class="w-12 h-12 rounded-full overflow-hidden border-2 border-gray-300 flex items-center justify-center bg-gray-200 mb-2">
-                    <img src="/TicketProApp/client/src/assets/images/perfiles/default.png" alt="Foto de perfil"
+                    <img src="/tk/client/src/assets/images/perfiles/default.png" alt="Foto de perfil"
                         id="profile-img-mobile" class="object-cover w-full h-full">
                 </div>
             </div>
@@ -67,7 +67,7 @@
                 class="block px-4 py-1 text-gray-700 hover:text-color6 font-semibold text-sm w-full text-left">
                 <i class="fas fa-cog mr-2"></i> Configuraciones
             </a>
-            <form action="/TicketProApp/server/controller/LogoutController.php" method="post" class="w-full">
+            <form action="/tk/server/controller/LogoutController.php" method="post" class="w-full">
                 <button type="submit" name="logout"
                     class="block px-4 py-1 text-gray-700 hover:text-color6 font-semibold text-sm w-full text-left">
                     <i class="fas fa-sign-out-alt mr-2"></i> Logout
@@ -185,7 +185,7 @@
         <form id="formPerfilUsuario" enctype="multipart/form-data" autocomplete="off">
             <div class="flex flex-col items-center mb-2">
                 <!-- Imagen de perfil -->
-                <img id="perfilFoto" src="/TicketProApp/client/src/assets/images/perfiles/default.png"
+                <img id="perfilFoto" src="/tk/client/src/assets/images/perfiles/default.png"
                     alt="Foto de perfil"
                     class="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-4 border-color5 mb-2" />
                 <input type="file" id="inputPerfilFoto" name="foto" accept="image/*"
@@ -471,7 +471,7 @@
                 class="absolute top-4 right-4 text-color7 text-xl sm:text-2xl font-bold hover:text-red-700">&times;</button>
 
             <div class="flex flex-col items-center mb-6">
-                <img id="verFoto" src="/TicketProApp/client/src/assets/images/perfiles/default.png" alt="Foto de perfil"
+                <img id="verFoto" src="/tk/client/src/assets/images/perfiles/default.png" alt="Foto de perfil"
                     class="w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover border-4 border-color5 mb-4" />
                 <h2 class="font-bold text-color4 text-center mb-1 text-base sm:text-base md:text-base lg:text-lg"
                     id="verNombreCompleto"></h2>
@@ -563,12 +563,12 @@
         </div>
     </div>
 
-    <script src="/TicketProApp/client/src/assets/js/loadPartials.js"></script>
-    <script src="/TicketProApp/client/src/assets/js/menu.js"></script>
-    <script src="/TicketProApp/client/src/assets/js/usuarios.js"></script>
-    <script src="/TicketProApp/client/src/assets/js/dashboard.js"></script>
-    <script src="/TicketProApp/client/src/assets/js/profile.js"></script>
-    <script src="/TicketProApp/client/src/assets/js/departamentos.js"></script>
+    <script src="/tk/client/src/assets/js/loadPartials.js"></script>
+    <script src="/tk/client/src/assets/js/menu.js"></script>
+    <script src="/tk/client/src/assets/js/usuarios.js"></script>
+    <script src="/tk/client/src/assets/js/dashboard.js"></script>
+    <script src="/tk/client/src/assets/js/profile.js"></script>
+    <script src="/tk/client/src/assets/js/departamentos.js"></script>
 </body>
 
 </html>

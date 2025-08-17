@@ -80,7 +80,7 @@ function iniciarModuloUsuarios(vista, filtro = "") {
     btnEstadoUsuarioConfirmar.addEventListener("click", () => {
       if (currentIdToEstado) {
         // Obtiene el usuario actual para saber su estado
-        fetch("/TicketProApp/server/controller/UsuariosController.php", {
+        fetch("/tk/server/controller/UsuariosController.php", {
           method: "POST",
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
           body: `action=fetch&id_usuario=${currentIdToEstado}`,
@@ -89,7 +89,7 @@ function iniciarModuloUsuarios(vista, filtro = "") {
           .then((usuario) => {
             const nuevoEstado = usuario.estado === "Activo" ? "Inactivo" : "Activo";
             // Cambia el estado del usuario
-            fetch("/TicketProApp/server/controller/UsuariosController.php", {
+            fetch("/tk/server/controller/UsuariosController.php", {
               method: "POST",
               headers: { "Content-Type": "application/x-www-form-urlencoded" },
               body: `action=toggle_estado&id_usuario=${currentIdToEstado}&estado=${nuevoEstado}`,
@@ -169,7 +169,7 @@ function iniciarModuloUsuarios(vista, filtro = "") {
     }));
 
     // Envía los datos al backend
-    fetch("/TicketProApp/server/controller/UsuariosController.php", {
+    fetch("/tk/server/controller/UsuariosController.php", {
       method: "POST",
       body: formData,
     })
@@ -263,7 +263,7 @@ function iniciarModuloUsuarios(vista, filtro = "") {
     }));
 
     // Envía los datos al backend
-    fetch("/TicketProApp/server/controller/UsuariosController.php", {
+    fetch("/tk/server/controller/UsuariosController.php", {
       method: "POST",
       body: formData,
     })
@@ -275,7 +275,7 @@ function iniciarModuloUsuarios(vista, filtro = "") {
           if (data.foto) {
             const img = document.querySelector(`img[data-user-id="${formData.get("id_usuario")}"]`);
             if (img) {
-              img.src = "/TicketProApp/client/src/" + data.foto + "?t=" + new Date().getTime();
+              img.src = "/tk/client/src/" + data.foto + "?t=" + new Date().getTime();
             }
           }
           window.location.reload();
@@ -340,7 +340,7 @@ function iniciarModuloUsuarios(vista, filtro = "") {
         card.className = `bg-white border border-gray-200 rounded-lg shadow-sm p-3 flex flex-col items-center ${textoSize}`;
         card.innerHTML = `
         <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-full overflow-hidden border-2 border-color5 mb-2">
-          <img src="/TicketProApp/client/src/${usuario.foto || 'assets/images/perfiles/default.png'}" alt="Foto de perfil" class="object-cover w-full h-full" data-user-id="${usuario.id_usuario}">
+          <img src="/tk/client/src/${usuario.foto || 'assets/images/perfiles/default.png'}" alt="Foto de perfil" class="object-cover w-full h-full" data-user-id="${usuario.id_usuario}">
         </div>
         <div class="${nombreSize} text-color4 text-center">${usuario.nombre} ${usuario.apellido}</div>
         <div class="${rolSize} text-color6 text-center"> ${usuario.rol_nombre || "Usuario"}</div>
@@ -465,7 +465,7 @@ function iniciarModuloUsuarios(vista, filtro = "") {
    * Obtiene la lista de usuarios desde el backend y la renderiza.
    */
   function fetchUsuarios() {
-    fetch("/TicketProApp/server/controller/UsuariosController.php", {
+    fetch("/tk/server/controller/UsuariosController.php", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: "action=fetch",
@@ -494,7 +494,7 @@ function iniciarModuloUsuarios(vista, filtro = "") {
    * Abre el modal de edición y carga los datos del usuario seleccionado.
    */
   window.editUsuario = function (id) {
-    fetch("/TicketProApp/server/controller/UsuariosController.php", {
+    fetch("/tk/server/controller/UsuariosController.php", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: `action=fetch&id_usuario=${id}`,
@@ -550,7 +550,7 @@ function iniciarModuloUsuarios(vista, filtro = "") {
    */
   window.confirmEstadoUsuario = function (id) {
     currentIdToEstado = id;
-    fetch("/TicketProApp/server/controller/UsuariosController.php", {
+    fetch("/tk/server/controller/UsuariosController.php", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: `action=fetch&id_usuario=${id}`,
@@ -583,14 +583,14 @@ function iniciarModuloUsuarios(vista, filtro = "") {
    * Abre el modal de visualización de usuario y muestra sus datos.
    */
   window.viewUsuario = function (id, id_rol) {
-    fetch("/TicketProApp/server/controller/UsuariosController.php", {
+    fetch("/tk/server/controller/UsuariosController.php", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: `action=fetch&id_usuario=${id}&id_rol=${id_rol}`,
     })
       .then((response) => response.json())
       .then((usuario) => {
-        document.getElementById("verFoto").src = "/TicketProApp/client/src/" + (usuario.foto || "assets/images/perfiles/default.png");
+        document.getElementById("verFoto").src = "/tk/client/src/" + (usuario.foto || "assets/images/perfiles/default.png");
         document.getElementById("verNombreCompleto").textContent = `${usuario.nombre} ${usuario.apellido}`;
         document.getElementById("verEmail").textContent = usuario.email;
         document.getElementById("verRol").textContent = usuario.rol_nombre || "Usuario";

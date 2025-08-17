@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     // Verificar autenticación antes de mostrar el dashboard
-    fetch('/TicketProApp/server/controller/DashboardController.php', {
+    fetch('/tk/server/controller/DashboardController.php', {
         credentials: "include",
         headers: {
             "Accept": "application/json"
@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(data => {
             // Solo verifica success, no autenticado (el backend no lo envía)
             if (!data.success) {
-                window.location.href = "/TicketProApp/client/index.html";
+                window.location.href = "/tl/client/index.html";
                 return;
             }
 
@@ -105,7 +105,7 @@ document.addEventListener("DOMContentLoaded", function () {
             });
 
             // Cargar nombre y foto del usuario en el header (petición al backend)
-            fetch('/TicketProApp/server/controller/DashboardController.php', {
+            fetch('/tk/server/controller/DashboardController.php', {
                 credentials: "include",
                 headers: {
                     "Accept": "application/json"
@@ -120,8 +120,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     if (data.success && data.foto) {
                         const imgWeb = document.getElementById('profile-img-web');
                         const imgMobile = document.getElementById('profile-img-mobile');
-                        if (imgWeb) imgWeb.src = '/TicketProApp/client/src/' + data.foto;
-                        if (imgMobile) imgMobile.src = '/TicketProApp/client/src/' + data.foto;
+                        if (imgWeb) imgWeb.src = '/tk/client/src/' + data.foto;
+                        if (imgMobile) imgMobile.src = '/tk/client/src/' + data.foto;
                     }
                 });
 

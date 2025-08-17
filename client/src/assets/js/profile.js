@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", function () {
         perfilTelefono.textContent = usuario.telefono || "";
         perfilDepartamento.textContent = usuario.departamento || "";
         perfilMunicipio.textContent = usuario.municipio || "";
-        perfilFoto.src = usuario.foto && usuario.foto.startsWith("/") ? usuario.foto : "/TicketProApp/client/src/" + (usuario.foto || "assets/images/perfiles/default.png");
+        perfilFoto.src = usuario.foto && usuario.foto.startsWith("/") ? usuario.foto : "/tk/client/src/" + (usuario.foto || "assets/images/perfiles/default.png");
 
         // Oculta inputs, muestra spans
         inputPerfilNombreCompleto.classList.add("hidden");
@@ -148,7 +148,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (btnPerfil) {
         btnPerfil.addEventListener("click", function (e) {
             e.preventDefault();
-            fetch("/TicketProApp/server/controller/DashboardController.php", {
+            fetch("/tk/server/controller/DashboardController.php", {
                 credentials: "include",
                 headers: {
                     "Accept": "application/json"
@@ -201,7 +201,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
             formData.append("documento", usuarioActual.documento);
 
-            fetch("/TicketProApp/server/controller/UsuariosController.php", {
+            fetch("/tk/server/controller/UsuariosController.php", {
                 method: "POST",
                 body: formData
             })
@@ -209,7 +209,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 .then(resp => {
                     if (resp.success) {
                         // Recargar datos del usuario
-                        fetch("/TicketProApp/server/controller/DashboardController.php", {
+                        fetch("/tk/server/controller/DashboardController.php", {
                             credentials: "include",
                             headers: {
                                 "Accept": "application/json"
