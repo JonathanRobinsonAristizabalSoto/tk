@@ -9,6 +9,11 @@ try {
 
     switch ($action) {
         case 'add':
+            // Solo hay 3 roles: Administrador (1), Soporte (2), Usuario (3)
+            $id_rol = intval($_POST['id_rol'] ?? 3);
+            if (!in_array($id_rol, [1, 2, 3])) {
+                $id_rol = 3; // Por defecto Usuario
+            }
             $data = [
                 'tipo_documento' => $_POST['tipo_documento'] ?? '',
                 'documento' => $_POST['documento'] ?? '',
@@ -19,8 +24,11 @@ try {
                 'departamento' => $_POST['departamento'] ?? '',
                 'municipio' => $_POST['municipio'] ?? '',
                 'password' => password_hash($_POST['password'] ?? '', PASSWORD_DEFAULT),
-                'id_rol' => $_POST['id_rol'] ?? 5,
-                'foto' => $_POST['foto'] ?? 'assets/images/perfiles/default.png'
+                'id_rol' => $id_rol,
+                'foto' => $_POST['foto'] ?? 'assets/images/perfiles/default.png',
+                'estado' => 'Activo',
+                'email_verificado' => 0,
+                'token_verificacion' => null
             ];
 
             // Validación básica
@@ -45,6 +53,10 @@ try {
 
         case 'update':
             $id_usuario = $_POST['id_usuario'];
+            $id_rol = intval($_POST['id_rol'] ?? 3);
+            if (!in_array($id_rol, [1, 2, 3])) {
+                $id_rol = 3;
+            }
             $data = [
                 'nombre' => $_POST['nombre'] ?? '',
                 'apellido' => $_POST['apellido'] ?? '',
@@ -52,8 +64,11 @@ try {
                 'telefono' => $_POST['telefono'] ?? '',
                 'departamento' => $_POST['departamento'] ?? '',
                 'municipio' => $_POST['municipio'] ?? '',
-                'id_rol' => $_POST['id_rol'] ?? 5,
-                'foto' => $_POST['foto_actual'] ?? 'assets/images/perfiles/default.png'
+                'id_rol' => $id_rol,
+                'foto' => $_POST['foto_actual'] ?? 'assets/images/perfiles/default.png',
+                'estado' => $_POST['estado'] ?? 'Activo',
+                'email_verificado' => $_POST['email_verificado'] ?? 0,
+                'token_verificacion' => $_POST['token_verificacion'] ?? null
             ];
 
             // Manejo de imagen
@@ -115,6 +130,52 @@ try {
                 echo json_encode(['success' => false, 'message' => 'Error al cambiar estado.']);
             }
             break;
+
+        case 'eliminar_logico':
+            $id_usuario = $_POST['id_usuario'];
+            if ($usuarioModel->eliminarLogico($id_usuario)) {
+                echo json_encode(['success' => true, 'message' => 'Usuario marcado como eliminado.']);
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Error al eliminar usuario.']);
+            }
+            break;
+
+        case 'verificar_correo':
+            $id_usuario = $_POST['id_usuario'];
+            if ($usuarioModel->verificarCorreo($id_usuario)) {
+                echo json_encode(['success' => true, 'message' => 'Correo verificado con éxito.']);
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Error al verificar correo.']);
+            }
+            break;
+
+        case 'actualizar_token_verificacion':
+            $id_usuario = $_POST['id_usuario'];
+            $token = $_POST['token_verificacion'] ?? null;
+            if ($usuarioModel->actualizarTokenVerificacion($id_usuario, $token)) {
+                echo json_encode(['success' => true, 'message' => 'Token actualizado con éxito.']);
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Error al actualizar token.']);
+            }
+            break;
+
+        case 'get_catalogos':
+            // Obtener roles activos
+            $roles = $pdo->query("SELECT id_rol, nombre FROM roles WHERE estado = 'Activo' AND eliminado = 0")->fetchAll(PDO::FETCH_ASSOC);
+            // Obtener tipos de documento desde el ENUM
+            $tipos = [];
+            $stmt = $pdo->query("SHOW COLUMNS FROM usuarios LIKE 'tipo_documento'");
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($row) {
+                preg_match("/^enum\((.*)\)$/", $row['Type'], $matches);
+                if (isset($matches[1])) {
+                    $tipos = array_map(function($v) {
+                        return trim($v, "'");
+                    }, explode(',', $matches[1]));
+                }
+            }
+            echo json_encode(['roles' => $roles, 'tipos_documento' => $tipos]);
+            exit;
 
         case 'fetch':
             if (isset($_POST['id_usuario'])) {

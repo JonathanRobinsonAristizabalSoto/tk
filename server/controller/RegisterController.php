@@ -1,6 +1,7 @@
 <?php
 header('Content-Type: application/json');
 require_once("../config/config.php");
+require_once("../model/Usuario.php");
 
 // Función para sanitizar datos
 function limpiar($valor) {
@@ -18,7 +19,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $departamento   = limpiar($_POST["departamento"] ?? '');
     $municipio      = limpiar($_POST["municipio"] ?? '');
     $password       = $_POST["password"] ?? ''; // No sanitizar la contraseña
-    $rol            = intval($_POST["tipoUsuario"] ?? 5); // Por defecto usuario
+
+    // Solo hay 3 roles: Administrador (1), Soporte (2), Usuario (3)
+    $rol            = intval($_POST["tipoUsuario"] ?? 3); // Por defecto Usuario
 
     // Imagen de perfil por defecto
     $foto = 'assets/images/perfiles/default.png';
@@ -44,10 +47,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         exit;
     }
 
+    // Modelo usuario
+    $usuarioModel = new Usuario($pdo);
+
     // Verifica si el email o documento ya existen
-    $stmt = $pdo->prepare("SELECT id_usuario FROM usuarios WHERE email = ? OR documento = ?");
-    $stmt->execute([$email, $documento]);
-    if ($stmt->fetch()) {
+    if ($usuarioModel->existeEmailODocumento($email, $documento)) {
         echo json_encode(["success" => false, "message" => "El correo o documento ya está registrado."]);
         exit;
     }
@@ -55,12 +59,26 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Hash de la contraseña
     $passwordHash = password_hash($password, PASSWORD_DEFAULT);
 
-    // Inserta el usuario con la imagen por defecto
-    $stmt = $pdo->prepare("INSERT INTO usuarios (tipo_documento, documento, nombre, apellido, email, telefono, departamento, municipio, foto, password, id_rol) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    $ok = $stmt->execute([
-        $tipo_documento, $documento, $nombre, $apellido, $email,
-        $telefono, $departamento, $municipio, $foto, $passwordHash, $rol
-    ]);
+    // Datos para el modelo
+    $data = [
+        'tipo_documento' => $tipo_documento,
+        'documento' => $documento,
+        'nombre' => $nombre,
+        'apellido' => $apellido,
+        'email' => $email,
+        'telefono' => $telefono,
+        'departamento' => $departamento,
+        'municipio' => $municipio,
+        'foto' => $foto,
+        'password' => $passwordHash,
+        'id_rol' => $rol,
+        'estado' => 'Activo',
+        'email_verificado' => 0,
+        'token_verificacion' => null
+    ];
+
+    // Inserta el usuario usando el modelo
+    $ok = $usuarioModel->crear($data);
 
     if ($ok) {
         echo json_encode(["success" => true, "message" => "Registro exitoso"]);
