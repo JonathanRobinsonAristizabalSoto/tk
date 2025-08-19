@@ -260,3 +260,17 @@ INSERT INTO rolpermisos (id_rol, id_permiso, fecha_asignacion) VALUES
 (2, 3, '2023-10-01 10:00:00'), -- Soporte: Editar
 (3, 1, '2023-10-01 10:00:00'), -- Usuario: Crear
 (3, 2, '2023-10-01 10:00:00'); -- Usuario: Ver
+
+INSERT INTO usuarios (
+    tipo_documento, documento, nombre, apellido, email, telefono, departamento, municipio, foto, password, id_rol, estado, email_verificado, eliminado
+) VALUES
+('CC', '1053810807', 'Jonathan', 'Aristizabal', 'admin@gmail.com', '3187542709', 'Caldas', 'Manizales', 'assets/images/perfiles/default.png', '$2y$10$JA/SnuV36zc/jbkkH4Wwje7F1HGm5Le7ZQd0AMzrTGk3lBPaUIzLi', 1, 'Activo', 1, 0), -- Administrador
+('CC', '1000000002', 'Jaime', 'Rodriguez', 'jaime@email.com', '3100000002', 'Caldas', 'Manizales', 'assets/images/perfiles/default.png', '$2y$10$JA/SnuV36zc/jbkkH4Wwje7F1HGm5Le7ZQd0AMzrTGk3lBPaUIzLi', 2, 'Activo', 1, 0), -- Soporte
+('CC', '1000000003', 'Gloria', 'Corrales', 'gloria@email.com', '3100000003', 'Caldas', 'Manizales', 'assets/images/perfiles/default.png', '$2y$10$JA/SnuV36zc/jbkkH4Wwje7F1HGm5Le7ZQd0AMzrTGk3lBPaUIzLi', 2, 'Activo', 1, 0), -- Soporte
+('CC', '1000000004', 'Sofía', 'Ramírez', 'sofia@email.com', '3100000004', 'Caldas', 'Manizales', 'assets/images/perfiles/default.png', '$2y$10$JA/SnuV36zc/jbkkH4Wwje7F1HGm5Le7ZQd0AMzrTGk3lBPaUIzLi', 3, 'Activo', 1, 0),
+('CC', '1000000005', 'Carlos', 'López', 'carlos@email.com', '3100000005', 'Caldas', 'Manizales', 'assets/images/perfiles/default.png', '$2y$10$JA/SnuV36zc/jbkkH4Wwje7F1HGm5Le7ZQd0AMzrTGk3lBPaUIzLi', 3, 'Activo', 1, 0),
+('CC', '1000000006', 'María', 'Torres', 'maria@email.com', '3100000006', 'Caldas', 'Manizales', 'assets/images/perfiles/default.png', '$2y$10$JA/SnuV36zc/jbkkH4Wwje7F1HGm5Le7ZQd0AMzrTGk3lBPaUIzLi', 3, 'Activo', 1, 0),
+('CC', '1000000007', 'Pedro', 'García', 'pedro@email.com', '3100000007', 'Caldas', 'Manizales', 'assets/images/perfiles/default.png', '$2y$10$JA/SnuV36zc/jbkkH4Wwje7F1HGm5Le7ZQd0AMzrTGk3lBPaUIzLi', 3, 'Activo', 1, 0),
+('CC', '1000000008', 'Laura', 'Jiménez', 'laura@email.com', '3100000008', 'Caldas', 'Manizales', 'assets/images/perfiles/default.png', '$2y$10$JA/SnuV36zc/jbkkH4Wwje7F1HGm5Le7ZQd0AMzrTGk3lBPaUIzLi', 3, 'Activo', 1, 0),
+('CC', '1000000009', 'Diego', 'Castro', 'diego@email.com', '3100000009', 'Caldas', 'Manizales', 'assets/images/perfiles/default.png', '$2y$10$JA/SnuV36zc/jbkkH4Wwje7F1HGm5Le7ZQd0AMzrTGk3lBPaUIzLi', 3, 'Activo', 1, 0),
+('CC', '1000000010', 'Valentina', 'Mendoza', 'valentina@email.com', '3100000010', 'Caldas', 'Manizales', 'assets/images/perfiles/default.png', '$2y$10$JA/SnuV36zc/jbkkH4Wwje7F1HGm5Le7ZQd0AMzrTGk3lBPaUIzLi', 3, 'Activo', 1, 0);
