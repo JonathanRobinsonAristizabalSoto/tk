@@ -1,0 +1,24 @@
+<!-- Modal de error en registro -->
+<div id="modal-error-registro" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm hidden">
+  <div class="bg-white dark:bg-primary rounded-xl shadow-lg p-8 max-w-xs w-full text-center relative">
+    <!-- Icono de alerta animado (parpadeo) -->
+    <div class="flex items-center justify-center mb-3">
+      <svg class="w-12 h-12 text-red-600 dark:text-red-400 animate-pulse" viewBox="0 0 24 24" fill="none">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M12 7v4m0 4h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="12" cy="16" r="1" fill="currentColor"/>
+      </svg>
+    </div>
+    <h2 class="text-lg font-bold text-secondary dark:text-secondary mb-2">Error en el registro</h2>
+    <div id="error-registro-msg" class="text-white dark:text-white text-sm mb-2">
+      <!-- Aquí JS pondrá el mensaje de error personalizado -->
+    </div>
+    <div id="contenedor-reenviar-codigo" class="mb-4">
+      <!-- Aquí JS pondrá el botón de reenviar si corresponde -->
+    </div>
+    <p id="error-registro-msg-generico" class="text-gray-700 dark:text-white mb-4 text-sm"></p>
+    <button id="cerrar-modal-error-registro" class="bg-primary dark:bg-secondary text-white px-4 py-2 rounded hover:bg-secondary dark:hover:bg-gray-dark transition">
+      Cerrar
+    </button>
+  </div>
+</div>

@@ -19,7 +19,7 @@ if (
         echo json_encode([
             'success' => false,
             'message' => 'No autenticado',
-            'redirect' => '/TicketProApp/client/index.html'
+            'redirect' => '/tk/index.html'
         ]);
         exit;
     }
@@ -45,14 +45,14 @@ if (
             echo json_encode([
                 'success' => false,
                 'message' => 'Usuario no encontrado',
-                'redirect' => '/TicketProApp/client/index.html'
+                'redirect' => '/tk/index.html'
             ]);
         }
     } catch (PDOException $e) {
         echo json_encode([
             'success' => false,
             'message' => 'Error de conexión. Contacte al administrador.',
-            'redirect' => '/TicketProApp/client/index.html'
+            'redirect' => '/tk/index.html'
         ]);
     }
     exit;
@@ -60,8 +60,8 @@ if (
 
 // Si la petición es normal (HTML)
 if (!isset($_SESSION['documento']) || empty($_SESSION['documento'])) {
-    header("Location: /TicketProApp/client/index.html");
+    header("Location: /tk/index.html");
     exit;
 }
-readfile("../../client/src/pages/dashboard.html");
+readfile("../../src/pages/dashboard.html");
 ?>

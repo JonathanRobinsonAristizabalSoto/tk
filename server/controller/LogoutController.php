@@ -4,5 +4,5 @@ session_unset();
 session_destroy();
 
 // Redirigir al inicio
-header("Location: /TicketProApp/client/index.html");
+header("Location: /tk/index.html");
 exit;

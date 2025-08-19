@@ -75,7 +75,7 @@ try {
             if (isset($_FILES['foto']) && $_FILES['foto']['error'] == UPLOAD_ERR_OK) {
                 $ext = pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION);
                 $nombreArchivo = 'assets/images/perfiles/' . uniqid('perfil_') . '.' . $ext;
-                $rutaDestino = '../../client/src/' . $nombreArchivo;
+                $rutaDestino = '../../src/' . $nombreArchivo;
                 if (move_uploaded_file($_FILES['foto']['tmp_name'], $rutaDestino)) {
                     $data['foto'] = $nombreArchivo;
                 }
@@ -104,7 +104,7 @@ try {
             if (isset($_FILES['foto']) && $_FILES['foto']['error'] == UPLOAD_ERR_OK) {
                 $ext = pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION);
                 $nombreArchivo = 'assets/images/perfiles/' . uniqid('perfil_') . '.' . $ext;
-                $rutaDestino = '../../client/src/' . $nombreArchivo;
+                $rutaDestino = '../../src/' . $nombreArchivo;
                 if (move_uploaded_file($_FILES['foto']['tmp_name'], $rutaDestino)) {
                     $data['foto'] = $nombreArchivo;
                 }
