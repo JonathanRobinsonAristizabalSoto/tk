@@ -1,7 +1,6 @@
 import { getCatalogosUsuario } from "../api/api.js";
 
 document.addEventListener("DOMContentLoaded", function () {
-    // Diccionario para mostrar nombres bonitos de tipo de documento
     const nombresTipoDocumento = {
         CC: "Cédula de Ciudadanía",
         TI: "Tarjeta de Identidad",
@@ -11,12 +10,10 @@ document.addEventListener("DOMContentLoaded", function () {
         NIT: "NIT"
     };
 
-    // Cargar roles y tipos de documento dinámicamente usando el API centralizado
     async function cargarCatalogos() {
         try {
             const data = await getCatalogosUsuario();
 
-            // Tipos de documento
             const tipoDocSelect = document.getElementById("typeDocument");
             if (tipoDocSelect && Array.isArray(data.tipos_documento)) {
                 tipoDocSelect.innerHTML = "";
@@ -28,7 +25,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 });
             }
 
-            // Roles
             const rolSelect = document.getElementById("user-type");
             if (rolSelect && Array.isArray(data.roles)) {
                 rolSelect.innerHTML = "";
@@ -46,7 +42,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     cargarCatalogos();
 
-    // Lógica de login
     const loginForm = document.getElementById("loginForm");
     if (!loginForm) return;
 
@@ -79,10 +74,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-// Función para Google Identity Services
 function onGoogleSignIn(response) {
-    // Aquí puedes manejar el objeto de respuesta de Google
     console.log("Google Sign-In response:", response);
-    // Ejemplo: enviar el token al backend para validación
     // fetch("/tk/server/controller/LoginController.php", { ... })
 }

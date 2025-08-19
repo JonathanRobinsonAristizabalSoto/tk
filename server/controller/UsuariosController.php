@@ -24,6 +24,45 @@ class UsuariosController {
                 case 'add':
                     $id_rol = intval($_POST['id_rol'] ?? 3);
                     if (!in_array($id_rol, [1, 2, 3])) $id_rol = 3;
+
+                    // Procesar foto si se subió una nueva desde el formulario de admin
+                    $foto = 'assets/images/perfiles/default.png';
+                    if (isset($_FILES['fotoCrear']) && $_FILES['fotoCrear']['error'] == UPLOAD_ERR_OK) {
+                        $ext = strtolower(pathinfo($_FILES['fotoCrear']['name'], PATHINFO_EXTENSION));
+                        $nombreArchivo = 'assets/images/perfiles/' . uniqid('perfil_') . '.' . $ext;
+                        $rutaDestino = '../../src/' . $nombreArchivo;
+                        $tmp_name = $_FILES['fotoCrear']['tmp_name'];
+
+                        list($width, $height) = getimagesize($tmp_name);
+                        $maxWidth = 400; $maxHeight = 400;
+                        $newWidth = $width; $newHeight = $height;
+                        if ($width > $maxWidth) {
+                            $newHeight = $height * ($maxWidth / $width);
+                            $newWidth = $maxWidth;
+                        }
+                        if ($newHeight > $maxHeight) {
+                            $newWidth = $newWidth * ($maxHeight / $newHeight);
+                            $newHeight = $maxHeight;
+                        }
+
+                        // Crear imagen según el tipo
+                        if ($ext === 'jpg' || $ext === 'jpeg') {
+                            $srcImg = imagecreatefromjpeg($tmp_name);
+                        } elseif ($ext === 'png') {
+                            $srcImg = imagecreatefrompng($tmp_name);
+                        } else {
+                            move_uploaded_file($tmp_name, $rutaDestino); // Si no es jpg/png, solo mueve el archivo
+                            $foto = $nombreArchivo;
+                            break;
+                        }
+                        $dstImg = imagecreatetruecolor($newWidth, $newHeight);
+                        imagecopyresampled($dstImg, $srcImg, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+                        imagejpeg($dstImg, $rutaDestino, 80); // calidad 80%
+                        imagedestroy($srcImg);
+                        imagedestroy($dstImg);
+                        $foto = $nombreArchivo;
+                    }
+
                     $data = [
                         'tipo_documento' => $_POST['tipo_documento'] ?? '',
                         'documento'      => $_POST['documento'] ?? '',
@@ -35,7 +74,7 @@ class UsuariosController {
                         'municipio'      => $_POST['municipio'] ?? '',
                         'password'       => password_hash($_POST['password'] ?? '', PASSWORD_DEFAULT),
                         'id_rol'         => $id_rol,
-                        'foto'           => $_POST['foto'] ?? 'assets/images/perfiles/default.png',
+                        'foto'           => $foto,
                         'estado'         => 'Activo',
                         'email_verificado' => 0,
                         'token_verificacion' => null
@@ -79,10 +118,37 @@ class UsuariosController {
                     ];
                     // Procesar foto si se subió una nueva
                     if (isset($_FILES['foto']) && $_FILES['foto']['error'] == UPLOAD_ERR_OK) {
-                        $ext = pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION);
+                        $ext = strtolower(pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION));
                         $nombreArchivo = 'assets/images/perfiles/' . uniqid('perfil_') . '.' . $ext;
                         $rutaDestino = '../../src/' . $nombreArchivo;
-                        if (move_uploaded_file($_FILES['foto']['tmp_name'], $rutaDestino)) {
+                        $tmp_name = $_FILES['foto']['tmp_name'];
+
+                        list($width, $height) = getimagesize($tmp_name);
+                        $maxWidth = 400; $maxHeight = 400;
+                        $newWidth = $width; $newHeight = $height;
+                        if ($width > $maxWidth) {
+                            $newHeight = $height * ($maxWidth / $width);
+                            $newWidth = $maxWidth;
+                        }
+                        if ($newHeight > $maxHeight) {
+                            $newWidth = $newWidth * ($maxHeight / $newHeight);
+                            $newHeight = $maxHeight;
+                        }
+
+                        if ($ext === 'jpg' || $ext === 'jpeg') {
+                            $srcImg = imagecreatefromjpeg($tmp_name);
+                        } elseif ($ext === 'png') {
+                            $srcImg = imagecreatefrompng($tmp_name);
+                        } else {
+                            move_uploaded_file($tmp_name, $rutaDestino);
+                            $data['foto'] = $nombreArchivo;
+                        }
+                        if (isset($srcImg)) {
+                            $dstImg = imagecreatetruecolor($newWidth, $newHeight);
+                            imagecopyresampled($dstImg, $srcImg, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+                            imagejpeg($dstImg, $rutaDestino, 80);
+                            imagedestroy($srcImg);
+                            imagedestroy($dstImg);
                             $data['foto'] = $nombreArchivo;
                         }
                     }
@@ -107,10 +173,37 @@ class UsuariosController {
                     ];
                     // Procesar foto si se subió una nueva
                     if (isset($_FILES['foto']) && $_FILES['foto']['error'] == UPLOAD_ERR_OK) {
-                        $ext = pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION);
+                        $ext = strtolower(pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION));
                         $nombreArchivo = 'assets/images/perfiles/' . uniqid('perfil_') . '.' . $ext;
                         $rutaDestino = '../../src/' . $nombreArchivo;
-                        if (move_uploaded_file($_FILES['foto']['tmp_name'], $rutaDestino)) {
+                        $tmp_name = $_FILES['foto']['tmp_name'];
+
+                        list($width, $height) = getimagesize($tmp_name);
+                        $maxWidth = 400; $maxHeight = 400;
+                        $newWidth = $width; $newHeight = $height;
+                        if ($width > $maxWidth) {
+                            $newHeight = $height * ($maxWidth / $width);
+                            $newWidth = $maxWidth;
+                        }
+                        if ($newHeight > $maxHeight) {
+                            $newWidth = $newWidth * ($maxHeight / $newHeight);
+                            $newHeight = $maxHeight;
+                        }
+
+                        if ($ext === 'jpg' || $ext === 'jpeg') {
+                            $srcImg = imagecreatefromjpeg($tmp_name);
+                        } elseif ($ext === 'png') {
+                            $srcImg = imagecreatefrompng($tmp_name);
+                        } else {
+                            move_uploaded_file($tmp_name, $rutaDestino);
+                            $data['foto'] = $nombreArchivo;
+                        }
+                        if (isset($srcImg)) {
+                            $dstImg = imagecreatetruecolor($newWidth, $newHeight);
+                            imagecopyresampled($dstImg, $srcImg, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+                            imagejpeg($dstImg, $rutaDestino, 80);
+                            imagedestroy($srcImg);
+                            imagedestroy($dstImg);
                             $data['foto'] = $nombreArchivo;
                         }
                     }

@@ -203,11 +203,8 @@ document.addEventListener("DOMContentLoaded", async function () {
                 });
                 const data = await resp.json();
                 if (data.success) {
-                    // Recargar datos del usuario
-                    const usuario = await getDashboardUser();
-                    usuarioActual = usuario;
-                    mostrarDatos(usuario);
-                    mostrarMensaje("exito", `<span class="font-bold text-color4">¡Perfil actualizado exitosamente!</span>`);
+                    // Recargar la página para ver los cambios en tiempo real
+                    window.location.reload();
                 } else {
                     mostrarMensaje("error", data.message || "Error al actualizar perfil.");
                 }
