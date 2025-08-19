@@ -1,71 +1,109 @@
 <?php
+header('Content-Type: application/json');
 require_once("../model/Rol.php");
 
 /**
  * Controlador para gestión de roles.
- * Solo permite consultar roles, ya que los roles son predeterminados y no se crean ni eliminan desde la aplicación.
+ * Permite consultar y actualizar la descripción de los roles.
  */
-class RolesController {
+class RolesController
+{
     private $rolModel;
 
     /**
      * Constructor: recibe la conexión PDO y crea el modelo de roles.
      * @param PDO $pdo Conexión a la base de datos
      */
-    public function __construct($pdo) {
+    public function __construct($pdo)
+    {
         $this->rolModel = new Rol($pdo);
     }
 
     /**
      * Maneja las acciones solicitadas para el módulo roles.
-     * @param string $action Acción a ejecutar (get_roles, get_all, get_by_id)
+     * @param string $action Acción a ejecutar (get_roles, get_all, get_by_id, update_descripcion)
      */
-    public function handle($action) {
+    public function handle($action)
+    {
         try {
             switch ($action) {
                 case 'get_roles':
-                    // Obtiene los roles activos
                     $roles = $this->rolModel->obtenerActivos();
+                    $roles = array_map(function ($rol) {
+                        return [
+                            'id_rol'              => $rol['id_rol'] ?? null,
+                            'nombre'              => $rol['nombre'] ?? '',
+                            'estado'              => $rol['estado'] ?? '',
+                            'descripcion'         => $rol['descripcion'] ?? '',
+                            'fecha_actualizacion' => $rol['fecha_actualizacion'] ?? ''
+                        ];
+                    }, $roles);
                     echo json_encode([
                         'success' => true,
                         'roles' => $roles
                     ]);
-                    break;
+                    exit;
                 case 'get_all':
-                    // Obtiene todos los roles no eliminados
                     $roles = $this->rolModel->obtenerTodos();
+                    $roles = array_map(function ($rol) {
+                        return [
+                            'id_rol'              => $rol['id_rol'] ?? null,
+                            'nombre'              => $rol['nombre'] ?? '',
+                            'estado'              => $rol['estado'] ?? '',
+                            'descripcion'         => $rol['descripcion'] ?? '',
+                            'fecha_actualizacion' => $rol['fecha_actualizacion'] ?? ''
+                        ];
+                    }, $roles);
                     echo json_encode([
                         'success' => true,
                         'roles' => $roles
                     ]);
-                    break;
+                    exit;
                 case 'get_by_id':
-                    // Obtiene un rol por su ID
                     $id_rol = intval($_POST['id_rol'] ?? $_GET['id_rol'] ?? 0);
                     if ($id_rol <= 0) {
                         echo json_encode(['success' => false, 'message' => 'ID de rol inválido.']);
-                        break;
+                        exit;
                     }
                     $rol = $this->rolModel->obtenerPorId($id_rol);
+                    if ($rol) {
+                        $rol = [
+                            'id_rol'              => $rol['id_rol'] ?? null,
+                            'nombre'              => $rol['nombre'] ?? '',
+                            'estado'              => $rol['estado'] ?? '',
+                            'descripcion'         => $rol['descripcion'] ?? '',
+                            'fecha_actualizacion' => $rol['fecha_actualizacion'] ?? ''
+                        ];
+                    }
                     echo json_encode([
                         'success' => $rol ? true : false,
                         'rol' => $rol
                     ]);
-                    break;
+                    exit;
+                case 'update_descripcion':
+                    $id_rol = intval($_POST['id_rol'] ?? 0);
+                    $descripcion = $_POST['descripcion'] ?? '';
+                    if ($id_rol <= 0 || $descripcion === '') {
+                        echo json_encode(['success' => false, 'message' => 'Datos inválidos.']);
+                        exit;
+                    }
+                    $exito = $this->rolModel->actualizarDescripcion($id_rol, $descripcion);
+                    echo json_encode(['success' => $exito]);
+                    exit;
                 default:
-                    // Acción no válida para este módulo
                     echo json_encode([
                         'success' => false,
                         'message' => 'Acción no válida para roles.'
                     ]);
+                    exit;
             }
         } catch (Throwable $e) {
-            // Manejo global de errores
             echo json_encode([
                 'success' => false,
                 'message' => 'Error en el controlador de roles.',
                 'error' => $e->getMessage()
             ]);
+            exit;
         }
     }
 }

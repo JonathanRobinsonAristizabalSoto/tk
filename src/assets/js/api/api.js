@@ -9,6 +9,18 @@ export async function getRoles() {
 }
 
 /**
+ * Actualiza la descripción de un rol y la fecha de actualización
+ */
+export async function updateDescripcionRol(id_rol, descripcion) {
+    const res = await fetch(`${API_BASE}?module=roles&action=update_descripcion`, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `id_rol=${encodeURIComponent(id_rol)}&descripcion=${encodeURIComponent(descripcion)}`
+    });
+    return await res.json();
+}
+
+/**
  * Solicita los tipos de documento y roles (catálogos de usuario)
  */
 export async function getCatalogosUsuario() {

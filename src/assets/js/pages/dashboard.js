@@ -20,6 +20,32 @@ const tipoDocumentoLabels = {
     "NIT": "NIT"
 };
 
+// --- Utilidad para cargar roles en un select ---
+async function cargarRolesEnSelect(selectId, selectedRolId = null) {
+    const select = document.getElementById(selectId);
+    if (!select) return;
+    select.innerHTML = '<option value="">Cargando roles...</option>';
+    try {
+        const data = await getRoles();
+        if (data.success && Array.isArray(data.roles)) {
+            select.innerHTML = '';
+            data.roles.forEach(rol => {
+                const option = document.createElement('option');
+                option.value = rol.id_rol;
+                option.textContent = rol.nombre;
+                if (selectedRolId && String(rol.id_rol) === String(selectedRolId)) {
+                    option.selected = true;
+                }
+                select.appendChild(option);
+            });
+        } else {
+            select.innerHTML = '<option value="">No hay roles disponibles</option>';
+        }
+    } catch (error) {
+        select.innerHTML = '<option value="">Error al cargar roles</option>';
+    }
+}
+
 document.addEventListener("DOMContentLoaded", async function () {
     // Verificar autenticación antes de mostrar el dashboard
     let data;
@@ -265,20 +291,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                     }
                 }
                 // Roles
-                const rolSelect = document.getElementById("rolCrear");
-                if (rolSelect) {
-                    rolSelect.innerHTML = "";
-                    if (catalogos.success && Array.isArray(catalogos.roles)) {
-                        catalogos.roles.forEach(rol => {
-                            const option = document.createElement("option");
-                            option.value = rol.id_rol;
-                            option.textContent = rol.nombre;
-                            rolSelect.appendChild(option);
-                        });
-                    } else {
-                        rolSelect.innerHTML = '<option value="">No hay roles disponibles</option>';
-                    }
-                }
+                await cargarRolesEnSelect("rolCrear");
             } catch (error) {
                 const tipoDocSelect = document.getElementById("tipo_documentoCrear");
                 if (tipoDocSelect) tipoDocSelect.innerHTML = '<option value="">Error al cargar tipos</option>';
@@ -293,10 +306,25 @@ document.addEventListener("DOMContentLoaded", async function () {
         iniciarModuloUsuariosConFiltro('tarjetas', "");
     }
 
+    // --- ROLES MODULE ---
+    function renderRolesModule(vista = "tarjetas") {
+        const mainContent = document.getElementById('main-content');
+        // Limpia el contenido principal y llama a la función global de roles.js
+        if (typeof window.renderRoles === "function") {
+            window.renderRoles(vista);
+        } else if (typeof renderRoles === "function") {
+            renderRoles(vista);
+        } else {
+            mainContent.innerHTML = "<div class='text-center text-red-600 font-bold'>No se pudo cargar el módulo de roles.</div>";
+        }
+    }
+
+    // Elimina el renderizado automático de usuarios/roles al recargar
     if (localStorage.getItem("usuariosMensaje")) {
-        renderUsuariosModule(window.innerWidth < 768);
-        setSidebarActive('sidebar-usuarios-btn');
-        return;
+        // Si quieres mostrar solo el mensaje, hazlo aquí
+        // ejemplo: mostrarMensaje(localStorage.getItem("usuariosMensaje"));
+        localStorage.removeItem("usuariosMensaje");
+        // No renderices ningún módulo, así se mantiene "Mis Tickets"
     }
 
     function setSidebarActive(id) {
@@ -319,8 +347,10 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     const rolesBtn = document.getElementById('sidebar-roles-btn');
     if (rolesBtn) {
-        rolesBtn.addEventListener('click', function () {
+        rolesBtn.addEventListener('click', function (e) {
+            e.preventDefault();
             setSidebarActive('sidebar-roles-btn');
+            renderRolesModule("tarjetas");
         });
     }
 
@@ -328,6 +358,8 @@ document.addEventListener("DOMContentLoaded", async function () {
     if (ticketsBtn) {
         ticketsBtn.addEventListener('click', function () {
             setSidebarActive('sidebar-tickets-btn');
+            // Aquí puedes agregar la función para mostrar los tickets si tienes una
+            // Si no, se mantiene el contenido por defecto del dashboard.html
         });
     }
 
@@ -355,30 +387,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     // Función para cargar roles dinámicamente en el modal de edición usando el API centralizado
     window.cargarRolesEditar = async function (selectedRolId) {
-        const select = document.getElementById('rolEditar');
-        if (!select) return;
-        select.innerHTML = '<option value="">Cargando roles...</option>';
-        try {
-            const data = await getRoles();
-            if (data.success && Array.isArray(data.roles)) {
-                select.innerHTML = '';
-                data.roles.forEach(rol => {
-                    const option = document.createElement('option');
-                    option.value = rol.id_rol;
-                    option.textContent = rol.nombre;
-                    if (selectedRolId && String(rol.id_rol) === String(selectedRolId)) {
-                        option.selected = true;
-                    }
-                    select.appendChild(option);
-                });
-            } else {
-                select.innerHTML = '<option value="">No hay roles disponibles</option>';
-            }
-        } catch (error) {
-            select.innerHTML = '<option value="">Error al cargar roles</option>';
-            alert("No se pudieron cargar los roles. Intenta nuevamente.");
-            console.error("Error al cargar roles:", error);
-        }
+        await cargarRolesEnSelect('rolEditar', selectedRolId);
     };
 
     window.mostrarModalEditar = function (usuario) {

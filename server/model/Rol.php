@@ -16,10 +16,10 @@ class Rol {
 
     /**
      * Obtiene todos los roles activos y no eliminados.
-     * @return array Lista de roles (id_rol, nombre)
+     * @return array Lista de roles (id_rol, nombre, estado, descripcion, fecha_actualizacion)
      */
     public function obtenerActivos() {
-        $stmt = $this->pdo->prepare("SELECT id_rol, nombre FROM roles WHERE estado = 'Activo' AND eliminado = 0");
+        $stmt = $this->pdo->prepare("SELECT id_rol, nombre, estado, descripcion, fecha_actualizacion FROM roles WHERE estado = 'Activo' AND eliminado = 0");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -29,7 +29,7 @@ class Rol {
      * @return array Lista completa de roles
      */
     public function obtenerTodos() {
-        $stmt = $this->pdo->prepare("SELECT id_rol, nombre, estado FROM roles WHERE eliminado = 0");
+        $stmt = $this->pdo->prepare("SELECT id_rol, nombre, estado, descripcion, fecha_actualizacion FROM roles WHERE eliminado = 0");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -40,8 +40,20 @@ class Rol {
      * @return array|null Rol encontrado o null si no existe
      */
     public function obtenerPorId($id_rol) {
-        $stmt = $this->pdo->prepare("SELECT id_rol, nombre, estado FROM roles WHERE id_rol = ? AND eliminado = 0");
+        $stmt = $this->pdo->prepare("SELECT id_rol, nombre, estado, descripcion, fecha_actualizacion FROM roles WHERE id_rol = ? AND eliminado = 0");
         $stmt->execute([$id_rol]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        $rol = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $rol ? $rol : null;
+    }
+
+    /**
+     * Actualiza la descripción y la fecha de actualización de un rol.
+     * @param int $id_rol ID del rol
+     * @param string $descripcion Nueva descripción
+     * @return bool True si se actualizó correctamente
+     */
+    public function actualizarDescripcion($id_rol, $descripcion) {
+        $stmt = $this->pdo->prepare("UPDATE roles SET descripcion = ?, fecha_actualizacion = NOW() WHERE id_rol = ? AND eliminado = 0");
+        return $stmt->execute([$descripcion, $id_rol]);
     }
 }

@@ -115,7 +115,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="../pages/roles.html" id="sidebar-roles-btn"
+                            <a href="#" id="sidebar-roles-btn"
                                 class="sidebar-link block p-2 text-color1 hover:text-color6 rounded-lg flex items-center text-base md:text-sm">
                                 <i class="fas fa-user-shield mr-2 text-base md:text-sm"></i>
                                 <span class="text-base md:text-sm">Roles</span>
@@ -340,7 +340,6 @@
             </div>
         </form>
     </div>
-
     <!-- Modal Crear Usuario -->
     <div id="modalCrear" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
         <form id="dataFormCrear" class="bg-white p-4 sm:p-8 rounded-lg shadow-lg w-full max-w-xl border-2 border-color5
@@ -452,7 +451,6 @@
             </div>
         </form>
     </div>
-
     <!-- Modal Ver -->
     <div id="modalVer" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
         <div class="bg-white p-4 sm:p-8 rounded-lg shadow-lg w-full max-w-lg border-2 border-color5 relative
@@ -509,7 +507,6 @@
             </div>
         </div>
     </div>
-
     <!-- modal estado de usuario -->
     <div id="modalEstadoUsuario"
         class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -555,8 +552,99 @@
             <span id="mensajeTexto" class="block font-semibold text-color4 text-base"></span>
         </div>
     </div>
+    
+    <!-- ----------------------------->
+    <!-- Modales para CRUD de roles -->
+    <!-- ----------------------------->
+
+    <!-- Modal Editar Rol -->
+    <div id="modalEditarRol" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <form id="formEditarRol"
+            class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md border-2 border-color5 flex flex-col items-center">
+            <h2 class="text-lg font-bold text-color4 mb-2 flex items-center justify-center">
+                <i class="fas fa-user-shield mr-2"></i> Editar Rol
+            </h2>
+            <p class="text-center text-color6 mb-4 text-sm w-full">Modifica la descripción del rol.</p>
+            <div class="mb-4 w-full">
+                <label for="descripcionEditarRol"
+                    class="font-bold text-color4 mb-1 block text-sm text-center w-full">Descripción</label>
+                <input type="text" id="descripcionEditarRol" name="descripcionEditarRol" required
+                    class="mb-2 w-full rounded bg-gray-100 p-2 text-color4 font-medium text-sm text-center">
+            </div>
+            <input type="hidden" id="id_rolEditar" name="id_rolEditar">
+            <div class="flex gap-2 mt-2 w-full items-center justify-center">
+                <button type="submit"
+                    class="bg-color5 text-white p-2 rounded w-full font-bold hover:bg-color6 transition text-sm text-center">Guardar</button>
+                <button type="button" id="closeModalEditarRol"
+                    class="bg-gray-300 p-2 rounded w-full font-bold text-color4 hover:bg-gray-400 transition text-sm text-center">Cancelar</button>
+            </div>
+        </form>
+    </div>
+    <!-- Modal Ver Rol -->
+    <div id="modalVerRol" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div
+            class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md border-2 border-color5 flex flex-col items-center">
+            <h2 class="font-bold text-color4 mb-2 text-lg flex items-center justify-center">
+                <i class="fas fa-user-shield mr-2"></i> Ver Rol
+            </h2>
+            <div class="mb-4 w-full">
+                <label class="font-bold text-color5 mb-1 block text-sm text-center w-full">Descripción</label>
+                <div id="descripcionVerRol" class="text-color4 text-center text-base"></div>
+            </div>
+            <div class="mb-2 w-full">
+                <label class="font-bold text-color5 mb-1 block text-sm text-center w-full">Estado</label>
+                <span id="estadoVerRol" class="inline-block px-3 py-1 rounded text-sm"></span>
+            </div>
+            <button type="button" id="closeModalVerRol"
+                class="bg-gray-300 p-2 rounded w-full font-semibold text-color4 hover:bg-gray-400 transition text-base">Cerrar</button>
+        </div>
+    </div>
+    <!-- Modal Cambiar Estado Rol -->
+    <div id="modalEstadoRol" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div
+            class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md border-2 border-color5 flex flex-col items-center">
+            <div class="flex items-center justify-center mb-4">
+                <span id="modalEstadoRolIcon" class="text-4xl"></span>
+            </div>
+            <h2 class="font-bold text-color4 text-base mb-2">Cambiar estado del rol</h2>
+            <p id="modalEstadoRolTexto" class="text-color4 text-sm mb-6">
+                ¿Seguro que deseas cambiar el estado de este rol?
+            </p>
+            <div class="flex justify-center gap-4 w-full">
+                <button id="btnEstadoRolConfirmar" class="flex items-center justify-center gap-2 px-5 py-2 rounded-lg font-semibold text-sm transition duration-200 shadow
+        bg-green-600 hover:bg-green-700 text-white border-2 border-green-600">
+                    <i id="modalEstadoRolConfirmarIcon" class="fas fa-check"></i>
+                    <span id="modalEstadoRolConfirmarText">Activar</span>
+                </button>
+                <button id="btnEstadoRolCancelar" class="flex items-center justify-center gap-2 px-5 py-2 rounded-lg font-semibold text-sm transition duration-200 shadow
+        bg-color1 hover:bg-color2 text-color4 border-2 border-color4">
+                    <i class="fas fa-times"></i>
+                    Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Mensaje (éxito/error) -->
+    <div id="modalMensajeRol"
+        class="hidden fixed inset-0 flex items-center justify-center z-[100] bg-black bg-opacity-60 backdrop-blur-sm transition-all duration-300">
+        <div id="mensajeBoxRol" class="rounded-xl shadow-lg px-6 py-6 w-[90vw] max-w-sm mx-auto text-center
+    border-2 border-color5 bg-white flex flex-col items-center gap-3">
+            <div class="flex items-center justify-center mb-2">
+                <svg class="animate-spin h-7 w-7 text-color5" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"
+                        fill="none"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                </svg>
+            </div>
+            <span id="mensajeTextoRol" class="block font-semibold text-color4 text-base"></span>
+        </div>
+    </div>
+
+    <!-- Modal cierre de sesion -->
+    <div id="modal-logout-placeholder"></div>
 
     <script type="module" src="/tk/src/assets/js/pages/usuarios.js"></script>
+    <script type="module" src="/tk/src/assets/js/pages/roles.js"></script>
     <script type="module" src="/tk/src/assets/js/pages/dashboard.js"></script>
     <script type="module" src="/tk/src/assets/js/pages/profile.js"></script>
 
