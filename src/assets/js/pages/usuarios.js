@@ -1,3 +1,5 @@
+import { fetchUsuarios as apiFetchUsuarios, fetchUsuarioById, getRoles } from "../api/api.js";
+
 /**
  * Inicializa el módulo de usuarios: renderiza vistas, maneja eventos de CRUD, paginación y mensajes.
  * @param {string} vista - Vista inicial ('tabla' o 'tarjetas')
@@ -42,7 +44,7 @@ function iniciarModuloUsuarios(vista, filtro = "") {
   // --- EVENTOS DE MODALES ---
   // Abrir modal de crear usuario
   if (abrirModalCrear) {
-    abrirModalCrear.addEventListener("click", () => {
+    abrirModalCrear.addEventListener("click", async () => {
       modalCrear.classList.remove("hidden");
       dataFormCrear.reset();
       document.getElementById("id_usuarioCrear").value = "";
@@ -56,6 +58,29 @@ function iniciarModuloUsuarios(vista, filtro = "") {
         departamentoSelect.onchange = function () {
           cargarDepartamentosMunicipios("departamentoCrear", "municipioCrear", this.value);
         };
+      }
+      // Cargar roles dinámicamente
+      const rolSelect = document.getElementById("rolCrear");
+      if (rolSelect) {
+        rolSelect.innerHTML = '<option value="">Cargando roles...</option>';
+        try {
+          const data = await getRoles();
+          if (data.success && Array.isArray(data.roles)) {
+            rolSelect.innerHTML = '';
+            data.roles.forEach(rol => {
+              const option = document.createElement('option');
+              option.value = rol.id_rol;
+              option.textContent = rol.nombre;
+              rolSelect.appendChild(option);
+            });
+          } else {
+            rolSelect.innerHTML = '<option value="">No hay roles disponibles</option>';
+          }
+        } catch (error) {
+          rolSelect.innerHTML = '<option value="">Error al cargar roles</option>';
+          mostrarMensaje("error", "No se pudieron cargar los roles. Intenta nuevamente.");
+          console.error("Error al cargar roles:", error);
+        }
       }
     });
   }
@@ -77,36 +102,33 @@ function iniciarModuloUsuarios(vista, filtro = "") {
 
   // --- CAMBIAR ESTADO DE USUARIO ---
   if (btnEstadoUsuarioConfirmar) {
-    btnEstadoUsuarioConfirmar.addEventListener("click", () => {
+    btnEstadoUsuarioConfirmar.addEventListener("click", async () => {
       if (currentIdToEstado) {
-        // Obtiene el usuario actual para saber su estado
-        fetch("/tk/server/controller/UsuariosController.php", {
-          method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: `action=fetch&id_usuario=${currentIdToEstado}`,
-        })
-          .then((response) => response.json())
-          .then((usuario) => {
-            const nuevoEstado = usuario.estado === "Activo" ? "Inactivo" : "Activo";
-            // Cambia el estado del usuario
-            fetch("/tk/server/controller/UsuariosController.php", {
-              method: "POST",
-              headers: { "Content-Type": "application/x-www-form-urlencoded" },
-              body: `action=toggle_estado&id_usuario=${currentIdToEstado}&estado=${nuevoEstado}`,
-            })
-              .then((response) => response.json())
-              .then((data) => {
-                mostrarMensaje(data.success ? "exito" : "error", data.message);
-                if (data.success) fetchUsuarios();
-                modalEstadoUsuario.classList.add("hidden");
-                currentIdToEstado = null;
-              })
-              .catch(() => {
-                mostrarMensaje("error", "Error al cambiar el estado del usuario. Inténtalo nuevamente.");
-                modalEstadoUsuario.classList.add("hidden");
-                currentIdToEstado = null;
-              });
+        try {
+          // Obtiene el usuario actual para saber su estado
+          const usuario = await fetchUsuarioById(currentIdToEstado);
+          const nuevoEstado = usuario.estado === "Activo" ? "Inactivo" : "Activo";
+          // Cambia el estado del usuario
+          const formData = new URLSearchParams();
+          formData.append("action", "toggle_estado");
+          formData.append("id_usuario", currentIdToEstado);
+          formData.append("estado", nuevoEstado);
+
+          const response = await fetch("/tk/server/routes/api.php?module=usuarios&action=toggle_estado", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: formData.toString(),
           });
+          const data = await response.json();
+          mostrarMensaje(data.success ? "exito" : "error", data.message);
+          if (data.success) fetchUsuarios();
+        } catch (error) {
+          mostrarMensaje("error", "Error al cambiar el estado del usuario. Inténtalo nuevamente.");
+          console.error("Error al cambiar estado:", error);
+        } finally {
+          modalEstadoUsuario.classList.add("hidden");
+          currentIdToEstado = null;
+        }
       }
     });
   }
@@ -125,66 +147,72 @@ function iniciarModuloUsuarios(vista, filtro = "") {
    */
   function enviarDatosCrear(event) {
     event.preventDefault();
-    const formData = new FormData(dataFormCrear);
-    // Normaliza los nombres de los campos para el backend
-    formData.append("action", "add");
-    formData.append("departamento", formData.get("departamentoCrear"));
-    formData.append("municipio", formData.get("municipioCrear"));
-    formData.append("tipo_documento", formData.get("tipo_documentoCrear"));
-    formData.append("documento", formData.get("documentoCrear"));
-    formData.append("nombre", formData.get("nombreCrear"));
-    formData.append("apellido", formData.get("apellidoCrear"));
-    formData.append("email", formData.get("emailCrear"));
-    formData.append("telefono", formData.get("telefonoCrear"));
-    formData.append("id_rol", formData.get("rolCrear"));
-    formData.append("password", formData.get("passwordCrear"));
-    // Elimina los campos originales del formData
-    formData.delete("departamentoCrear");
-    formData.delete("municipioCrear");
-    formData.delete("tipo_documentoCrear");
-    formData.delete("documentoCrear");
-    formData.delete("nombreCrear");
-    formData.delete("apellidoCrear");
-    formData.delete("emailCrear");
-    formData.delete("telefonoCrear");
-    formData.delete("rolCrear");
-    formData.delete("passwordCrear");
-    formData.delete("confirmarPasswordCrear");
+    try {
+      const formData = new FormData(dataFormCrear);
+      // Normaliza los nombres de los campos para el backend
+      formData.append("action", "add");
+      formData.append("departamento", formData.get("departamentoCrear"));
+      formData.append("municipio", formData.get("municipioCrear"));
+      formData.append("tipo_documento", formData.get("tipo_documentoCrear"));
+      formData.append("documento", formData.get("documentoCrear"));
+      formData.append("nombre", formData.get("nombreCrear"));
+      formData.append("apellido", formData.get("apellidoCrear"));
+      formData.append("email", formData.get("emailCrear"));
+      formData.append("telefono", formData.get("telefonoCrear"));
+      formData.append("id_rol", formData.get("rolCrear"));
+      formData.append("password", formData.get("passwordCrear"));
+      // Elimina los campos originales del formData
+      formData.delete("departamentoCrear");
+      formData.delete("municipioCrear");
+      formData.delete("tipo_documentoCrear");
+      formData.delete("documentoCrear");
+      formData.delete("nombreCrear");
+      formData.delete("apellidoCrear");
+      formData.delete("emailCrear");
+      formData.delete("telefonoCrear");
+      formData.delete("rolCrear");
+      formData.delete("passwordCrear");
+      formData.delete("confirmarPasswordCrear");
 
-    // Valida que las contraseñas coincidan
-    if (formData.get("password") !== dataFormCrear.confirmarPasswordCrear.value) {
-      mostrarMensaje("error", "Las contraseñas no coinciden.");
-      return;
-    }
+      // Valida que las contraseñas coincidan
+      if (formData.get("password") !== dataFormCrear.confirmarPasswordCrear.value) {
+        mostrarMensaje("error", "Las contraseñas no coinciden.");
+        return;
+      }
 
-    // Guarda mensaje de éxito en localStorage para mostrarlo tras recarga
-    const cambios = [
-      `Usuario creado: ${formData.get("nombre")} ${formData.get("apellido")}`,
-      `Email: ${formData.get("email")}`,
-      `Rol: ${document.getElementById("rolCrear").selectedOptions[0].text}`
-    ];
-    localStorage.setItem("usuariosMensaje", JSON.stringify({
-      tipo: "exito",
-      mensaje: `¡Usuario creado exitosamente!\n${cambios.join('\n')}`
-    }));
+      // Guarda mensaje de éxito en localStorage para mostrarlo tras recarga
+      const cambios = [
+        `Usuario creado: ${formData.get("nombre")} ${formData.get("apellido")}`,
+        `Email: ${formData.get("email")}`,
+        `Rol: ${document.getElementById("rolCrear").selectedOptions[0].text}`
+      ];
+      localStorage.setItem("usuariosMensaje", JSON.stringify({
+        tipo: "exito",
+        mensaje: `¡Usuario creado exitosamente!\n${cambios.join('\n')}`
+      }));
 
-    // Envía los datos al backend
-    fetch("/tk/server/controller/UsuariosController.php", {
-      method: "POST",
-      body: formData,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.success) {
-          modalCrear.classList.add("hidden");
-          window.location.reload();
-        } else {
-          mostrarMensaje("error", data.message);
-        }
+      // Envía los datos al backend usando la API centralizada
+      fetch("/tk/server/routes/api.php?module=usuarios&action=add", {
+        method: "POST",
+        body: formData,
       })
-      .catch(() => {
-        mostrarMensaje("error", "Error al enviar datos. Inténtalo nuevamente.");
-      });
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            modalCrear.classList.add("hidden");
+            window.location.reload();
+          } else {
+            mostrarMensaje("error", data.message);
+          }
+        })
+        .catch((error) => {
+          mostrarMensaje("error", "Error al enviar datos. Inténtalo nuevamente.");
+          console.error("Error al crear usuario:", error);
+        });
+    } catch (error) {
+      mostrarMensaje("error", "Error inesperado al crear usuario.");
+      console.error("Error inesperado en crear usuario:", error);
+    }
   }
 
   /**
@@ -192,103 +220,106 @@ function iniciarModuloUsuarios(vista, filtro = "") {
    */
   function enviarDatosEditar(event) {
     event.preventDefault();
-    // Bloquea edición de tipo de documento y documento
-    const tipoDocSelect = document.getElementById("tipo_documentoEditar");
-    const documentoInput = document.getElementById("documentoEditar");
-    if (tipoDocSelect) tipoDocSelect.setAttribute("disabled", "disabled");
-    if (documentoInput) documentoInput.setAttribute("readonly", "readonly");
+    try {
+      // Bloquea edición de tipo de documento y documento
+      const tipoDocSelect = document.getElementById("tipo_documentoEditar");
+      const documentoInput = document.getElementById("documentoEditar");
+      if (tipoDocSelect) tipoDocSelect.setAttribute("disabled", "disabled");
+      if (documentoInput) documentoInput.setAttribute("readonly", "readonly");
 
-    const formData = new FormData(dataFormEditar);
-    formData.append("action", "update");
-    formData.append("id_usuario", formData.get("id_usuarioEditar"));
-    formData.append("departamento", formData.get("departamentoEditar"));
-    formData.append("municipio", formData.get("municipioEditar"));
-    formData.append("tipo_documento", formData.get("tipo_documentoEditar"));
-    formData.append("documento", formData.get("documentoEditar"));
-    formData.append("nombre", formData.get("nombreEditar"));
-    formData.append("apellido", formData.get("apellidoEditar"));
-    formData.append("email", formData.get("emailEditar"));
-    formData.append("telefono", formData.get("telefonoEditar"));
-    formData.append("id_rol", formData.get("rolEditar"));
+      const formData = new FormData(dataFormEditar);
+      formData.append("action", "update");
+      formData.append("id_usuario", formData.get("id_usuarioEditar"));
+      formData.append("departamento", formData.get("departamentoEditar"));
+      formData.append("municipio", formData.get("municipioEditar"));
+      formData.append("tipo_documento", formData.get("tipo_documentoEditar"));
+      formData.append("documento", formData.get("documentoEditar"));
+      formData.append("nombre", formData.get("nombreEditar"));
+      formData.append("apellido", formData.get("apellidoEditar"));
+      formData.append("email", formData.get("emailEditar"));
+      formData.append("telefono", formData.get("telefonoEditar"));
+      formData.append("id_rol", formData.get("rolEditar"));
 
-    // Adjunta foto si se seleccionó una nueva
-    const fotoInput = document.getElementById("fotoEditar");
-    if (fotoInput && fotoInput.files && fotoInput.files[0]) {
-      formData.append("foto", fotoInput.files[0]);
-    } else if (usuarioActualEditar && usuarioActualEditar.foto) {
-      formData.append("foto_actual", usuarioActualEditar.foto);
-    }
+      // Adjunta foto si se seleccionó una nueva
+      const fotoInput = document.getElementById("fotoEditar");
+      if (fotoInput && fotoInput.files && fotoInput.files[0]) {
+        formData.append("foto", fotoInput.files[0]);
+      } else if (usuarioActualEditar && usuarioActualEditar.foto) {
+        formData.append("foto_actual", usuarioActualEditar.foto);
+      }
 
-    // Elimina los campos originales del formData
-    formData.delete("id_usuarioEditar");
-    formData.delete("departamentoEditar");
-    formData.delete("municipioEditar");
-    formData.delete("tipo_documentoEditar");
-    formData.delete("documentoEditar");
-    formData.delete("nombreEditar");
-    formData.delete("apellidoEditar");
-    formData.delete("emailEditar");
-    formData.delete("telefonoEditar");
-    formData.delete("rolEditar");
+      // Elimina los campos originales del formData
+      formData.delete("id_usuarioEditar");
+      formData.delete("departamentoEditar");
+      formData.delete("municipioEditar");
+      formData.delete("tipo_documentoEditar");
+      formData.delete("documentoEditar");
+      formData.delete("nombreEditar");
+      formData.delete("apellidoEditar");
+      formData.delete("emailEditar");
+      formData.delete("telefonoEditar");
+      formData.delete("rolEditar");
 
-    // Detecta cambios para mostrar mensaje
-    const cambios = [];
-    if (usuarioActualEditar.nombre !== dataFormEditar.nombreEditar.value) cambios.push("Nombre");
-    if (usuarioActualEditar.apellido !== dataFormEditar.apellidoEditar.value) cambios.push("Apellido");
-    if (usuarioActualEditar.email !== dataFormEditar.emailEditar.value) cambios.push("Email");
-    if ((usuarioActualEditar.telefono || "") !== dataFormEditar.telefonoEditar.value) cambios.push("Teléfono");
-    if ((usuarioActualEditar.departamento || "") !== dataFormEditar.departamentoEditar.value) cambios.push("Departamento");
-    if ((usuarioActualEditar.municipio || "") !== dataFormEditar.municipioEditar.value) cambios.push("Municipio");
-    if (usuarioActualEditar.id_rol != dataFormEditar.rolEditar.value) cambios.push("Rol");
-    if (fotoInput && fotoInput.files && fotoInput.files[0]) cambios.push("Foto de perfil");
+      // Detecta cambios para mostrar mensaje
+      const cambios = [];
+      if (usuarioActualEditar.nombre !== dataFormEditar.nombreEditar.value) cambios.push("Nombre");
+      if (usuarioActualEditar.apellido !== dataFormEditar.apellidoEditar.value) cambios.push("Apellido");
+      if (usuarioActualEditar.email !== dataFormEditar.emailEditar.value) cambios.push("Email");
+      if ((usuarioActualEditar.telefono || "") !== dataFormEditar.telefonoEditar.value) cambios.push("Teléfono");
+      if ((usuarioActualEditar.departamento || "") !== dataFormEditar.departamentoEditar.value) cambios.push("Departamento");
+      if ((usuarioActualEditar.municipio || "") !== dataFormEditar.municipioEditar.value) cambios.push("Municipio");
+      if (usuarioActualEditar.id_rol != dataFormEditar.rolEditar.value) cambios.push("Rol");
+      if (fotoInput && fotoInput.files && fotoInput.files[0]) cambios.push("Foto de perfil");
 
-    let mensaje = "";
-    if (cambios.length) {
-      mensaje = `<div class="font-bold mb-2 text-color5 text-lg">DATOS EDITADOS EXITOSAMENTE</div>
-        <ul class="pl-0">
-          ${cambios.map(campo => `
-            <li class="list-none flex items-center mb-1">
-              <span class="text-color5 text-lg mr-2"><i class="fas fa-check-circle"></i></span>
-              <span class="text-color4">${campo}</span>
-            </li>
-          `).join('')}
-        </ul>`;
-    } else {
-      mensaje = `<span class="text-color4">No hubo modificaciones.</span>`;
-    }
+      let mensaje = "";
+      if (cambios.length) {
+        mensaje = `<div class="font-bold mb-2 text-color5 text-lg">DATOS EDITADOS EXITOSAMENTE</div>
+          <ul class="pl-0">
+            ${cambios.map(campo => `
+              <li class="list-none flex items-center mb-1">
+                <span class="text-color5 text-lg mr-2"><i class="fas fa-check-circle"></i></span>
+                <span class="text-color4">${campo}</span>
+              </li>
+            `).join('')}
+          </ul>`;
+      } else {
+        mensaje = `<span class="text-color4">No hubo modificaciones.</span>`;
+      }
 
-    localStorage.setItem("usuariosMensaje", JSON.stringify({
-      tipo: "exito",
-      mensaje: mensaje
-    }));
+      localStorage.setItem("usuariosMensaje", JSON.stringify({
+        tipo: "exito",
+        mensaje: mensaje
+      }));
 
-    // Envía los datos al backend
-    fetch("/tk/server/controller/UsuariosController.php", {
-      method: "POST",
-      body: formData,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.success) {
-          modalEditar.classList.add("hidden");
-          // Actualiza la imagen del usuario editado si hay nueva foto
-          if (data.foto) {
-            const img = document.querySelector(`img[data-user-id="${formData.get("id_usuario")}"]`);
-            if (img) {
-              img.src = "/tk/src/" + data.foto + "?t=" + new Date().getTime();
-            }
-          }
-          window.location.reload();
-        } else {
-          mostrarMensaje("error", data.message);
-        }
+      // Envía los datos al backend usando la API centralizada
+      fetch("/tk/server/routes/api.php?module=usuarios&action=update", {
+        method: "POST",
+        body: formData,
       })
-      .catch(() => {
-        mostrarMensaje("error", "Error al enviar datos. Inténtalo nuevamente.");
-      });
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            modalEditar.classList.add("hidden");
+            if (data.foto) {
+              const img = document.querySelector(`img[data-user-id="${formData.get("id_usuario")}"]`);
+              if (img) {
+                img.src = "/tk/src/" + data.foto + "?t=" + new Date().getTime();
+              }
+            }
+            window.location.reload();
+          } else {
+            mostrarMensaje("error", data.message);
+          }
+        })
+        .catch((error) => {
+          mostrarMensaje("error", "Error al enviar datos. Inténtalo nuevamente.");
+          console.error("Error al editar usuario:", error);
+        });
+    } catch (error) {
+      mostrarMensaje("error", "Error inesperado al editar usuario.");
+      console.error("Error inesperado en editar usuario:", error);
+    }
   }
-
-
 
   // --- RENDER DE USUARIOS ---
   /**
@@ -296,7 +327,6 @@ function iniciarModuloUsuarios(vista, filtro = "") {
    */
   function renderUsuarios() {
     dataTable.innerHTML = "";
-    const width = window.innerWidth;
     let vistaActual = localStorage.getItem('usuariosVista') || 'tabla';
     let tarjetasPorFila = 4;
     let textoSize = "text-xs";
@@ -465,12 +495,7 @@ function iniciarModuloUsuarios(vista, filtro = "") {
    * Obtiene la lista de usuarios desde el backend y la renderiza.
    */
   function fetchUsuarios() {
-    fetch("/tk/server/controller/UsuariosController.php", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: "action=fetch",
-    })
-      .then((response) => response.json())
+    apiFetchUsuarios()
       .then((data) => {
         usuariosData = data;
         paginaActual = 1;
@@ -484,8 +509,9 @@ function iniciarModuloUsuarios(vista, filtro = "") {
           localStorage.removeItem("usuariosMensaje");
         }
       })
-      .catch(() => {
+      .catch((error) => {
         mostrarMensaje("error", "Error al cargar usuarios. Inténtalo nuevamente.");
+        console.error("Error al cargar usuarios:", error);
       });
   }
 
@@ -493,119 +519,130 @@ function iniciarModuloUsuarios(vista, filtro = "") {
   /**
    * Abre el modal de edición y carga los datos del usuario seleccionado.
    */
-  window.editUsuario = function (id) {
-    fetch("/tk/server/controller/UsuariosController.php", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: `action=fetch&id_usuario=${id}`,
-    })
-      .then((response) => response.json())
-      .then((usuario) => {
-        usuarioActualEditar = usuario;
-        // Carga departamentos y municipios si la función existe
-        if (typeof cargarDepartamentosMunicipios === "function") {
+  window.editUsuario = async function (id) {
+    try {
+      const usuario = await fetchUsuarioById(id);
+      usuarioActualEditar = usuario;
+      // Carga departamentos y municipios si la función existe
+      if (typeof cargarDepartamentosMunicipios === "function") {
+        cargarDepartamentosMunicipios(
+          "departamentoEditar",
+          "municipioEditar",
+          usuario.departamento
+        );
+        setTimeout(() => {
+          document.getElementById("departamentoEditar").value = usuario.departamento;
           cargarDepartamentosMunicipios(
             "departamentoEditar",
             "municipioEditar",
             usuario.departamento
           );
           setTimeout(() => {
-            document.getElementById("departamentoEditar").value = usuario.departamento;
-            cargarDepartamentosMunicipios(
-              "departamentoEditar",
-              "municipioEditar",
-              usuario.departamento
-            );
-            setTimeout(() => {
-              document.getElementById("municipioEditar").value = usuario.municipio;
-            }, 200);
+            document.getElementById("municipioEditar").value = usuario.municipio;
           }, 200);
-        }
-        document.getElementById("id_usuarioEditar").value = usuario.id_usuario;
-        document.getElementById("nombreEditar").value = usuario.nombre;
-        document.getElementById("apellidoEditar").value = usuario.apellido;
-        document.getElementById("emailEditar").value = usuario.email;
-        document.getElementById("telefonoEditar").value = usuario.telefono || "";
+        }, 200);
+      }
+      document.getElementById("id_usuarioEditar").value = usuario.id_usuario;
+      document.getElementById("nombreEditar").value = usuario.nombre;
+      document.getElementById("apellidoEditar").value = usuario.apellido;
+      document.getElementById("emailEditar").value = usuario.email;
+      document.getElementById("telefonoEditar").value = usuario.telefono || "";
 
-        // Ya NO es necesario ocultar campos de tipo de documento y documento, porque ya no existen en el HTML
-
-        if (document.getElementById("fotoEditar")) {
-          document.getElementById("fotoEditar").value = "";
-        }
-        if (document.getElementById("rolEditar")) {
-          let rolSelect = document.getElementById("rolEditar");
-          for (let i = 0; i < rolSelect.options.length; i++) {
-            if (rolSelect.options[i].value == usuario.id_rol) {
-              rolSelect.selectedIndex = i;
-              break;
-            }
+      // Cargar roles dinámicamente en el modal de edición
+      const rolSelect = document.getElementById("rolEditar");
+      if (rolSelect) {
+        rolSelect.innerHTML = '<option value="">Cargando roles...</option>';
+        try {
+          const data = await getRoles();
+          if (data.success && Array.isArray(data.roles)) {
+            rolSelect.innerHTML = '';
+            data.roles.forEach(rol => {
+              const option = document.createElement('option');
+              option.value = rol.id_rol;
+              option.textContent = rol.nombre;
+              if (usuario.id_rol == rol.id_rol) {
+                option.selected = true;
+              }
+              rolSelect.appendChild(option);
+            });
+          } else {
+            rolSelect.innerHTML = '<option value="">No hay roles disponibles</option>';
           }
+        } catch (error) {
+          rolSelect.innerHTML = '<option value="">Error al cargar roles</option>';
+          mostrarMensaje("error", "No se pudieron cargar los roles. Intenta nuevamente.");
+          console.error("Error al cargar roles:", error);
         }
-        modalEditar.classList.remove("hidden");
-      });
+      }
+
+      if (document.getElementById("fotoEditar")) {
+        document.getElementById("fotoEditar").value = "";
+      }
+      modalEditar.classList.remove("hidden");
+    } catch (error) {
+      mostrarMensaje("error", "Error al cargar datos del usuario para editar.");
+      console.error("Error al cargar usuario para editar:", error);
+    }
   };
 
   /**
    * Abre el modal de confirmación para cambiar el estado del usuario (habilitar/inhabilitar).
    */
-  window.confirmEstadoUsuario = function (id) {
-    currentIdToEstado = id;
-    fetch("/tk/server/controller/UsuariosController.php", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: `action=fetch&id_usuario=${id}`,
-    })
-      .then((response) => response.json())
-      .then((usuario) => {
-        estadoUsuarioActual = usuario.estado;
-        const isActivo = usuario.estado === "Activo";
-        const texto = isActivo
-          ? "¿Seguro que deseas inhabilitar este usuario?"
-          : "¿Seguro que deseas habilitar este usuario?";
-        const btnText = isActivo ? "Inhabilitar" : "Habilitar";
-        const btnIcon = isActivo ? "fa-user-times" : "fa-user-check";
-        const btnColor = isActivo ? "bg-red-600 hover:bg-red-700 border-red-600" : "bg-green-600 hover:bg-green-700 border-green-600";
-        document.getElementById("modalEstadoUsuarioTexto").textContent = texto;
-        document.getElementById("modalEstadoUsuarioConfirmarText").textContent = btnText;
-        document.getElementById("modalEstadoUsuarioConfirmarIcon").className = `fas ${btnIcon}`;
-        document.getElementById("btnEstadoUsuarioConfirmar").className =
-          `flex items-center justify-center gap-2 px-5 py-2 rounded-xl font-semibold text-base transition duration-200 shadow text-white border-2 ${btnColor}`;
-        document.getElementById("btnEstadoUsuarioCancelar").className =
-          "flex items-center justify-center gap-2 px-5 py-2 rounded-xl font-semibold text-base transition duration-200 shadow bg-color1 hover:bg-color2 text-color4 border-2 border-color4";
-        document.getElementById("modalEstadoUsuarioIcon").innerHTML = isActivo
-          ? '<i class="fas fa-user-times text-red-600"></i>'
-          : '<i class="fas fa-user-check text-green-600"></i>';
-        modalEstadoUsuario.classList.remove("hidden");
-      });
+  window.confirmEstadoUsuario = async function (id) {
+    try {
+      currentIdToEstado = id;
+      const usuario = await fetchUsuarioById(id);
+      estadoUsuarioActual = usuario.estado;
+      const isActivo = usuario.estado === "Activo";
+      const texto = isActivo
+        ? "¿Seguro que deseas inhabilitar este usuario?"
+        : "¿Seguro que deseas habilitar este usuario?";
+      const btnText = isActivo ? "Inhabilitar" : "Habilitar";
+      const btnIcon = isActivo ? "fa-user-times" : "fa-user-check";
+      const btnColor = isActivo ? "bg-red-600 hover:bg-red-700 border-red-600" : "bg-green-600 hover:bg-green-700 border-green-600";
+      document.getElementById("modalEstadoUsuarioTexto").textContent = texto;
+      document.getElementById("modalEstadoUsuarioConfirmarText").textContent = btnText;
+      document.getElementById("modalEstadoUsuarioConfirmarIcon").className = `fas ${btnIcon}`;
+      document.getElementById("btnEstadoUsuarioConfirmar").className =
+        `flex items-center justify-center gap-2 px-5 py-2 rounded-xl font-semibold text-base transition duration-200 shadow text-white border-2 ${btnColor}`;
+      document.getElementById("btnEstadoUsuarioCancelar").className =
+        "flex items-center justify-center gap-2 px-5 py-2 rounded-xl font-semibold text-base transition duration-200 shadow bg-color1 hover:bg-color2 text-color4 border-2 border-color4";
+      document.getElementById("modalEstadoUsuarioIcon").innerHTML = isActivo
+        ? '<i class="fas fa-user-times text-red-600"></i>'
+        : '<i class="fas fa-user-check text-green-600"></i>';
+      modalEstadoUsuario.classList.remove("hidden");
+    } catch (error) {
+      mostrarMensaje("error", "Error al cargar datos del usuario para cambiar estado.");
+      console.error("Error al cargar usuario para estado:", error);
+    }
   };
 
   /**
    * Abre el modal de visualización de usuario y muestra sus datos.
    */
-  window.viewUsuario = function (id, id_rol) {
-    fetch("/tk/server/controller/UsuariosController.php", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: `action=fetch&id_usuario=${id}&id_rol=${id_rol}`,
-    })
-      .then((response) => response.json())
-      .then((usuario) => {
-        document.getElementById("verFoto").src = "/tk/src/" + (usuario.foto || "assets/images/perfiles/default.png");
-        document.getElementById("verNombreCompleto").textContent = `${usuario.nombre} ${usuario.apellido}`;
-        document.getElementById("verEmail").textContent = usuario.email;
-        document.getElementById("verRol").textContent = usuario.rol_nombre || "Usuario";
-        document.getElementById("verDocumento").textContent = usuario.documento || "";
-        document.getElementById("verTelefono").textContent = usuario.telefono || "";
-        document.getElementById("verDepartamento").textContent = usuario.departamento || "";
-        document.getElementById("verMunicipio").textContent = usuario.municipio || "";
-        modalVer.classList.remove("hidden");
-      });
-    // Permite cerrar el modal desde los botones de cierre
-    if (document.getElementById("closeModalVer")) {
-      document.getElementById("closeModalVer").onclick = () => modalVer.classList.add("hidden");
-    }
-    if (document.getElementById("closeModalVerBtn")) {
-      document.getElementById("closeModalVerBtn").onclick = () => modalVer.classList.add("hidden");
+  window.viewUsuario = async function (id, id_rol) {
+    try {
+      const usuario = await fetchUsuarioById(id);
+      document.getElementById("verFoto").src = "/tk/src/" + (usuario.foto || "assets/images/perfiles/default.png");
+      document.getElementById("verNombreCompleto").textContent = `${usuario.nombre} ${usuario.apellido}`;
+      document.getElementById("verEmail").textContent = usuario.email;
+      document.getElementById("verRol").textContent = usuario.rol_nombre || "Usuario";
+      document.getElementById("verDocumento").textContent = usuario.documento || "";
+      document.getElementById("verTelefono").textContent = usuario.telefono || "";
+      document.getElementById("verDepartamento").textContent = usuario.departamento || "";
+      document.getElementById("verMunicipio").textContent = usuario.municipio || "";
+      modalVer.classList.remove("hidden");
+
+      // Permite cerrar el modal desde los botones de cierre
+      if (document.getElementById("closeModalVer")) {
+        document.getElementById("closeModalVer").onclick = () => modalVer.classList.add("hidden");
+      }
+      if (document.getElementById("closeModalVerBtn")) {
+        document.getElementById("closeModalVerBtn").onclick = () => modalVer.classList.add("hidden");
+      }
+    } catch (error) {
+      mostrarMensaje("error", "Error al cargar datos del usuario para ver.");
+      console.error("Error al cargar usuario para ver:", error);
     }
   };
 
@@ -640,3 +677,6 @@ function iniciarModuloUsuarios(vista, filtro = "") {
   // Carga los usuarios al iniciar el módulo
   fetchUsuarios();
 }
+
+// Exporta la función para que pueda ser llamada desde dashboard.js
+window.iniciarModuloUsuarios = iniciarModuloUsuarios;

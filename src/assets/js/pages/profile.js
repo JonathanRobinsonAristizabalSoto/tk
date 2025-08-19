@@ -1,4 +1,6 @@
-document.addEventListener("DOMContentLoaded", function () {
+import { getDashboardUser, getCatalogosUsuario } from "../api/api.js";
+
+document.addEventListener("DOMContentLoaded", async function () {
     const btnPerfil = document.getElementById("btnMiPerfil");
     const modalPerfil = document.getElementById("modalPerfil");
     const formPerfil = document.getElementById("formPerfilUsuario");
@@ -144,22 +146,14 @@ document.addEventListener("DOMContentLoaded", function () {
         }, 2200);
     }
 
-    // Cargar datos al abrir el modal
+    // Cargar datos al abrir el modal usando el API centralizado
     if (btnPerfil) {
-        btnPerfil.addEventListener("click", function (e) {
+        btnPerfil.addEventListener("click", async function (e) {
             e.preventDefault();
-            fetch("/tk/server/controller/DashboardController.php", {
-                credentials: "include",
-                headers: {
-                    "Accept": "application/json"
-                }
-            })
-                .then(res => res.json())
-                .then(usuario => {
-                    usuarioActual = usuario;
-                    mostrarDatos(usuario);
-                    modalPerfil.classList.remove("hidden");
-                });
+            const usuario = await getDashboardUser();
+            usuarioActual = usuario;
+            mostrarDatos(usuario);
+            modalPerfil.classList.remove("hidden");
         });
     }
 
@@ -179,7 +173,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Botón Guardar (envía datos al backend)
     if (formPerfil) {
-        formPerfil.onsubmit = function (e) {
+        formPerfil.onsubmit = async function (e) {
             e.preventDefault();
             const formData = new FormData();
             // Separar nombre y apellido si es necesario
@@ -201,31 +195,25 @@ document.addEventListener("DOMContentLoaded", function () {
             }
             formData.append("documento", usuarioActual.documento);
 
-            fetch("/tk/server/controller/UsuariosController.php", {
-                method: "POST",
-                body: formData
-            })
-                .then(res => res.json())
-                .then(resp => {
-                    if (resp.success) {
-                        // Recargar datos del usuario
-                        fetch("/tk/server/controller/DashboardController.php", {
-                            credentials: "include",
-                            headers: {
-                                "Accept": "application/json"
-                            }
-                        })
-                            .then(res => res.json())
-                            .then(usuario => {
-                                usuarioActual = usuario;
-                                mostrarDatos(usuario);
-                                mostrarMensaje("exito", `<span class="font-bold text-color4">¡Perfil actualizado exitosamente!</span>`);
-                            });
-                    } else {
-                        mostrarMensaje("error", resp.message || "Error al actualizar perfil.");
-                    }
-                })
-                .catch(() => mostrarMensaje("error", "Error de conexión al actualizar perfil."));
+            try {
+                const resp = await fetch("/tk/server/routes/api.php?module=usuarios&action=update_perfil", {
+                    method: "POST",
+                    body: formData,
+                    credentials: "include"
+                });
+                const data = await resp.json();
+                if (data.success) {
+                    // Recargar datos del usuario
+                    const usuario = await getDashboardUser();
+                    usuarioActual = usuario;
+                    mostrarDatos(usuario);
+                    mostrarMensaje("exito", `<span class="font-bold text-color4">¡Perfil actualizado exitosamente!</span>`);
+                } else {
+                    mostrarMensaje("error", data.message || "Error al actualizar perfil.");
+                }
+            } catch {
+                mostrarMensaje("error", "Error de conexión al actualizar perfil.");
+            }
         };
     }
 

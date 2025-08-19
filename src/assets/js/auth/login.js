@@ -1,5 +1,7 @@
+import { getCatalogosUsuario } from "../api/api.js";
+
 document.addEventListener("DOMContentLoaded", function () {
-    // Cargar roles y tipos de documento dinámicamente
+    // Diccionario para mostrar nombres bonitos de tipo de documento
     const nombresTipoDocumento = {
         CC: "Cédula de Ciudadanía",
         TI: "Tarjeta de Identidad",
@@ -9,17 +11,14 @@ document.addEventListener("DOMContentLoaded", function () {
         NIT: "NIT"
     };
 
+    // Cargar roles y tipos de documento dinámicamente usando el API centralizado
     async function cargarCatalogos() {
         try {
-            const res = await fetch("/tk/server/controller/UsuariosController.php", {
-                method: "POST",
-                body: new URLSearchParams({ action: "get_catalogos" }),
-            });
-            const data = await res.json();
+            const data = await getCatalogosUsuario();
 
             // Tipos de documento
             const tipoDocSelect = document.getElementById("typeDocument");
-            if (tipoDocSelect) {
+            if (tipoDocSelect && Array.isArray(data.tipos_documento)) {
                 tipoDocSelect.innerHTML = "";
                 data.tipos_documento.forEach(tipo => {
                     const opt = document.createElement("option");
@@ -31,7 +30,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // Roles
             const rolSelect = document.getElementById("user-type");
-            if (rolSelect) {
+            if (rolSelect && Array.isArray(data.roles)) {
                 rolSelect.innerHTML = "";
                 data.roles.forEach(rol => {
                     const opt = document.createElement("option");

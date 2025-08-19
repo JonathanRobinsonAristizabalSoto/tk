@@ -55,8 +55,8 @@
                         id="username-mobile">Usuario</span></span>
                 <div
                     class="w-12 h-12 rounded-full overflow-hidden border-2 border-gray-300 flex items-center justify-center bg-gray-200 mb-2">
-                    <img src="/tk/src/assets/images/perfiles/default.png" alt="Foto de perfil"
-                        id="profile-img-mobile" class="object-cover w-full h-full">
+                    <img src="/tk/src/assets/images/perfiles/default.png" alt="Foto de perfil" id="profile-img-mobile"
+                        class="object-cover w-full h-full">
                 </div>
             </div>
             <a href="#" id="btnMiPerfil"
@@ -328,8 +328,6 @@
                         class="font-bold text-color4 mb-1 block text-sm sm:text-sm text-center w-full">Rol</label>
                     <select id="rolEditar" name="rolEditar"
                         class="mb-2 w-full rounded bg-gray-100 p-2 text-color4 font-medium text-sm sm:text-sm text-center">
-                        <option value="1">Administrador</option>
-                        <option value="5">Usuario</option>
                     </select>
                 </div>
             </div>
@@ -372,11 +370,7 @@
                         documento</label>
                     <select id="tipo_documentoCrear" name="tipo_documentoCrear"
                         class="mb-2 w-full rounded bg-gray-100 p-2 text-color4 font-medium text-sm sm:text-sm text-center">
-                        <option value="CC">Cédula de Ciudadanía</option>
-                        <option value="TI">Tarjeta de Identidad</option>
-                        <option value="CE">Cédula de Extranjería</option>
-                        <option value="PS">Pasaporte</option>
-                        <option value="DNI">Documento Nacional de Identificación</option>
+                        <!-- Opciones se llenan dinámicamente -->
                     </select>
                 </div>
                 <div class="flex flex-col items-center w-full">
@@ -445,8 +439,7 @@
                         class="font-bold text-color4 mb-1 block text-sm sm:text-sm text-center w-full">Rol</label>
                     <select id="rolCrear" name="rolCrear"
                         class="mb-2 w-full rounded bg-gray-100 p-2 text-color4 font-medium text-sm sm:text-sm text-center">
-                        <option value="1">Administrador</option>
-                        <option value="5" selected>Usuario</option>
+                        <!-- Opciones se llenan dinámicamente -->
                     </select>
                 </div>
             </div>
@@ -563,11 +556,12 @@
         </div>
     </div>
 
+    <script type="module" src="/tk/src/assets/js/pages/usuarios.js"></script>
+    <script type="module" src="/tk/src/assets/js/pages/dashboard.js"></script>
+    <script type="module" src="/tk/src/assets/js/pages/profile.js"></script>
+
     <script src="/tk/src/assets/js/utils/loadPartials.js"></script>
     <script src="/tk/src/assets/js/utils/menu.js"></script>
-    <script src="/tk/src/assets/js/pages/usuarios.js"></script>
-    <script src="/tk/src/assets/js/pages/dashboard.js"></script>
-    <script src="/tk/src/assets/js/pages/profile.js"></script>
     <script src="/tk/src/assets/js/utils/departamentos.js"></script>
 </body>
 
