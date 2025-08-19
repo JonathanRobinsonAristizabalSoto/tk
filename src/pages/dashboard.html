@@ -67,7 +67,7 @@
                 class="block px-4 py-1 text-gray-700 hover:text-color6 font-semibold text-sm w-full text-left">
                 <i class="fas fa-cog mr-2"></i> Configuraciones
             </a>
-            <form action="/tk/server/controller/LogoutController.php" method="post" class="w-full">
+            <form id="logoutForm" action="/tk/server/controller/LogoutController.php" method="post" class="w-full">
                 <button type="submit" name="logout"
                     class="block px-4 py-1 text-gray-700 hover:text-color6 font-semibold text-sm w-full text-left">
                     <i class="fas fa-sign-out-alt mr-2"></i> Logout
@@ -552,7 +552,7 @@
             <span id="mensajeTexto" class="block font-semibold text-color4 text-base"></span>
         </div>
     </div>
-    
+
     <!-- ----------------------------->
     <!-- Modales para CRUD de roles -->
     <!-- ----------------------------->
@@ -647,6 +647,7 @@
     <script type="module" src="/tk/src/assets/js/pages/roles.js"></script>
     <script type="module" src="/tk/src/assets/js/pages/dashboard.js"></script>
     <script type="module" src="/tk/src/assets/js/pages/profile.js"></script>
+    <script type="module" src="/tk/src/assets/js/modals/modal-logout.js"></script>
 
     <script src="/tk/src/assets/js/utils/loadPartials.js"></script>
     <script src="/tk/src/assets/js/utils/menu.js"></script>
