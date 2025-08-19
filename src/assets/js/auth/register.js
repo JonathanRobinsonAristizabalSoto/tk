@@ -1,7 +1,56 @@
 import { getCatalogosUsuario } from "../api/api.js";
 
-document.addEventListener("DOMContentLoaded", function () {
-  // Mapeo de valores a nombres legibles para tipo de documento
+// Helpers para mostrar/ocultar modales
+function mostrarModalExito() {
+  const modal = document.getElementById("modal-exito-registro");
+  if (modal) modal.classList.remove("hidden");
+}
+function ocultarModalExito() {
+  const modal = document.getElementById("modal-exito-registro");
+  if (modal) modal.classList.add("hidden");
+}
+function mostrarModalError(mensaje) {
+  const modal = document.getElementById("modal-error-registro");
+  const mensajeDiv = document.getElementById("modal-error-mensaje");
+  if (modal && mensajeDiv) {
+    mensajeDiv.textContent = mensaje;
+    modal.classList.remove("hidden");
+  }
+}
+function ocultarModalError() {
+  const modal = document.getElementById("modal-error-registro");
+  if (modal) modal.classList.add("hidden");
+}
+
+// Cargar los modales en los placeholders
+async function cargarModales() {
+  // Modal de éxito
+  const exitoRes = await fetch("/tk/src/pages/modals/modal-exito-registro.html");
+  document.getElementById("modal-exito-registro-placeholder").innerHTML = await exitoRes.text();
+  // Modal de error
+  const errorRes = await fetch("/tk/src/pages/modals/modal-error-registro.html");
+  document.getElementById("modal-error-registro-placeholder").innerHTML = await errorRes.text();
+}
+
+document.addEventListener("DOMContentLoaded", async function () {
+  await cargarModales();
+
+  // Botón cerrar éxito
+  const btnCerrarExito = document.getElementById("cerrar-modal-exito-registro");
+  if (btnCerrarExito) {
+    btnCerrarExito.addEventListener("click", function () {
+      ocultarModalExito();
+      window.location.href = "./login.html";
+    });
+  }
+
+  // Botón cerrar error
+  const btnCerrarError = document.getElementById("cerrar-modal-error-registro");
+  if (btnCerrarError) {
+    btnCerrarError.addEventListener("click", ocultarModalError);
+  }
+
+  // Cargar selects dinámicos
   const nombresTipoDocumento = {
     CC: "Cédula de Ciudadanía",
     TI: "Tarjeta de Identidad",
@@ -11,12 +60,9 @@ document.addEventListener("DOMContentLoaded", function () {
     NIT: "NIT"
   };
 
-  // Cargar roles y tipos de documento dinámicamente usando el API centralizado
   async function cargarCatalogos() {
     try {
       const data = await getCatalogosUsuario();
-
-      // Tipos de documento
       const tipoDocSelect = document.getElementById("typeDocument");
       if (tipoDocSelect && Array.isArray(data.tipos_documento)) {
         tipoDocSelect.innerHTML = "";
@@ -27,8 +73,6 @@ document.addEventListener("DOMContentLoaded", function () {
           tipoDocSelect.appendChild(opt);
         });
       }
-
-      // Roles
       const rolSelect = document.getElementById("tipoUsuario");
       if (rolSelect && Array.isArray(data.roles)) {
         rolSelect.innerHTML = "";
@@ -40,28 +84,24 @@ document.addEventListener("DOMContentLoaded", function () {
         });
       }
     } catch (e) {
-      // Si falla, no mostrar nada
+      mostrarModalError("Error al cargar catálogos.");
     }
   }
-
   cargarCatalogos();
 
-  // Inicializa los selects de departamento y municipio
+  // Departamento y municipio
   if (typeof cargarDepartamentosMunicipios === "function") {
     cargarDepartamentosMunicipios("departamentoRegistro", "municipioRegistro");
   }
-
-  // Actualiza municipios al cambiar el departamento
   const departamentoSelect = document.getElementById("departamentoRegistro");
-  const municipioSelect = document.getElementById("municipioRegistro");
-  if (departamentoSelect && municipioSelect) {
+  if (departamentoSelect) {
     departamentoSelect.addEventListener("change", function () {
       cargarDepartamentosMunicipios("departamentoRegistro", "municipioRegistro", this.value);
     });
   }
 
+  // Formulario registro
   const form = document.getElementById("form-registro");
-  const errorDiv = document.getElementById("registro-error");
   if (!form) return;
 
   form.addEventListener("submit", async function (e) {
@@ -71,7 +111,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const pass = form.querySelector('[name="password"]');
     const pass2 = form.querySelector('[name="confirm-password"]');
     if (pass2 && pass.value !== pass2.value) {
-      errorDiv.textContent = "Las contraseñas no coinciden.";
+      mostrarModalError("Las contraseñas no coinciden.");
       pass.value = "";
       pass2.value = "";
       pass.focus();
@@ -81,21 +121,20 @@ document.addEventListener("DOMContentLoaded", function () {
     const formData = new FormData(form);
 
     try {
-      const response = await fetch("/tk/server/controller/RegisterController.php", {
+      // AJUSTE: Enviar a la API central, no al controlador directo
+      const response = await fetch("/tk/server/routes/api.php?module=register&action=register", {
         method: "POST",
         body: formData,
       });
       const data = await response.json();
 
       if (data.success) {
-        errorDiv.textContent = "";
-        alert("¡Registro exitoso! Ahora puedes iniciar sesión.");
-        window.location.href = "./login.html";
+        mostrarModalExito();
       } else {
-        errorDiv.textContent = data.message;
+        mostrarModalError(data.message || "Error en el registro.");
       }
     } catch (error) {
-      errorDiv.textContent = "Error de conexión con el servidor.";
+      mostrarModalError("Error de conexión con el servidor.");
     }
   });
 });

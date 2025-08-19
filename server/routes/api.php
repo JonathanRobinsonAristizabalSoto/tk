@@ -4,6 +4,8 @@ require_once("../config/config.php");
 require_once("../controller/RolesController.php");
 require_once("../controller/UsuariosController.php");
 require_once("../controller/DashboardController.php");
+require_once("../controller/RegisterController.php"); // Agrega el controlador de registro
+require_once("../controller/LoginController.php");    // Agrega el controlador de login
 
 // Obtiene el módulo y la acción solicitados de forma segura (GET o POST)
 $action = $_GET['action'] ?? $_POST['action'] ?? '';
@@ -14,6 +16,8 @@ $validModules = [
     'roles'      => RolesController::class,
     'usuarios'   => UsuariosController::class,
     'dashboard'  => DashboardController::class,
+    'register'   => RegisterController::class, // Ruta para registro
+    'login'      => LoginController::class,    // Ruta para login
     // Puedes agregar aquí otros módulos si los necesitas
 ];
 

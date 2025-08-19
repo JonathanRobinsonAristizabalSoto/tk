@@ -77,23 +77,6 @@
             Iniciar sesión
           </button>
 
-          <!-- Botón de Google Login compacto y centrado -->
-          <div class="flex justify-center my-2">
-            <div>
-              <!-- Google Identity Services: mejora aquí -->
-              <div id="g_id_onload"
-                data-client_id="226309003233-6jq415qlb9i6vi062q6b7kp8nf7a50hd.apps.googleusercontent.com"
-                data-context="signin" data-ux_mode="popup" data-callback="onGoogleSignIn" data-auto_prompt="false">
-              </div>
-              <div class="g_id_signin" data-type="standard" data-shape="rectangular" data-theme="outline"
-                data-text="sign_in_with" data-size="large" data-logo_alignment="left">
-              </div>
-            </div>
-          </div>
-          <!-- Fin mejora Google -->
-
-          <script src="https://accounts.google.com/gsi/client" async defer></script>
-
           <a href="/tk/src/pages/auth/register.html"
             class="mt-2 text-sm sm:text-base text-center text-color6 hover:underline font-medium transition font-poppins w-full">¿No
             tienes cuenta? Regístrate</a>
@@ -104,6 +87,9 @@
       </form>
     </div>
   </main>
+
+  <div id="modal-error-login-placeholder"></div>
+  <div id="modal-exito-login-placeholder"></div>
 
   <div id="footer-placeholder"></div>
   <div id="modal-privacidad-placeholder"></div>

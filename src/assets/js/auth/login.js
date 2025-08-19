@@ -1,5 +1,21 @@
 import { getCatalogosUsuario } from "../api/api.js";
 
+async function cargarModalesLogin() {
+    // Cargar modal de error
+    const errorRes = await fetch("/tk/src/pages/modals/modal-error-login.html");
+    document.getElementById("modal-error-login-placeholder").innerHTML = await errorRes.text();
+
+    // Cargar modal de éxito
+    const exitoRes = await fetch("/tk/src/pages/modals/modal-exito-login.html");
+    document.getElementById("modal-exito-login-placeholder").innerHTML = await exitoRes.text();
+
+    // Cerrar modal de error
+    document.getElementById("cerrar-modal-error-login").onclick = function () {
+        document.getElementById("modal-error-login").classList.add("hidden");
+    };
+}
+cargarModalesLogin();
+
 document.addEventListener("DOMContentLoaded", function () {
     const nombresTipoDocumento = {
         CC: "Cédula de Ciudadanía",
@@ -45,36 +61,40 @@ document.addEventListener("DOMContentLoaded", function () {
     const loginForm = document.getElementById("loginForm");
     if (!loginForm) return;
 
-    loginForm.addEventListener("submit", function (event) {
+    loginForm.addEventListener("submit", async function (event) {
         event.preventDefault();
 
         const formData = new FormData(loginForm);
 
-        fetch("/tk/server/controller/LoginController.php", {
-            method: "POST",
-            body: formData,
-            credentials: "include"
-        })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then((data) => {
-                if (data.success) {
-                    window.location.href = "/tk/src/pages/dashboard.html";
-                } else {
-                    alert(data.message);
-                }
-            })
-            .catch((error) => {
-                alert("Error al iniciar sesión. Inténtalo nuevamente.");
+        try {
+            const response = await fetch("/tk/server/routes/api.php?module=login&action=login", {
+                method: "POST",
+                body: formData,
+                credentials: "include"
             });
+
+            const data = await response.json();
+
+            if (data.success) {
+                // Mostrar modal de éxito
+                document.getElementById("usuario-nombre-login").textContent = data.nombre || "";
+                document.getElementById("modal-exito-login").classList.remove("hidden");
+                setTimeout(() => {
+                    window.location.href = "/tk/src/pages/dashboard.html";
+                }, 2000);
+            } else {
+                // Mostrar modal de error
+                document.getElementById("error-login-msg").textContent = data.message;
+                document.getElementById("modal-error-login").classList.remove("hidden");
+            }
+        } catch (error) {
+            document.getElementById("error-login-msg").textContent = "Error al iniciar sesión. Inténtalo nuevamente.";
+            document.getElementById("modal-error-login").classList.remove("hidden");
+        }
     });
 });
 
 function onGoogleSignIn(response) {
     console.log("Google Sign-In response:", response);
-    // fetch("/tk/server/controller/LoginController.php", { ... })
+    // fetch("/tk/server/routes/api.php?module=login&action=login", { ... })
 }
