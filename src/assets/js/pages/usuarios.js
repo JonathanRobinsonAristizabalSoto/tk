@@ -66,7 +66,7 @@ function iniciarModuloUsuarios(vista, filtro = "") {
     let estadoUsuarioActual = "Activo";
     let usuariosData = [];
     let paginaActual = 1;
-    let usuariosPorPagina = 10;
+    let usuariosPorPagina = 8; // <-- Cambiado a 8 para tarjetas
 
     // --- EVENTOS DE MODALES ---
     if (abrirModalCrear) {
@@ -313,6 +313,7 @@ function iniciarModuloUsuarios(vista, filtro = "") {
         dataTable.innerHTML = "";
         let vistaActual = localStorage.getItem('usuariosVista') || 'tabla';
         let tarjetasPorPagina = 8;
+        let tablaPorPagina = 10;
         let usuariosFiltrados = usuariosData;
         if (filtro && filtro.length > 0) {
             usuariosFiltrados = usuariosData.filter(usuario =>
@@ -322,11 +323,17 @@ function iniciarModuloUsuarios(vista, filtro = "") {
             );
         }
 
-        const totalPaginas = Math.ceil(usuariosFiltrados.length / usuariosPorPagina);
+        // Ajusta usuariosPorPagina según la vista
+        if (vistaActual === 'tarjetas') {
+            usuariosPorPagina = tarjetasPorPagina;
+        } else {
+            usuariosPorPagina = tablaPorPagina;
+        }
+
+        const totalPaginas = Math.max(1, Math.ceil(usuariosFiltrados.length / usuariosPorPagina));
         if (paginaActual > totalPaginas) paginaActual = 1; // Reinicia si la página actual es mayor al total
 
         if (vistaActual === 'tarjetas') {
-            usuariosPorPagina = tarjetasPorPagina;
             dataTable.className = `grid grid-cols-1 sm:grid-cols-4 gap-4`;
             const inicio = (paginaActual - 1) * usuariosPorPagina;
             const fin = inicio + usuariosPorPagina;
@@ -366,7 +373,6 @@ function iniciarModuloUsuarios(vista, filtro = "") {
                 dataTable.appendChild(card);
             });
         } else if (vistaActual === 'tabla') {
-            usuariosPorPagina = 10;
             dataTable.className = "overflow-x-auto";
             const inicio = (paginaActual - 1) * usuariosPorPagina;
             const fin = inicio + usuariosPorPagina;
@@ -389,13 +395,13 @@ function iniciarModuloUsuarios(vista, filtro = "") {
                 </thead>
                 <tbody>
                     ${usuariosMostrar.map(usuario => {
-                        const isActivo = usuario.estado === "Activo";
-                        const btnColor = isActivo ? "bg-green-600 hover:bg-green-700" : "bg-red-600 hover:bg-red-700";
-                        const btnIcon = isActivo
-                            ? '<i class="fas fa-user-check"></i>'
-                            : '<i class="fas fa-user-times"></i>';
-                        const btnTitle = isActivo ? "Inhabilitar" : "Habilitar";
-                        return `
+                const isActivo = usuario.estado === "Activo";
+                const btnColor = isActivo ? "bg-green-600 hover:bg-green-700" : "bg-red-600 hover:bg-red-700";
+                const btnIcon = isActivo
+                    ? '<i class="fas fa-user-check"></i>'
+                    : '<i class="fas fa-user-times"></i>';
+                const btnTitle = isActivo ? "Inhabilitar" : "Habilitar";
+                return `
                             <tr>
                                 <td class="p-2 border-b border-r text-center">${usuario.nombre} ${usuario.apellido}</td>
                                 <td class="p-2 border-b border-r text-center">${usuario.email}</td>
@@ -413,7 +419,7 @@ function iniciarModuloUsuarios(vista, filtro = "") {
                                 </td>
                             </tr>
                         `;
-                    }).join('')}
+            }).join('')}
                 </tbody>
             `;
             dataTable.appendChild(tabla);
@@ -422,11 +428,14 @@ function iniciarModuloUsuarios(vista, filtro = "") {
     }
 
     // --- PAGINADOR ---
+    // Esta función SIEMPRE muestra el paginador en el módulo de usuarios
     function renderPaginador(totalUsuarios) {
         if (!paginador) return;
         paginador.innerHTML = "";
-        const totalPaginas = Math.ceil(totalUsuarios / usuariosPorPagina);
-        if (totalPaginas <= 1) return;
+        const totalPaginas = Math.max(1, Math.ceil(totalUsuarios / usuariosPorPagina));
+
+        // SIEMPRE muestra el paginador
+        paginador.style.display = "flex";
 
         let html = `<nav class="flex justify-center items-center gap-1 m-1">`;
         html += `<button class="px-2 py-1 rounded bg-color5 text-white text-xs font-semibold hover:bg-color6 transition ${paginaActual === 1 ? "opacity-50 cursor-not-allowed" : ""}" ${paginaActual === 1 ? "disabled" : ""} id="btnPagAnterior">Anterior</button>`;
@@ -444,7 +453,6 @@ function iniciarModuloUsuarios(vista, filtro = "") {
             }
         });
         document.getElementById("btnPagSiguiente")?.addEventListener("click", () => {
-            const totalPaginas = Math.ceil(usuariosData.length / usuariosPorPagina);
             if (paginaActual < totalPaginas) {
                 paginaActual++;
                 renderUsuarios();

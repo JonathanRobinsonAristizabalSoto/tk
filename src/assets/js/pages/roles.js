@@ -177,30 +177,30 @@ window.viewRol = function(id_rol) {
   if (!rol) return;
   const modal = document.getElementById("modalVerRol");
   modal.innerHTML = `
-    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md border-2 border-color5 flex flex-col items-center relative">
+    <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-lg border-4 border-color5 flex flex-col items-center relative">
       <button type="button" id="closeModalVerRol"
-        class="absolute top-4 right-4 text-color7 text-xl sm:text-2xl font-bold hover:text-red-700">&times;</button>
+        class="absolute top-5 right-5 text-red-500 text-2xl font-bold hover:text-red-700 transition-colors duration-200">&times;</button>
       <div class="flex flex-col items-center mb-6">
-        <span class="text-5xl mb-2">
-          <i class="fas fa-user-shield ${rol.estado === "Activo" ? "text-green-600" : "text-red-600"}"></i>
+        <span class="mb-3">
+          <i class="fas fa-user-shield ${rol.estado === "Activo" ? "text-color5" : "text-red-500"} text-5xl drop-shadow"></i>
         </span>
-        <h2 class="font-bold text-color4 text-center mb-1 text-base sm:text-base md:text-base lg:text-lg">
-          ${rol.nombre}
-        </h2>
-        <span class="inline-block px-3 py-1 rounded mb-2 text-sm sm:text-base md:text-base lg:text-sm ${rol.estado === "Activo" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}">
+        <h2 class="font-bold text-gray-800 text-center mb-1 text-base">${rol.nombre}</h2>
+        <span class="inline-block px-4 py-1 rounded mb-2 text-sm font-semibold ${rol.estado === "Activo" ? "bg-green-100 text-color5 border border-green-400" : "bg-red-100 text-red-700 border border-red-400"} shadow">
           ${rol.estado}
         </span>
       </div>
-      <div class="mb-4 w-full">
-        <label class="font-bold text-color5 mb-1 block text-sm text-center w-full">Descripción</label>
-        <div id="descripcionVerRol" class="text-color4 text-center text-base">${rol.descripcion || ""}</div>
-      </div>
-      <div class="mb-2 w-full">
-        <label class="font-bold text-color5 mb-1 block text-sm text-center w-full">Actualización</label>
-        <div class="text-gray-500 text-center text-sm">${rol.fecha_actualizacion ? formatFecha(rol.fecha_actualizacion) : ""}</div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full mb-4">
+        <div class="bg-gray-50 rounded-lg border border-color2 p-4 flex flex-col items-center w-full">
+          <span class="font-bold text-color6 text-sm mb-1">Descripción:</span>
+          <span class="text-color4 text-sm text-center">${rol.descripcion || "<span class='italic text-color2'>Sin descripción</span>"}</span>
+        </div>
+        <div class="bg-gray-50 rounded-lg border border-color2 p-4 flex flex-col items-center w-full">
+          <span class="font-bold text-color6 text-sm mb-1">Actualización:</span>
+          <span class="text-color4 text-sm text-center">${rol.fecha_actualizacion ? formatFecha(rol.fecha_actualizacion) : ""}</span>
+        </div>
       </div>
       <button type="button" id="closeModalVerRolBtn"
-        class="bg-gray-300 p-2 rounded w-full font-semibold text-color4 hover:bg-gray-400 transition text-base mt-2">Cerrar</button>
+        class="bg-gray-300 hover:bg-gray-400 text-gray-700 px-6 py-2 rounded-xl w-full font-bold text-base shadow transition mt-2">Cerrar</button>
     </div>
   `;
   modal.classList.remove("hidden");

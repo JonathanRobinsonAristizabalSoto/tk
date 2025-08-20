@@ -166,6 +166,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     // --- USUARIOS MODULE ---
     function renderUsuariosModule(isMobile) {
         const mainContent = document.getElementById('main-content');
+
         let textoSize = "text-xs";
         let nombreSize = "text-base font-bold";
         const width = window.innerWidth;
@@ -236,6 +237,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             `;
         }
 
+        // --- AJUSTE: el paginador SIEMPRE debe estar dentro del área dinámica ---
         mainContent.innerHTML = `
         <div class="flex flex-col gap-2 my-1">
             <div class="flex justify-center">
@@ -244,6 +246,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             ${usuariosHeaderHtml}
         </div>
         <div id="dataTable"></div>
+        <div id="usuariosPaginador" class="mt-4 flex justify-center items-center"></div>
         `;
 
         let textoBusqueda = "";
@@ -309,7 +312,8 @@ document.addEventListener("DOMContentLoaded", async function () {
     // --- ROLES MODULE ---
     function renderRolesModule(vista = "tarjetas") {
         const mainContent = document.getElementById('main-content');
-        // Limpia el contenido principal y llama a la función global de roles.js
+        mainContent.innerHTML = "";
+
         if (typeof window.renderRoles === "function") {
             window.renderRoles(vista);
         } else if (typeof renderRoles === "function") {
@@ -321,10 +325,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     // Elimina el renderizado automático de usuarios/roles al recargar
     if (localStorage.getItem("usuariosMensaje")) {
-        // Si quieres mostrar solo el mensaje, hazlo aquí
-        // ejemplo: mostrarMensaje(localStorage.getItem("usuariosMensaje"));
         localStorage.removeItem("usuariosMensaje");
-        // No renderices ningún módulo, así se mantiene "Mis Tickets"
     }
 
     function setSidebarActive(id) {
@@ -394,4 +395,40 @@ document.addEventListener("DOMContentLoaded", async function () {
         window.cargarRolesEditar(usuario && usuario.id_rol ? usuario.id_rol : null);
         toggleModal('modalEditar', true);
     };
+
+    // --- MEJORA: Modal de confirmación al presionar atrás en el navegador ---
+    // Agrega una entrada extra al historial para interceptar el primer "Atrás"
+    if (window.history && window.history.pushState) {
+        window.history.pushState({ dashboard: true }, '', window.location.href);
+    }
+
+    window.addEventListener('popstate', function (event) {
+        // Solo mostrar el modal si estamos en dashboard
+        if (location.pathname.includes('dashboard.html')) {
+            mostrarModalLogoutConfirm();
+            // Volver a agregar la entrada para evitar salir
+            window.history.pushState({ dashboard: true }, '', window.location.href);
+        }
+    });
+
+    function mostrarModalLogoutConfirm() {
+        const modal = document.getElementById('modal-logout-confirm');
+        if (modal) {
+            modal.classList.remove('hidden');
+            // Botón Sí: cerrar sesión
+            const btnSi = document.getElementById('btnLogoutConfirmSi');
+            if (btnSi) {
+                btnSi.onclick = function () {
+                    window.location.href = "/tk/server/controller/LogoutController.php";
+                };
+            }
+            // Botón No: cerrar modal y permanecer en dashboard
+            const btnNo = document.getElementById('btnLogoutConfirmNo');
+            if (btnNo) {
+                btnNo.onclick = function () {
+                    modal.classList.add('hidden');
+                };
+            }
+        }
+    }
 });

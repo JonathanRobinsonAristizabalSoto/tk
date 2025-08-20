@@ -13,9 +13,9 @@ document.addEventListener("DOMContentLoaded", async function () {
     const perfilTelefono = document.getElementById("perfilTelefono");
     const inputPerfilTelefono = document.getElementById("inputPerfilTelefono");
     const perfilDepartamento = document.getElementById("perfilDepartamento");
-    const inputPerfilDepartamento = document.getElementById("inputPerfilDepartamento"); // select
+    const inputPerfilDepartamento = document.getElementById("inputPerfilDepartamento");
     const perfilMunicipio = document.getElementById("perfilMunicipio");
-    const inputPerfilMunicipio = document.getElementById("inputPerfilMunicipio"); // select
+    const inputPerfilMunicipio = document.getElementById("inputPerfilMunicipio");
     const perfilFoto = document.getElementById("perfilFoto");
     const inputPerfilFoto = document.getElementById("inputPerfilFoto");
     const perfilRol = document.getElementById("perfilRol");
@@ -80,23 +80,19 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     // Mostrar datos en modo edición
     function habilitarEdicion(usuario) {
-        // Inputs con valores actuales
         inputPerfilNombreCompleto.value = (usuario.nombre + " " + (usuario.apellido || "")).trim();
         inputPerfilEmail.value = usuario.email || "";
         inputPerfilTelefono.value = usuario.telefono || "";
 
-        // Mostrar selects y cargar departamentos/municipios dinámicamente
         inputPerfilDepartamento.classList.remove("hidden");
         perfilDepartamento.classList.add("hidden");
         inputPerfilMunicipio.classList.remove("hidden");
         perfilMunicipio.classList.add("hidden");
 
-        // Cargar departamentos y municipios usando el JS dinámico
         if (typeof cargarDepartamentosMunicipios === "function") {
             cargarDepartamentosMunicipios("inputPerfilDepartamento", "inputPerfilMunicipio", usuario.departamento, usuario.municipio);
         }
 
-        // Mostrar inputs, ocultar spans
         inputPerfilNombreCompleto.classList.remove("hidden");
         perfilNombreCompleto.classList.add("hidden");
         inputPerfilEmail.classList.remove("hidden");
@@ -104,15 +100,11 @@ document.addEventListener("DOMContentLoaded", async function () {
         inputPerfilTelefono.classList.remove("hidden");
         perfilTelefono.classList.add("hidden");
         inputPerfilFoto.classList.remove("hidden");
-
-        // Ocultar la foto en modo edición
         perfilFoto.classList.add("hidden");
 
-        // Mostrar título y descripción de edición
         if (tituloEdicion) tituloEdicion.classList.remove("hidden");
         if (descripcionEdicion) descripcionEdicion.classList.remove("hidden");
 
-        // Botones
         btnEditarPerfil.classList.add("hidden");
         btnGuardarPerfil.classList.remove("hidden");
         btnCancelarEdicionPerfil.classList.remove("hidden");
@@ -146,6 +138,14 @@ document.addEventListener("DOMContentLoaded", async function () {
         }, 2200);
     }
 
+    // Mostrar mensaje guardado en localStorage tras recargar
+    const mensajeGuardado = localStorage.getItem("perfilMensaje");
+    if (mensajeGuardado && modalMensaje && mensajeTexto && mensajeBox) {
+        const obj = JSON.parse(mensajeGuardado);
+        mostrarMensaje(obj.tipo, obj.mensaje);
+        localStorage.removeItem("perfilMensaje");
+    }
+
     // Cargar datos al abrir el modal usando el API centralizado
     if (btnPerfil) {
         btnPerfil.addEventListener("click", async function (e) {
@@ -176,7 +176,6 @@ document.addEventListener("DOMContentLoaded", async function () {
         formPerfil.onsubmit = async function (e) {
             e.preventDefault();
             const formData = new FormData();
-            // Separar nombre y apellido si es necesario
             let nombreCompleto = inputPerfilNombreCompleto.value.trim().split(" ");
             let nombre = nombreCompleto.shift() || "";
             let apellido = nombreCompleto.join(" ") || "";
@@ -186,7 +185,6 @@ document.addEventListener("DOMContentLoaded", async function () {
             formData.append("apellido", apellido);
             formData.append("email", inputPerfilEmail.value.trim());
             formData.append("telefono", inputPerfilTelefono.value.trim());
-            // Usar los valores seleccionados en los selects
             formData.append("departamento", inputPerfilDepartamento.value);
             formData.append("municipio", inputPerfilMunicipio.value);
             formData.append("foto_actual", usuarioActual.foto || "");
@@ -203,7 +201,10 @@ document.addEventListener("DOMContentLoaded", async function () {
                 });
                 const data = await resp.json();
                 if (data.success) {
-                    // Recargar la página para ver los cambios en tiempo real
+                    localStorage.setItem("perfilMensaje", JSON.stringify({
+                        tipo: "exito",
+                        mensaje: "¡Perfil actualizado exitosamente!"
+                    }));
                     window.location.reload();
                 } else {
                     mostrarMensaje("error", data.message || "Error al actualizar perfil.");
