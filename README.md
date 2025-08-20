@@ -13,20 +13,23 @@ Tk/                                          # Nombre del proyecto ubicado en la
 ├── node_modules/                            # Carpeta de dependencias externas del frontend instaladas por npm (librerías y paquetes JS).
 ├── server/                                  # Carpeta backend: lógica de negocio, controladores PHP, configuración y base de datos 
 │   ├── config/                              # Configuración del backend 
-│   │   └── config.php                       # Archivo de configuración de la base de datos y cabeceras CORS 
+│   │   └── config.php                       # Archivo de configuración de la base de datos y cabeceras CORS
 │   ├── controller/                          # Controladores del backend en PHP 
 │   │   ├── DashboardController.php          # Controlador para proteger el acceso al dashboard y servir datos del usuario autenticado (HTML y JSON)
 │   │   ├── LoginController.php              # Controlador para autenticación de usuarios y creación de sesión
 │   │   ├── LogoutController.php             # Controlador para cerrar la sesión del usuario
 │   │   ├── RegisterController.php           # Controlador para registro de nuevos usuarios
+│   │   ├── RolesController.php              # Controlador PHP para consultar y actualizar roles.
 │   │   └── UsuariosController.php           # Controlador para gestión de usuarios: crear, actualizar, consultar y cambiar estado
 │   ├── model/                               # Modelos del backend en PHP (acceso y lógica de datos)
+│   │   ├── Rol.php                          # Modelo para la entidad Rol
 │   │   ├── Usuario.php                      # Modelo para la entidad Usuario
-│   ├── routes/                              # 
-│   │   ├──
-│   ├── utils/                               # 
-│   │   ├── EmailHelper.php                  #
-│   └── .env                                 # 
+│   ├── routes/                              # Rutas de la API backend
+│   │   ├── api.php                          # Archivo principal de rutas; gestiona peticiones y conecta módulos con sus controladores
+│   ├── utils/                               # Utilidades y helpers para el backend
+│   │   ├── EmailHelper.php                  # Helper para envío de correos electrónicos (verificación y notificaciones)
+│   │   └── funtion.php                      # Funciones auxiliares y configuración de base de datos/CORS
+│   └── .env                                 # Variables de entorno y credenciales de configuración
 ├── src/                                     # Carpeta de código fuente y recursos principales del frontend (estilos, imágenes, scripts, páginas HTML y componentes).
 │   ├── assets/                              # Carpeta de recursos estáticos del frontend: estilos CSS, imágenes y scripts JavaScript.
 │   │   ├── css/                             # Carpeta de hojas de estilo CSS para la interfaz de usuario
@@ -41,6 +44,8 @@ Tk/                                          # Nombre del proyecto ubicado en la
 │   │   │   ├── logoticket.png               # Imagen del logo principal
 │   │   │   └── logoticket2.png              # Imagen del logo secundario
 │   │   └── js/                              # Archivos JavaScript para la lógica del cliente
+│   │       ├── api/                         # Módulo de funciones para consumir la API desde el frontend
+│   │       │   └── api.js                   # Funciones JavaScript para interactuar con la API backend (consultas y acciones de usuarios, roles, dashboard)
 │   │       ├── auth/                        # Scripts relacionados con autenticación y registro
 │   │       │   ├── login.js                 # Lógica de autenticación y envío de credenciales al backend
 │   │       │   ├── register.js              # Lógica para el registro de nuevos usuarios
@@ -48,11 +53,13 @@ Tk/                                          # Nombre del proyecto ubicado en la
 │   │       ├── jquery/                      # Librerías externas
 │   │       │   └── jquery.min.js            # Biblioteca jQuery para manipulación del DOM y AJAX
 │   │       ├── modals/                      # Scripts para gestión de modales
+│   │       │   ├── modal-logout.js          # Modal para logout
 │   │       │   ├── modal-priv-cookies.js    # Carga y gestión de los modales de privacidad y cookies
 │   │       │   └── modal-verificacion.js    # Modal para verificación de usuario
 │   │       ├── pages/                       # Scripts específicos de páginas principales
 │   │       │   ├── dashboard.js             # Lógica y funcionalidades del dashboard principal del usuario
 │   │       │   ├── profile.js               # Lógica para mostrar y editar el perfil del usuario
+│   │       │   ├── roles.js                 # Módulo de gestión de Roles: CRUD, vistas y paginación
 │   │       │   └── usuarios.js              # Módulo de gestión de usuarios: CRUD, vistas y paginación
 │   │       ├── utils/                       # Scripts de utilidades generales
 │   │       │   ├── departamentos.js         # Lógica para cargar departamentos y municipios en formularios de usuario
