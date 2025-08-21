@@ -1,15 +1,17 @@
 <?php
 require_once("../model/Usuario.php");
+use Src\Utils\EmailHelper;
 
 /**
  * Controlador para gestión de usuarios.
- * Permite crear, actualizar, cambiar estado, eliminar lógicamente y consultar usuarios.
  */
-class UsuariosController {
+class UsuariosController
+{
     private $usuarioModel;
     private $pdo;
 
-    public function __construct($pdo) {
+    public function __construct($pdo)
+    {
         $this->pdo = $pdo;
         $this->usuarioModel = new Usuario($pdo);
     }
@@ -18,7 +20,8 @@ class UsuariosController {
      * Maneja las acciones solicitadas para el módulo usuarios.
      * @param string $action Acción a ejecutar
      */
-    public function handle($action) {
+    public function handle($action)
+    {
         try {
             switch ($action) {
                 case 'add':
@@ -34,8 +37,10 @@ class UsuariosController {
                         $tmp_name = $_FILES['fotoCrear']['tmp_name'];
 
                         list($width, $height) = getimagesize($tmp_name);
-                        $maxWidth = 400; $maxHeight = 400;
-                        $newWidth = $width; $newHeight = $height;
+                        $maxWidth = 400;
+                        $maxHeight = 400;
+                        $newWidth = $width;
+                        $newHeight = $height;
                         if ($width > $maxWidth) {
                             $newHeight = $height * ($maxWidth / $width);
                             $newWidth = $maxWidth;
@@ -80,7 +85,7 @@ class UsuariosController {
                         'token_verificacion' => null
                     ];
                     // Validación de campos obligatorios
-                    foreach (['tipo_documento','documento','nombre','apellido','email','telefono','departamento','municipio','password'] as $campo) {
+                    foreach (['tipo_documento', 'documento', 'nombre', 'apellido', 'email', 'telefono', 'departamento', 'municipio', 'password'] as $campo) {
                         if (empty($data[$campo])) {
                             echo json_encode(['success' => false, 'message' => 'Todos los campos son obligatorios.']);
                             return;
@@ -124,8 +129,10 @@ class UsuariosController {
                         $tmp_name = $_FILES['foto']['tmp_name'];
 
                         list($width, $height) = getimagesize($tmp_name);
-                        $maxWidth = 400; $maxHeight = 400;
-                        $newWidth = $width; $newHeight = $height;
+                        $maxWidth = 400;
+                        $maxHeight = 400;
+                        $newWidth = $width;
+                        $newHeight = $height;
                         if ($width > $maxWidth) {
                             $newHeight = $height * ($maxWidth / $width);
                             $newWidth = $maxWidth;
@@ -179,8 +186,10 @@ class UsuariosController {
                         $tmp_name = $_FILES['foto']['tmp_name'];
 
                         list($width, $height) = getimagesize($tmp_name);
-                        $maxWidth = 400; $maxHeight = 400;
-                        $newWidth = $width; $newHeight = $height;
+                        $maxWidth = 400;
+                        $maxHeight = 400;
+                        $newWidth = $width;
+                        $newHeight = $height;
                         if ($width > $maxWidth) {
                             $newHeight = $height * ($maxWidth / $width);
                             $newWidth = $maxWidth;
@@ -266,7 +275,7 @@ class UsuariosController {
                     if ($row) {
                         preg_match("/^enum\((.*)\)$/", $row['Type'], $matches);
                         if (isset($matches[1])) {
-                            $tipos = array_map(function($v) {
+                            $tipos = array_map(function ($v) {
                                 return trim($v, "'");
                             }, explode(',', $matches[1]));
                         }
@@ -287,6 +296,112 @@ class UsuariosController {
                         echo json_encode($usuarios);
                     }
                     break;
+
+                case 'verifyCode':
+                    $email = $_POST['user'] ?? '';
+                    $code = $_POST['code'] ?? '';
+
+                    // Si la petición es JSON, también puede venir por php://input
+                    if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($email)) {
+                        $input = json_decode(file_get_contents('php://input'), true);
+                        $email = $input['user'] ?? '';
+                        $code = $input['code'] ?? '';
+                    }
+
+                    if (!$email || !$code) {
+                        echo json_encode(['success' => false, 'message' => 'Datos incompletos.']);
+                        return;
+                    }
+
+                    // Busca el usuario por email
+                    $usuario = $this->usuarioModel->obtenerPorEmail($email);
+                    if (!$usuario) {
+                        echo json_encode(['success' => false, 'message' => 'Usuario no encontrado.']);
+                        return;
+                    }
+
+                    // Verifica el código
+                    if ($usuario['token_verificacion'] == $code) {
+                        // Marca el correo como verificado y elimina el token
+                        $this->usuarioModel->verificarCorreo($usuario['id_usuario']);
+                        // Puedes generar un token JWT aquí si lo usas
+                        echo json_encode(['success' => true, 'message' => 'Verificación exitosa.', 'token' => 'TOKEN_AQUI']);
+                    } else {
+                        echo json_encode(['success' => false, 'message' => 'Código incorrecto o expirado.']);
+                    }
+                    break;
+
+                // --- RECUPERACIÓN DE CONTRASEÑA ---
+                case 'sendRecoveryCode':
+                    $input = json_decode(file_get_contents('php://input'), true);
+                    $email = $input['email'] ?? $_POST['email'] ?? '';
+                    if (!$email) {
+                        echo json_encode(['success' => false, 'message' => 'Correo electrónico requerido.']);
+                        return;
+                    }
+                    $usuario = $this->usuarioModel->obtenerPorEmail($email);
+                    if (!$usuario) {
+                        echo json_encode(['success' => false, 'message' => 'No existe una cuenta con ese correo.']);
+                        return;
+                    }
+                    $codigo = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+                    if ($this->usuarioModel->actualizarCodigoRecuperacion($usuario['id_usuario'], $codigo)) {
+                        $enviado = EmailHelper::enviarCodigoRecuperacion($email, $codigo, $usuario['nombre']);
+                        if ($enviado) {
+                            echo json_encode(['success' => true, 'message' => 'Código enviado al correo.']);
+                        } else {
+                            echo json_encode(['success' => false, 'message' => 'No se pudo enviar el correo.']);
+                        }
+                    } else {
+                        echo json_encode(['success' => false, 'message' => 'No se pudo guardar el código.']);
+                    }
+                    return;
+
+                case 'verifyRecoveryCode':
+                    $input = json_decode(file_get_contents('php://input'), true);
+                    $email = $input['email'] ?? $_POST['email'] ?? '';
+                    $codigo = $input['codigo'] ?? $_POST['codigo'] ?? '';
+                    if (!$email || !$codigo) {
+                        echo json_encode(['success' => false, 'message' => 'Correo y código requeridos.']);
+                        return;
+                    }
+                    $usuario = $this->usuarioModel->obtenerPorEmail($email);
+                    if (!$usuario) {
+                        echo json_encode(['success' => false, 'message' => 'Usuario no encontrado.']);
+                        return;
+                    }
+                    if ($usuario['codigo_recuperacion'] == $codigo) {
+                        echo json_encode(['success' => true, 'message' => 'Código verificado.']);
+                    } else {
+                        echo json_encode(['success' => false, 'message' => 'Código incorrecto.']);
+                    }
+                    return;
+
+                case 'changePassword':
+                    $input = json_decode(file_get_contents('php://input'), true);
+                    $email = $input['email'] ?? $_POST['email'] ?? '';
+                    $codigo = $input['codigo'] ?? $_POST['codigo'] ?? '';
+                    $password = $input['password'] ?? $_POST['password'] ?? '';
+                    if (!$email || !$codigo || !$password) {
+                        echo json_encode(['success' => false, 'message' => 'Todos los campos son obligatorios.']);
+                        return;
+                    }
+                    $usuario = $this->usuarioModel->obtenerPorEmail($email);
+                    if (!$usuario) {
+                        echo json_encode(['success' => false, 'message' => 'Usuario no encontrado.']);
+                        return;
+                    }
+                    if ($usuario['codigo_recuperacion'] != $codigo) {
+                        echo json_encode(['success' => false, 'message' => 'Código incorrecto.']);
+                        return;
+                    }
+                    $ok = $this->usuarioModel->actualizarPasswordYLimpiarCodigo($usuario['id_usuario'], $password);
+                    if ($ok) {
+                        echo json_encode(['success' => true, 'message' => 'Contraseña actualizada correctamente.']);
+                    } else {
+                        echo json_encode(['success' => false, 'message' => 'No se pudo actualizar la contraseña.']);
+                    }
+                    return;
 
                 default:
                     echo json_encode(['success' => false, 'message' => 'Acción no válida.']);

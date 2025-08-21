@@ -54,6 +54,7 @@ CREATE TABLE usuarios (
     estado ENUM('Activo', 'Inactivo') NOT NULL DEFAULT 'Activo',
     email_verificado BOOLEAN NOT NULL DEFAULT 0,
     token_verificacion VARCHAR(255),
+    codigo_recuperacion VARCHAR(10) DEFAULT NULL, -- <--- AJUSTE AQUÍ
     eliminado BOOLEAN NOT NULL DEFAULT 0,
     fecha_registro DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     fecha_actualizacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -264,7 +265,7 @@ INSERT INTO rolpermisos (id_rol, id_permiso, fecha_asignacion) VALUES
 INSERT INTO usuarios (
     tipo_documento, documento, nombre, apellido, email, telefono, departamento, municipio, foto, password, id_rol, estado, email_verificado, eliminado
 ) VALUES
-('CC', '1053810807', 'Jonathan', 'Aristizabal', 'admin@gmail.com', '3187542709', 'Caldas', 'Manizales', 'assets/images/perfiles/default.png', '$2y$10$JA/SnuV36zc/jbkkH4Wwje7F1HGm5Le7ZQd0AMzrTGk3lBPaUIzLi', 1, 'Activo', 1, 0), -- Administrador
+('CC', '1053810807', 'Jonathan', 'Aristizabal', 'martinrobinsofficial@gmail.com', '3187542709', 'Caldas', 'Manizales', 'assets/images/perfiles/default.png', '$2y$10$JA/SnuV36zc/jbkkH4Wwje7F1HGm5Le7ZQd0AMzrTGk3lBPaUIzLi', 1, 'Activo', 1, 0), -- Administrador
 ('CC', '1000000002', 'Jaime', 'Rodriguez', 'jaime@email.com', '3100000002', 'Caldas', 'Manizales', 'assets/images/perfiles/default.png', '$2y$10$JA/SnuV36zc/jbkkH4Wwje7F1HGm5Le7ZQd0AMzrTGk3lBPaUIzLi', 2, 'Activo', 1, 0), -- Soporte
 ('CC', '1000000003', 'Gloria', 'Corrales', 'gloria@email.com', '3100000003', 'Caldas', 'Manizales', 'assets/images/perfiles/default.png', '$2y$10$JA/SnuV36zc/jbkkH4Wwje7F1HGm5Le7ZQd0AMzrTGk3lBPaUIzLi', 2, 'Activo', 1, 0), -- Soporte
 ('CC', '1000000004', 'Sofía', 'Ramírez', 'sofia@email.com', '3100000004', 'Caldas', 'Manizales', 'assets/images/perfiles/default.png', '$2y$10$JA/SnuV36zc/jbkkH4Wwje7F1HGm5Le7ZQd0AMzrTGk3lBPaUIzLi', 3, 'Activo', 1, 0),

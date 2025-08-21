@@ -1,0 +1,35 @@
+<div id="modal-nueva-contraseña" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 hidden">
+  <div class="bg-color4 rounded-2xl shadow-2xl border border-color2 px-6 py-8 sm:px-8 sm:py-8 w-full max-w-md flex flex-col items-center relative">
+    <button id="cerrar-modal-nueva-contraseña" class="absolute top-4 right-4 text-color6 text-xl hover:text-color5 transition">
+      <i class="fas fa-times"></i>
+    </button>
+    <i class="fas fa-lock text-color6 text-5xl sm:text-6xl mb-2 drop-shadow"></i>
+    <h3 class="text-xl sm:text-2xl font-oswald text-color5 mb-1 uppercase text-center">
+      Nueva contraseña
+    </h3>
+    <p class="text-sm sm:text-base text-color1 font-medium text-center font-lato mb-4">
+      Ingresa y confirma tu nueva contraseña para tu cuenta.
+    </p>
+    <form id="formNuevaContraseña" class="w-full flex flex-col items-center">
+      <label for="nuevaPassword"
+        class="block text-sm sm:text-base font-semibold text-color1 font-poppins text-center w-full mb-2">
+        Nueva contraseña
+      </label>
+      <input type="password" id="nuevaPassword" name="nuevaPassword" required minlength="6" placeholder="Nueva contraseña"
+        class="block w-full p-2 mt-1 text-xs sm:text-sm border border-color2 rounded-lg shadow-sm focus:ring-color6 focus:border-color6 bg-color1 font-poppins placeholder:text-center text-center" />
+
+      <label for="confirmarPassword"
+        class="block text-sm sm:text-base font-semibold text-color1 font-poppins text-center w-full mb-2 mt-4">
+        Confirmar contraseña
+      </label>
+      <input type="password" id="confirmarPassword" name="confirmarPassword" required minlength="6" placeholder="Confirmar contraseña"
+        class="block w-full p-2 mt-1 text-xs sm:text-sm border border-color2 rounded-lg shadow-sm focus:ring-color6 focus:border-color6 bg-color1 font-poppins placeholder:text-center text-center" />
+
+      <div id="error-nueva-contraseña" class="text-red-600 text-xs mt-2 mb-2 text-center"></div>
+      <button type="submit"
+        class="w-full py-2 mt-4 text-base sm:text-lg rounded-lg bg-color5 hover:bg-color6 text-white font-oswald uppercase">
+        Cambiar contraseña
+      </button>
+    </form>
+  </div>
+</div>

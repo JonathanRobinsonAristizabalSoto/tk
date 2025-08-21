@@ -89,6 +89,9 @@ Tk/                                          # Nombre del proyecto ubicado en la
 │   │   │   ├── header.html                  # Encabezado principal con logo y menú de navegación
 │   │   │   ├── footer.html                  # Pie de página con enlaces legales y redes sociales
 │       └── dashboard.html                   # Dashboard principal del usuario autenticado
+├── vendor/                                  #
+├── composer.json                            #
+├── composer.lock                            #
 ├── index.html                               # Página principal de inicio y bienvenida para los usuarios
 ├── package-lock.json                        # Archivo de bloqueo de dependencias npm, garantiza la instalación exacta de versiones usadas en el frontend
 ├── package.json                             # Configuración del proyecto frontend y scripts de npm

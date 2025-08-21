@@ -17,8 +17,8 @@ class Usuario {
     public function crear($data) {
         $stmt = $this->pdo->prepare(
             "INSERT INTO usuarios (
-                tipo_documento, documento, nombre, apellido, email, telefono, departamento, municipio, foto, password, id_rol, estado, email_verificado, token_verificacion, eliminado
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+                tipo_documento, documento, nombre, apellido, email, telefono, departamento, municipio, foto, password, id_rol, estado, email_verificado, token_verificacion, eliminado, codigo_recuperacion
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL)"
         );
         return $stmt->execute([
             $data['tipo_documento'],
@@ -159,5 +159,51 @@ class Usuario {
     public function obtenerTodos() {
         $stmt = $this->pdo->query("SELECT u.*, r.nombre AS rol_nombre FROM usuarios u LEFT JOIN roles r ON u.id_rol = r.id_rol WHERE u.eliminado = 0");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Obtiene un usuario por correo electrónico (solo si no está eliminado).
+     * @param string $email
+     * @return array|null
+     */
+    public function obtenerPorEmail($email) {
+        $stmt = $this->pdo->prepare("SELECT * FROM usuarios WHERE email = ? AND eliminado = 0");
+        $stmt->execute([$email]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Guarda el código de recuperación de contraseña para el usuario.
+     * @param int $id_usuario
+     * @param string $codigo
+     * @return bool
+     */
+    public function actualizarCodigoRecuperacion($id_usuario, $codigo) {
+        $stmt = $this->pdo->prepare("UPDATE usuarios SET codigo_recuperacion = ? WHERE id_usuario = ?");
+        return $stmt->execute([$codigo, $id_usuario]);
+    }
+
+    /**
+     * Verifica el código de recuperación para el usuario.
+     * @param int $id_usuario
+     * @param string $codigo
+     * @return bool
+     */
+    public function verificarCodigoRecuperacion($id_usuario, $codigo) {
+        $stmt = $this->pdo->prepare("SELECT id_usuario FROM usuarios WHERE id_usuario = ? AND codigo_recuperacion = ? AND eliminado = 0");
+        $stmt->execute([$id_usuario, $codigo]);
+        return $stmt->fetch() ? true : false;
+    }
+
+    /**
+     * Actualiza la contraseña y limpia el código de recuperación.
+     * @param int $id_usuario
+     * @param string $password
+     * @return bool
+     */
+    public function actualizarPasswordYLimpiarCodigo($id_usuario, $password) {
+        $hash = password_hash($password, PASSWORD_DEFAULT);
+        $stmt = $this->pdo->prepare("UPDATE usuarios SET password = ?, codigo_recuperacion = NULL WHERE id_usuario = ?");
+        return $stmt->execute([$hash, $id_usuario]);
     }
 }

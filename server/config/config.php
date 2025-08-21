@@ -1,15 +1,21 @@
 <?php
 
+require_once __DIR__ . '/../../vendor/autoload.php';
+
+// Cargar variables de entorno desde .env
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
+$dotenv->load();
+
 // Configuración de cabeceras para CORS
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
 try {
-    // Configuración de la base de datos
-    $dsn = 'mysql:host=localhost;dbname=ticketpro;charset=utf8';
-    $username = 'root';
-    $password = '';
+    // Configuración de la base de datos usando variables de entorno
+    $dsn = 'mysql:host=' . $_ENV['DB_HOST'] . ';dbname=' . $_ENV['DB_NAME'] . ';charset=utf8';
+    $username = $_ENV['DB_USER'];
+    $password = $_ENV['DB_PASS'];
 
     // Creación de la conexión PDO
     $pdo = new PDO($dsn, $username, $password);
@@ -23,5 +29,3 @@ try {
     echo json_encode(['success' => false, 'message' => 'Error de conexión: ' . $e->getMessage()]);
 }
 ?>
-
-

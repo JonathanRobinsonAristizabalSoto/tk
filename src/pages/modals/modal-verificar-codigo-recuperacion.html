@@ -1,0 +1,30 @@
+<div id="modal-verificar-codigo-recuperacion"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 hidden">
+    <div
+        class="bg-color4 rounded-2xl shadow-2xl border border-color2 px-6 py-8 sm:px-8 sm:py-8 w-full max-w-md flex flex-col items-center relative">
+        <button id="cerrar-modal-verificar-codigo"
+            class="absolute top-4 right-4 text-color6 text-xl hover:text-color5 transition">
+            <i class="fas fa-times"></i>
+        </button>
+        <i class="fas fa-key text-color6 text-5xl sm:text-6xl mb-2 drop-shadow"></i>
+        <h3 class="text-xl sm:text-2xl font-oswald text-color5 mb-1 uppercase text-center">
+            Verifica tu código
+        </h3>
+        <p class="text-sm sm:text-base text-color1 font-medium text-center font-lato mb-4">
+            Ingresa el código de verificación que enviamos a tu correo electrónico.
+        </p>
+        <form id="codigoRecuperacionForm" class="w-full flex flex-col items-center">
+            <label for="codigo"
+                class="block text-sm sm:text-base font-semibold text-color1 font-poppins text-center w-full mb-2">
+                Código de verificación
+            </label>
+            <input type="text" id="codigo" name="codigo" maxlength="6" required placeholder="Código de 6 dígitos"
+                class="block w-full p-2 mt-1 text-xs sm:text-sm border border-color2 rounded-lg shadow-sm focus:ring-color6 focus:border-color6 bg-color1 font-poppins placeholder:text-center text-center" />
+            <div id="error-codigo-recuperacion" class="text-red-600 text-xs mt-2 mb-2 text-center"></div>
+            <button type="submit"
+                class="w-full py-2 mt-4 text-base sm:text-lg rounded-lg bg-color5 hover:bg-color6 text-white font-oswald uppercase">
+                Verificar código
+            </button>
+        </form>
+    </div>
+</div>

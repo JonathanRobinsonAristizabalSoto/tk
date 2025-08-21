@@ -2,20 +2,45 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Verifica tu código</title>
-    <link rel="icon" type="image/png" href="../../assets/img/logos/favicon.png">
-    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <title>Verificación en dos pasos - TicketPro+</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/tk/src/assets/css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Oswald:wght@400;700;900&family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet" />
+    <script src="/tk/src/assets/js/jquery/jquery.min.js"></script>
 </head>
-<body>
-    <main class="flex flex-col items-center justify-center min-h-screen">
-        <h1 class="text-2xl mb-4">Verificación en dos pasos</h1>
-        <p>Ingresa el código de 6 dígitos que recibiste por <b>correo electrónico</b>.</p>
-        <form id="verify-code-form" class="mt-6 flex flex-col gap-4">
-            <input type="text" id="code" maxlength="6" placeholder="Código de 6 dígitos" class="text-center px-4 py-2 border rounded" required>
-            <button type="submit" class="bg-primary text-white px-6 py-2 rounded">Verificar</button>
-        </form>
-        <div id="error-message" class="text-red-500 mt-2"></div>
+<body class="flex flex-col min-h-screen font-poppins bg-color1">
+    <div id="header-placeholder"></div>
+    <main class="flex flex-col items-center justify-center flex-1 p-4 sm:p-8 bg-color1">
+        <div class="w-full max-w-md bg-color4 rounded-2xl shadow-2xl border border-color2 px-6 py-8 sm:px-10 sm:py-10">
+            <div class="w-full flex flex-col items-center mb-6">
+                <div class="flex items-center justify-center gap-3 mb-2">
+                    <i class="fas fa-shield-alt text-color6 text-3xl sm:text-4xl"></i>
+                    <h2 class="text-2xl sm:text-3xl font-oswald font-black text-color5 tracking-tight uppercase text-center w-full">
+                        Verificación en dos pasos
+                    </h2>
+                </div>
+                <p class="text-sm sm:text-base text-color1 font-medium text-center font-lato w-full">
+                    Ingresa el código de 6 dígitos que recibiste por <b>correo electrónico</b> para activar tu cuenta.
+                </p>
+            </div>
+            <form id="verify-code-form" class="flex flex-col gap-4">
+                <input type="text" id="code" maxlength="6" placeholder="Código de 6 dígitos" class="text-center px-4 py-2 border border-color2 rounded-lg shadow-sm focus:ring-color6 focus:border-color6 bg-color1 font-poppins text-lg tracking-widest" required>
+                <button type="submit" class="bg-color5 hover:bg-color6 text-white px-6 py-2 rounded-lg font-oswald text-lg shadow transition-colors duration-200">
+                    Verificar
+                </button>
+            </form>
+            <div id="error-message" class="text-red-500 mt-2 text-center"></div>
+            <div class="mt-4 text-center">
+                <a href="./register.html" class="text-color6 hover:underline font-medium text-sm transition">Volver al registro</a>
+            </div>
+        </div>
     </main>
-    <script type="module" src="../../assets/js/auth/verify-code.js"></script>
+    <div id="footer-placeholder"></div>
+    <div id="modal-privacidad-placeholder"></div>
+    <div id="modal-cookies-placeholder"></div>
+    <script type="module" src="/tk/src/assets/js/auth/verify-code.js"></script>
+    <script src="/tk/src/assets/js/modals/modal-priv-cookies.js"></script>
+    <script src="/tk/src/assets/js/utils/loadPartials.js"></script>
 </body>
 </html>

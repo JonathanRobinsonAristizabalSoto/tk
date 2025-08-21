@@ -37,54 +37,47 @@
       </div>
 
       <form id="loginForm" class="w-full">
-        <!-- Selector de tipo de documento (dinámico) -->
-        <label for="typeDocument"
-          class="block mt-2 text-sm sm:text-base font-semibold text-color1 font-poppins text-center w-full">Tipo de
-          documento</label>
-        <select id="typeDocument" name="typeDocument" required
-          class="block w-full p-2 mt-1 text-xs sm:text-sm border border-color2 rounded-lg shadow-sm focus:ring-color6 focus:border-color6 bg-color1 font-poppins text-center">
-        </select>
+  <!-- Campo para correo o número de documento -->
+  <label for="identificador"
+    class="block mt-2 text-sm sm:text-base font-semibold text-color1 font-poppins text-center w-full">
+    Correo electrónico o número de documento
+  </label>
+  <input type="text" id="identificador" name="identificador" placeholder="Ingresa tu correo o documento" required
+    class="block w-full p-2 mt-1 text-xs sm:text-sm border border-color2 rounded-lg shadow-sm focus:ring-color6 focus:border-color6 bg-color1 font-poppins placeholder:text-center text-center" />
 
-        <!-- Campo de número de documento -->
-        <label for="documento"
-          class="block mt-4 text-sm sm:text-base font-semibold text-color1 font-poppins text-center w-full">Número de
-          documento</label>
-        <input type="text" id="documento" name="documento" placeholder="Ingresa tu documento" required pattern="\d+"
-          class="block w-full p-2 mt-1 text-xs sm:text-sm border border-color2 rounded-lg shadow-sm focus:ring-color6 focus:border-color6 bg-color1 font-poppins placeholder:text-center text-center" />
+  <!-- Campo de contraseña -->
+  <label for="password"
+    class="block mt-4 text-sm sm:text-base font-semibold text-color1 font-poppins text-center w-full">Contraseña</label>
+  <div class="relative w-full flex items-center">
+    <input type="password" id="password" name="password" required placeholder="Ingresa tu contraseña"
+      class="block w-full p-2 pr-10 mt-1 text-xs sm:text-sm border border-color2 rounded-lg shadow-sm focus:ring-color6 focus:border-color6 bg-color1 font-poppins placeholder:text-center text-center" />
+    <i class="fas fa-eye absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-color5"
+      id="togglePassword"></i>
+  </div>
 
-        <!-- Campo de contraseña -->
-        <label for="password"
-          class="block mt-4 text-sm sm:text-base font-semibold text-color1 font-poppins text-center w-full">Contraseña</label>
-        <div class="relative w-full flex items-center">
-          <input type="password" id="password" name="password" required placeholder="Ingresa tu contraseña"
-            class="block w-full p-2 pr-10 mt-1 text-xs sm:text-sm border border-color2 rounded-lg shadow-sm focus:ring-color6 focus:border-color6 bg-color1 font-poppins placeholder:text-center text-center" />
-          <i class="fas fa-eye absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-color5"
-            id="togglePassword"></i>
-        </div>
+  <!-- Selector de tipo de usuario (dinámico) -->
+  <label for="user-type"
+    class="block mt-4 text-sm sm:text-base font-semibold text-color1 font-poppins text-center w-full">Tipo de
+    usuario</label>
+  <select id="user-type" name="user-type" required
+    class="block w-full p-2 mt-1 text-center text-xs sm:text-sm border border-color2 rounded-lg shadow-sm focus:ring-color6 focus:border-color6 bg-color1 font-poppins text-center">
+  </select>
 
-        <!-- Selector de tipo de usuario (dinámico) -->
-        <label for="user-type"
-          class="block mt-4 text-sm sm:text-base font-semibold text-color1 font-poppins text-center w-full">Tipo de
-          usuario</label>
-        <select id="user-type" name="user-type" required
-          class="block w-full p-2 mt-1 text-center text-xs sm:text-sm border border-color2 rounded-lg shadow-sm focus:ring-color6 focus:border-color6 bg-color1 font-poppins text-center">
-        </select>
+  <!-- Acciones del formulario -->
+  <div class="flex flex-col items-center mt-8 space-y-2 w-full">
+    <button type="submit"
+      class="w-full py-2 text-base sm:text-lg font-semibold rounded-lg bg-color5 hover:bg-color6 text-white transition-colors duration-200 font-oswald uppercase text-center">
+      Iniciar sesión
+    </button>
 
-        <!-- Acciones del formulario -->
-        <div class="flex flex-col items-center mt-8 space-y-2 w-full">
-          <button type="submit"
-            class="w-full py-2 text-base sm:text-lg font-semibold rounded-lg bg-color5 hover:bg-color6 text-white transition-colors duration-200 font-oswald uppercase text-center">
-            Iniciar sesión
-          </button>
-
-          <a href="/tk/src/pages/auth/register.html"
-            class="mt-2 text-sm sm:text-base text-center text-color6 hover:underline font-medium transition font-poppins w-full">¿No
-            tienes cuenta? Regístrate</a>
-          <a href="/tk/src/pages/auth/password_recovery.html"
-            class="mt-1 text-xs sm:text-sm text-center text-color1 hover:text-color2 hover:underline transition font-poppins w-full">Olvidé
-            mi contraseña</a>
-        </div>
-      </form>
+    <a href="/tk/src/pages/auth/register.html"
+      class="mt-2 text-sm sm:text-base text-center text-color6 hover:underline font-medium transition font-poppins w-full">¿No
+      tienes cuenta? Regístrate</a>
+    <a href="/tk/src/pages/auth/password_recovery.html"
+      class="mt-1 text-xs sm:text-sm text-center text-color1 hover:text-color2 hover:underline transition font-poppins w-full">Olvidé
+      mi contraseña</a>
+  </div>
+</form>
     </div>
   </main>
 

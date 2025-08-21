@@ -4,21 +4,32 @@ require_once("../config/config.php");
 require_once("../controller/RolesController.php");
 require_once("../controller/UsuariosController.php");
 require_once("../controller/DashboardController.php");
-require_once("../controller/RegisterController.php"); // Agrega el controlador de registro
-require_once("../controller/LoginController.php");    // Agrega el controlador de login
+require_once("../controller/RegisterController.php");
+require_once("../controller/LoginController.php");
 
-// Obtiene el módulo y la acción solicitados de forma segura (GET o POST)
+// Obtiene el módulo y la acción solicitados de forma segura (GET, POST o JSON)
 $action = $_GET['action'] ?? $_POST['action'] ?? '';
 $module = $_GET['module'] ?? $_POST['module'] ?? '';
+
+// Si la petición es JSON, decodifica el cuerpo
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($module)) {
+    $input = json_decode(file_get_contents('php://input'), true);
+    if (is_array($input)) {
+        $action = $input['action'] ?? $action;
+        $module = $input['module'] ?? $module;
+        // Puedes pasar otros datos al controlador si lo necesitas
+        $_POST = array_merge($_POST, $input);
+    }
+}
 
 // Define los módulos válidos y sus controladores asociados
 $validModules = [
     'roles'      => RolesController::class,
     'usuarios'   => UsuariosController::class,
     'dashboard'  => DashboardController::class,
-    'register'   => RegisterController::class, // Ruta para registro
-    'login'      => LoginController::class,    // Ruta para login
-    // Puedes agregar aquí otros módulos si los necesitas
+    'register'   => RegisterController::class,
+    'login'      => LoginController::class,
+    // Agrega aquí otros módulos si los necesitas
 ];
 
 // Establece el tipo de respuesta como JSON

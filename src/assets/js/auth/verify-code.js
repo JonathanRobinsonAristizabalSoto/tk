@@ -1,3 +1,4 @@
+import { apiPost } from "../api/api.js";
 
 // Selecciona el formulario de verificación
 const form = document.getElementById("verify-code-form");
@@ -13,21 +14,29 @@ if (form) {
 
     if (!code || !user) {
       errorDiv.textContent = "Debes ingresar el código de verificación.";
+      console.error("Error: Código o usuario no definido.");
       return;
     }
 
     try {
-      // Envía el código y el usuario al backend
-      const res = await apiPost(`${API_BASE}/tk/server/auth/verify-code`, { user, code });
+      // Envía el código y el usuario al backend usando la ruta correcta de la API
+      const res = await apiPost({
+        module: "usuarios",
+        action: "verifyCode",
+        user,
+        code
+      });
 
-      if (res.token) {
-        localStorage.setItem("token", res.token);
-        window.location.href = "../dashboard/dashboard.html";
+      if (res.success) {
+        // Redirige al login después de verificar el código
+        window.location.href = "./login.html";
       } else {
         errorDiv.textContent = res.message || "Código incorrecto o expirado.";
+        console.error("Error de verificación:", res);
       }
     } catch (error) {
       errorDiv.textContent = error.message || "Error al verificar el código.";
+      console.error("Error de conexión:", error);
     }
   });
 }

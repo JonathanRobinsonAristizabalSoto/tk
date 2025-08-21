@@ -2,9 +2,8 @@
 header('Content-Type: application/json');
 require_once("../config/config.php");
 require_once("../model/Usuario.php");
-require_once("../utils/functions.php"); // <-- Incluye la función limpiar solo aquí
-
-// Elimina la función limpiar de este archivo, ya está en utils/functions.php
+require_once("../utils/functions.php");
+require_once("../utils/EmailHelper.php");
 
 class RegisterController {
     private $usuarioModel;
@@ -60,6 +59,9 @@ class RegisterController {
 
         $passwordHash = password_hash($password, PASSWORD_DEFAULT);
 
+        // Generar código de verificación de 6 dígitos
+        $codigoVerificacion = str_pad(random_int(100000, 999999), 6, '0', STR_PAD_LEFT);
+
         $data = [
             'tipo_documento' => $tipo_documento,
             'documento' => $documento,
@@ -74,13 +76,34 @@ class RegisterController {
             'id_rol' => $rol,
             'estado' => 'Activo',
             'email_verificado' => 0,
-            'token_verificacion' => null
+            'token_verificacion' => $codigoVerificacion
         ];
 
         $ok = $this->usuarioModel->crear($data);
 
         if ($ok) {
-            echo json_encode(["success" => true, "message" => "Registro exitoso"]);
+            // Enviar el código al correo
+            $subject = 'Verifica tu correo en TicketPro+';
+            $body = "<p>Hola <b>$nombre $apellido</b>,</p>
+                     <p>Gracias por registrarte en TicketPro+. Tu código de verificación es:</p>
+                     <h2 style='text-align:center;'>$codigoVerificacion</h2>
+                     <p>Ingresa este código en la página de verificación para activar tu cuenta.</p>
+                     <p>Si no solicitaste este registro, ignora este correo.</p>";
+
+            $enviado = \Src\Utils\EmailHelper::sendCode($email, $codigoVerificacion, $subject, $body);
+
+            if ($enviado) {
+                echo json_encode([
+                    "success" => true,
+                    "message" => "Registro exitoso. Se ha enviado un código de verificación a tu correo.",
+                    "pendingUser" => $email // Para que el frontend lo guarde y redirija a verify-code.html
+                ]);
+            } else {
+                echo json_encode([
+                    "success" => false,
+                    "message" => "Registro exitoso, pero no se pudo enviar el correo de verificación."
+                ]);
+            }
         } else {
             echo json_encode(["success" => false, "message" => "Error al registrar"]);
         }
@@ -125,6 +148,9 @@ if (!class_exists('RegisterController')) {
             exit;
         }
         $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+
+        $codigoVerificacion = str_pad(random_int(100000, 999999), 6, '0', STR_PAD_LEFT);
+
         $data = [
             'tipo_documento' => $tipo_documento,
             'documento' => $documento,
@@ -139,11 +165,31 @@ if (!class_exists('RegisterController')) {
             'id_rol' => $rol,
             'estado' => 'Activo',
             'email_verificado' => 0,
-            'token_verificacion' => null
+            'token_verificacion' => $codigoVerificacion
         ];
         $ok = $usuarioModel->crear($data);
         if ($ok) {
-            echo json_encode(["success" => true, "message" => "Registro exitoso"]);
+            $subject = 'Verifica tu correo en TicketPro+';
+            $body = "<p>Hola <b>$nombre $apellido</b>,</p>
+                     <p>Gracias por registrarte en TicketPro+. Tu código de verificación es:</p>
+                     <h2 style='text-align:center;'>$codigoVerificacion</h2>
+                     <p>Ingresa este código en la página de verificación para activar tu cuenta.</p>
+                     <p>Si no solicitaste este registro, ignora este correo.</p>";
+
+            $enviado = \Src\Utils\EmailHelper::sendCode($email, $codigoVerificacion, $subject, $body);
+
+            if ($enviado) {
+                echo json_encode([
+                    "success" => true,
+                    "message" => "Registro exitoso. Se ha enviado un código de verificación a tu correo.",
+                    "pendingUser" => $email
+                ]);
+            } else {
+                echo json_encode([
+                    "success" => false,
+                    "message" => "Registro exitoso, pero no se pudo enviar el correo de verificación."
+                ]);
+            }
         } else {
             echo json_encode(["success" => false, "message" => "Error al registrar"]);
         }

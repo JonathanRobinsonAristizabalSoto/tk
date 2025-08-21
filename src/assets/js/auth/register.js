@@ -129,7 +129,13 @@ document.addEventListener("DOMContentLoaded", async function () {
       const data = await response.json();
 
       if (data.success) {
-        mostrarModalExito();
+        // Guardar el correo en localStorage y redirigir a verificación
+        if (data.pendingUser) {
+          localStorage.setItem("pendingUser", data.pendingUser);
+          window.location.href = "./verify-code.html";
+        } else {
+          mostrarModalExito();
+        }
       } else {
         mostrarModalError(data.message || "Error en el registro.");
       }

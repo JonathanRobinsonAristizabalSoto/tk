@@ -17,29 +17,9 @@ async function cargarModalesLogin() {
 cargarModalesLogin();
 
 document.addEventListener("DOMContentLoaded", function () {
-    const nombresTipoDocumento = {
-        CC: "Cédula de Ciudadanía",
-        TI: "Tarjeta de Identidad",
-        CE: "Cédula de Extranjería",
-        PS: "Pasaporte",
-        DNI: "DNI",
-        NIT: "NIT"
-    };
-
     async function cargarCatalogos() {
         try {
             const data = await getCatalogosUsuario();
-
-            const tipoDocSelect = document.getElementById("typeDocument");
-            if (tipoDocSelect && Array.isArray(data.tipos_documento)) {
-                tipoDocSelect.innerHTML = "";
-                data.tipos_documento.forEach(tipo => {
-                    const opt = document.createElement("option");
-                    opt.value = tipo;
-                    opt.textContent = nombresTipoDocumento[tipo] || tipo;
-                    tipoDocSelect.appendChild(opt);
-                });
-            }
 
             const rolSelect = document.getElementById("user-type");
             if (rolSelect && Array.isArray(data.roles)) {
@@ -64,7 +44,14 @@ document.addEventListener("DOMContentLoaded", function () {
     loginForm.addEventListener("submit", async function (event) {
         event.preventDefault();
 
-        const formData = new FormData(loginForm);
+        const identificador = document.getElementById("identificador").value.trim();
+        const password = document.getElementById("password").value.trim();
+        const id_rol = document.getElementById("user-type").value;
+
+        const formData = new FormData();
+        formData.append("identificador", identificador);
+        formData.append("password", password);
+        formData.append("user-type", id_rol);
 
         try {
             const response = await fetch("/tk/server/routes/api.php?module=login&action=login", {

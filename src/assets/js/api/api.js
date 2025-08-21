@@ -63,4 +63,16 @@ export async function fetchUsuarioById(id) {
     return await res.json();
 }
 
+/**
+ * Realiza una petición POST genérica (útil para verificación de código, registro, etc.)
+ */
+export async function apiPost(data) {
+    const res = await fetch(API_BASE, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+    });
+    return await res.json();
+}
+
 // ...agrega aquí más funciones para otros módulos y acciones...

@@ -15,7 +15,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 require_once("../config/config.php");
-require_once("../utils/functions.php"); // <-- Aquí incluyes la función limpiar
+require_once("../utils/functions.php"); // Incluye la función limpiar
 
 class LoginController {
     private $pdo;
@@ -33,14 +33,16 @@ class LoginController {
     }
 
     public function login() {
-        $tipo_documento = limpiar($_POST['typeDocument'] ?? '');
-        $documento = limpiar($_POST['documento'] ?? '');
+        $identificador = limpiar($_POST['identificador'] ?? '');
         $password = $_POST['password'] ?? '';
         $id_rol = limpiar($_POST['user-type'] ?? '');
 
-        if ($tipo_documento && $documento && $password && $id_rol) {
-            $stmt = $this->pdo->prepare("SELECT * FROM usuarios WHERE tipo_documento = ? AND documento = ? AND id_rol = ? AND estado = 'Activo' AND eliminado = 0");
-            $stmt->execute([$tipo_documento, $documento, $id_rol]);
+        if ($identificador && $password && $id_rol) {
+            // Buscar por correo o documento
+            $stmt = $this->pdo->prepare(
+                "SELECT * FROM usuarios WHERE (email = ? OR documento = ?) AND id_rol = ? AND estado = 'Activo' AND eliminado = 0"
+            );
+            $stmt->execute([$identificador, $identificador, $id_rol]);
             $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if ($usuario && password_verify($password, $usuario['password'])) {
