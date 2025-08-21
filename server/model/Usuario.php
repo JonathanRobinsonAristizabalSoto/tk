@@ -173,7 +173,18 @@ class Usuario {
     }
 
     /**
-     * Guarda el código de recuperación de contraseña para el usuario.
+     * Obtiene un usuario por documento (solo si no está eliminado).
+     * @param string $documento
+     * @return array|null
+     */
+    public function obtenerPorDocumento($documento) {
+        $stmt = $this->pdo->prepare("SELECT * FROM usuarios WHERE documento = ? AND eliminado = 0");
+        $stmt->execute([$documento]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Guarda el código de recuperación de contraseña para el usuario por ID.
      * @param int $id_usuario
      * @param string $codigo
      * @return bool
@@ -184,7 +195,18 @@ class Usuario {
     }
 
     /**
-     * Verifica el código de recuperación para el usuario.
+     * Guarda el código de recuperación de contraseña para el usuario por documento.
+     * @param string $documento
+     * @param string $codigo
+     * @return bool
+     */
+    public function actualizarCodigoRecuperacionPorDocumento($documento, $codigo) {
+        $stmt = $this->pdo->prepare("UPDATE usuarios SET codigo_recuperacion = ? WHERE documento = ? AND eliminado = 0");
+        return $stmt->execute([$codigo, $documento]);
+    }
+
+    /**
+     * Verifica el código de recuperación para el usuario por ID.
      * @param int $id_usuario
      * @param string $codigo
      * @return bool
@@ -196,7 +218,19 @@ class Usuario {
     }
 
     /**
-     * Actualiza la contraseña y limpia el código de recuperación.
+     * Verifica el código de recuperación para el usuario por documento.
+     * @param string $documento
+     * @param string $codigo
+     * @return bool
+     */
+    public function verificarCodigoRecuperacionPorDocumento($documento, $codigo) {
+        $stmt = $this->pdo->prepare("SELECT id_usuario FROM usuarios WHERE documento = ? AND codigo_recuperacion = ? AND eliminado = 0");
+        $stmt->execute([$documento, $codigo]);
+        return $stmt->fetch() ? true : false;
+    }
+
+    /**
+     * Actualiza la contraseña y limpia el código de recuperación por ID.
      * @param int $id_usuario
      * @param string $password
      * @return bool
@@ -205,5 +239,17 @@ class Usuario {
         $hash = password_hash($password, PASSWORD_DEFAULT);
         $stmt = $this->pdo->prepare("UPDATE usuarios SET password = ?, codigo_recuperacion = NULL WHERE id_usuario = ?");
         return $stmt->execute([$hash, $id_usuario]);
+    }
+
+    /**
+     * Actualiza la contraseña y limpia el código de recuperación por documento.
+     * @param string $documento
+     * @param string $password
+     * @return bool
+     */
+    public function actualizarPasswordYLimpiarCodigoPorDocumento($documento, $password) {
+        $hash = password_hash($password, PASSWORD_DEFAULT);
+        $stmt = $this->pdo->prepare("UPDATE usuarios SET password = ?, codigo_recuperacion = NULL WHERE documento = ? AND eliminado = 0");
+        return $stmt->execute([$hash, $documento]);
     }
 }

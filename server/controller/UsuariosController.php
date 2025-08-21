@@ -331,22 +331,26 @@ class UsuariosController
                     }
                     break;
 
-                // --- RECUPERACIÓN DE CONTRASEÑA ---
+                // --- RECUPERACIÓN DE CONTRASEÑA MEJORADA ---
                 case 'sendRecoveryCode':
                     $input = json_decode(file_get_contents('php://input'), true);
-                    $email = $input['email'] ?? $_POST['email'] ?? '';
-                    if (!$email) {
-                        echo json_encode(['success' => false, 'message' => 'Correo electrónico requerido.']);
+                    $identificador = $input['identificador'] ?? $_POST['identificador'] ?? '';
+                    if (!$identificador) {
+                        echo json_encode(['success' => false, 'message' => 'Correo electrónico o documento requerido.']);
                         return;
                     }
-                    $usuario = $this->usuarioModel->obtenerPorEmail($email);
+                    // Buscar usuario por email o documento
+                    $usuario = $this->usuarioModel->obtenerPorEmail($identificador);
                     if (!$usuario) {
-                        echo json_encode(['success' => false, 'message' => 'No existe una cuenta con ese correo.']);
+                        $usuario = $this->usuarioModel->obtenerPorDocumento($identificador);
+                    }
+                    if (!$usuario) {
+                        echo json_encode(['success' => false, 'message' => 'No existe una cuenta con ese correo o documento.']);
                         return;
                     }
                     $codigo = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
                     if ($this->usuarioModel->actualizarCodigoRecuperacion($usuario['id_usuario'], $codigo)) {
-                        $enviado = EmailHelper::enviarCodigoRecuperacion($email, $codigo, $usuario['nombre']);
+                        $enviado = EmailHelper::enviarCodigoRecuperacion($usuario['email'], $codigo, $usuario['nombre']);
                         if ($enviado) {
                             echo json_encode(['success' => true, 'message' => 'Código enviado al correo.']);
                         } else {
@@ -359,13 +363,16 @@ class UsuariosController
 
                 case 'verifyRecoveryCode':
                     $input = json_decode(file_get_contents('php://input'), true);
-                    $email = $input['email'] ?? $_POST['email'] ?? '';
+                    $identificador = $input['identificador'] ?? $_POST['identificador'] ?? '';
                     $codigo = $input['codigo'] ?? $_POST['codigo'] ?? '';
-                    if (!$email || !$codigo) {
-                        echo json_encode(['success' => false, 'message' => 'Correo y código requeridos.']);
+                    if (!$identificador || !$codigo) {
+                        echo json_encode(['success' => false, 'message' => 'Identificador y código requeridos.']);
                         return;
                     }
-                    $usuario = $this->usuarioModel->obtenerPorEmail($email);
+                    $usuario = $this->usuarioModel->obtenerPorEmail($identificador);
+                    if (!$usuario) {
+                        $usuario = $this->usuarioModel->obtenerPorDocumento($identificador);
+                    }
                     if (!$usuario) {
                         echo json_encode(['success' => false, 'message' => 'Usuario no encontrado.']);
                         return;
@@ -379,14 +386,17 @@ class UsuariosController
 
                 case 'changePassword':
                     $input = json_decode(file_get_contents('php://input'), true);
-                    $email = $input['email'] ?? $_POST['email'] ?? '';
+                    $identificador = $input['identificador'] ?? $_POST['identificador'] ?? '';
                     $codigo = $input['codigo'] ?? $_POST['codigo'] ?? '';
                     $password = $input['password'] ?? $_POST['password'] ?? '';
-                    if (!$email || !$codigo || !$password) {
+                    if (!$identificador || !$codigo || !$password) {
                         echo json_encode(['success' => false, 'message' => 'Todos los campos son obligatorios.']);
                         return;
                     }
-                    $usuario = $this->usuarioModel->obtenerPorEmail($email);
+                    $usuario = $this->usuarioModel->obtenerPorEmail($identificador);
+                    if (!$usuario) {
+                        $usuario = $this->usuarioModel->obtenerPorDocumento($identificador);
+                    }
                     if (!$usuario) {
                         echo json_encode(['success' => false, 'message' => 'Usuario no encontrado.']);
                         return;

@@ -712,3 +712,411 @@
 
 [2025-08-21 06:21:26] SMTP: SERVER -> CLIENT: 221 2.0.0 closing connection 6a1803df08f44-70ba9380eaasm98634276d6.62 - gsmtp
 
+[2025-08-21 06:35:30] SMTP: SERVER -> CLIENT: 220 smtp.gmail.com ESMTP 00721157ae682-71fcb76acdasm1719737b3.6 - gsmtp
+
+[2025-08-21 06:35:30] SMTP: CLIENT -> SERVER: EHLO localhost
+
+[2025-08-21 06:35:30] SMTP: SERVER -> CLIENT: 250-smtp.gmail.com at your service, [191.106.129.36]
+250-SIZE 35882577
+250-8BITMIME
+250-STARTTLS
+250-ENHANCEDSTATUSCODES
+250-PIPELINING
+250-CHUNKING
+250 SMTPUTF8
+
+[2025-08-21 06:35:30] SMTP: CLIENT -> SERVER: STARTTLS
+
+[2025-08-21 06:35:30] SMTP: SERVER -> CLIENT: 220 2.0.0 Ready to start TLS
+
+[2025-08-21 06:35:31] SMTP: CLIENT -> SERVER: EHLO localhost
+
+[2025-08-21 06:35:31] SMTP: SERVER -> CLIENT: 250-smtp.gmail.com at your service, [191.106.129.36]
+250-SIZE 35882577
+250-8BITMIME
+250-AUTH LOGIN PLAIN XOAUTH2 PLAIN-CLIENTTOKEN OAUTHBEARER XOAUTH
+250-ENHANCEDSTATUSCODES
+250-PIPELINING
+250-CHUNKING
+250 SMTPUTF8
+
+[2025-08-21 06:35:31] SMTP: CLIENT -> SERVER: AUTH LOGIN
+
+[2025-08-21 06:35:31] SMTP: SERVER -> CLIENT: 334 VXNlcm5hbWU6
+
+[2025-08-21 06:35:31] SMTP: CLIENT -> SERVER: [credentials hidden]
+[2025-08-21 06:35:31] SMTP: SERVER -> CLIENT: 334 UGFzc3dvcmQ6
+
+[2025-08-21 06:35:31] SMTP: CLIENT -> SERVER: [credentials hidden]
+[2025-08-21 06:35:31] SMTP: SERVER -> CLIENT: 235 2.7.0 Accepted
+
+[2025-08-21 06:35:31] SMTP: CLIENT -> SERVER: MAIL FROM:<ticketproofficial@gmail.com>
+
+[2025-08-21 06:35:32] SMTP: SERVER -> CLIENT: 250 2.1.0 OK 00721157ae682-71fcb76acdasm1719737b3.6 - gsmtp
+
+[2025-08-21 06:35:32] SMTP: CLIENT -> SERVER: RCPT TO:<martinrobinsofficial@gmail.com>
+
+[2025-08-21 06:35:32] SMTP: SERVER -> CLIENT: 250 2.1.5 OK 00721157ae682-71fcb76acdasm1719737b3.6 - gsmtp
+
+[2025-08-21 06:35:32] SMTP: CLIENT -> SERVER: DATA
+
+[2025-08-21 06:35:32] SMTP: SERVER -> CLIENT: 354 Go ahead 00721157ae682-71fcb76acdasm1719737b3.6 - gsmtp
+
+[2025-08-21 06:35:32] SMTP: CLIENT -> SERVER: Date: Thu, 21 Aug 2025 06:35:30 +0200
+
+[2025-08-21 06:35:32] SMTP: CLIENT -> SERVER: To: martinrobinsofficial@gmail.com
+
+[2025-08-21 06:35:32] SMTP: CLIENT -> SERVER: From: TicketPro+ <ticketproofficial@gmail.com>
+
+[2025-08-21 06:35:32] SMTP: CLIENT -> SERVER: Subject: =?UTF-8?Q?Recuperaci=C3=B3n_de_contrase=C3=B1a_-_TicketPro+?=
+
+[2025-08-21 06:35:32] SMTP: CLIENT -> SERVER: Message-ID: <mnzYywgfuVs04slF60SUk2GIzft6ZJbiIzK8xJH1mxI@localhost>
+
+[2025-08-21 06:35:32] SMTP: CLIENT -> SERVER: X-Mailer: PHPMailer 6.10.0 (https://github.com/PHPMailer/PHPMailer)
+
+[2025-08-21 06:35:32] SMTP: CLIENT -> SERVER: MIME-Version: 1.0
+
+[2025-08-21 06:35:32] SMTP: CLIENT -> SERVER: Content-Type: text/html; charset=UTF-8
+
+[2025-08-21 06:35:32] SMTP: CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
+
+[2025-08-21 06:35:32] SMTP: CLIENT -> SERVER: 
+
+[2025-08-21 06:35:32] SMTP: CLIENT -> SERVER: 
+
+[2025-08-21 06:35:32] SMTP: CLIENT -> SERVER:             <div style='font-family: Arial, sans-serif; color: #222;'>
+
+[2025-08-21 06:35:32] SMTP: CLIENT -> SERVER:                 <h2 style='color: #0066cc;'>Recuperación de contraseña</h2>
+
+[2025-08-21 06:35:32] SMTP: CLIENT -> SERVER:                 <p>Hola Jonathan,</p>
+
+[2025-08-21 06:35:32] SMTP: CLIENT -> SERVER:                 <p>Tu código para recuperar la contraseña es:</p>
+
+[2025-08-21 06:35:32] SMTP: CLIENT -> SERVER:                 <div style='font-size: 2em; font-weight: bold; color: #0066cc; margin: 20px 0;'>449297</div>
+
+[2025-08-21 06:35:32] SMTP: CLIENT -> SERVER:                 <p>Ingresa este código en la página para continuar con el proceso de recuperación.</p>
+
+[2025-08-21 06:35:32] SMTP: CLIENT -> SERVER:                 <hr>
+
+[2025-08-21 06:35:32] SMTP: CLIENT -> SERVER:                 <small>Si no solicitaste este código, puedes ignorar este mensaje.</small>
+
+[2025-08-21 06:35:32] SMTP: CLIENT -> SERVER:             </div>
+
+[2025-08-21 06:35:32] SMTP: CLIENT -> SERVER:         
+
+[2025-08-21 06:35:32] SMTP: CLIENT -> SERVER: 
+
+[2025-08-21 06:35:32] SMTP: CLIENT -> SERVER: .
+
+[2025-08-21 06:35:32] SMTP: SERVER -> CLIENT: 250 2.0.0 OK  1755750933 00721157ae682-71fcb76acdasm1719737b3.6 - gsmtp
+
+[2025-08-21 06:35:32] SMTP: CLIENT -> SERVER: QUIT
+
+[2025-08-21 06:35:33] SMTP: SERVER -> CLIENT: 221 2.0.0 closing connection 00721157ae682-71fcb76acdasm1719737b3.6 - gsmtp
+
+[2025-08-21 06:57:26] SMTP: SERVER -> CLIENT: 220 smtp.gmail.com ESMTP 00721157ae682-71e6deb96fdsm41825737b3.23 - gsmtp
+
+[2025-08-21 06:57:26] SMTP: CLIENT -> SERVER: EHLO localhost
+
+[2025-08-21 06:57:26] SMTP: SERVER -> CLIENT: 250-smtp.gmail.com at your service, [191.106.129.36]
+250-SIZE 35882577
+250-8BITMIME
+250-STARTTLS
+250-ENHANCEDSTATUSCODES
+250-PIPELINING
+250-CHUNKING
+250 SMTPUTF8
+
+[2025-08-21 06:57:26] SMTP: CLIENT -> SERVER: STARTTLS
+
+[2025-08-21 06:57:27] SMTP: SERVER -> CLIENT: 220 2.0.0 Ready to start TLS
+
+[2025-08-21 06:57:27] SMTP: CLIENT -> SERVER: EHLO localhost
+
+[2025-08-21 06:57:27] SMTP: SERVER -> CLIENT: 250-smtp.gmail.com at your service, [191.106.129.36]
+250-SIZE 35882577
+250-8BITMIME
+250-AUTH LOGIN PLAIN XOAUTH2 PLAIN-CLIENTTOKEN OAUTHBEARER XOAUTH
+250-ENHANCEDSTATUSCODES
+250-PIPELINING
+250-CHUNKING
+250 SMTPUTF8
+
+[2025-08-21 06:57:27] SMTP: CLIENT -> SERVER: AUTH LOGIN
+
+[2025-08-21 06:57:27] SMTP: SERVER -> CLIENT: 334 VXNlcm5hbWU6
+
+[2025-08-21 06:57:27] SMTP: CLIENT -> SERVER: [credentials hidden]
+[2025-08-21 06:57:27] SMTP: SERVER -> CLIENT: 334 UGFzc3dvcmQ6
+
+[2025-08-21 06:57:27] SMTP: CLIENT -> SERVER: [credentials hidden]
+[2025-08-21 06:57:28] SMTP: SERVER -> CLIENT: 235 2.7.0 Accepted
+
+[2025-08-21 06:57:28] SMTP: CLIENT -> SERVER: MAIL FROM:<ticketproofficial@gmail.com>
+
+[2025-08-21 06:57:28] SMTP: SERVER -> CLIENT: 250 2.1.0 OK 00721157ae682-71e6deb96fdsm41825737b3.23 - gsmtp
+
+[2025-08-21 06:57:28] SMTP: CLIENT -> SERVER: RCPT TO:<martinrobinsofficial@gmail.com>
+
+[2025-08-21 06:57:28] SMTP: SERVER -> CLIENT: 250 2.1.5 OK 00721157ae682-71e6deb96fdsm41825737b3.23 - gsmtp
+
+[2025-08-21 06:57:28] SMTP: CLIENT -> SERVER: DATA
+
+[2025-08-21 06:57:28] SMTP: SERVER -> CLIENT: 354 Go ahead 00721157ae682-71e6deb96fdsm41825737b3.23 - gsmtp
+
+[2025-08-21 06:57:28] SMTP: CLIENT -> SERVER: Date: Thu, 21 Aug 2025 06:57:26 +0200
+
+[2025-08-21 06:57:28] SMTP: CLIENT -> SERVER: To: martinrobinsofficial@gmail.com
+
+[2025-08-21 06:57:28] SMTP: CLIENT -> SERVER: From: TicketPro+ <ticketproofficial@gmail.com>
+
+[2025-08-21 06:57:28] SMTP: CLIENT -> SERVER: Subject: =?UTF-8?Q?Recuperaci=C3=B3n_de_contrase=C3=B1a_-_TicketPro+?=
+
+[2025-08-21 06:57:28] SMTP: CLIENT -> SERVER: Message-ID: <dbOX5JOYxwIk9vo4iXhMwGIREwjNSbcIPYTsUxBw@localhost>
+
+[2025-08-21 06:57:28] SMTP: CLIENT -> SERVER: X-Mailer: PHPMailer 6.10.0 (https://github.com/PHPMailer/PHPMailer)
+
+[2025-08-21 06:57:28] SMTP: CLIENT -> SERVER: MIME-Version: 1.0
+
+[2025-08-21 06:57:28] SMTP: CLIENT -> SERVER: Content-Type: text/html; charset=UTF-8
+
+[2025-08-21 06:57:28] SMTP: CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
+
+[2025-08-21 06:57:28] SMTP: CLIENT -> SERVER: 
+
+[2025-08-21 06:57:28] SMTP: CLIENT -> SERVER: 
+
+[2025-08-21 06:57:28] SMTP: CLIENT -> SERVER:             <div style='font-family: Arial, sans-serif; color: #222;'>
+
+[2025-08-21 06:57:28] SMTP: CLIENT -> SERVER:                 <h2 style='color: #0066cc;'>Recuperación de contraseña</h2>
+
+[2025-08-21 06:57:28] SMTP: CLIENT -> SERVER:                 <p>Hola Jonathan,</p>
+
+[2025-08-21 06:57:28] SMTP: CLIENT -> SERVER:                 <p>Tu código para recuperar la contraseña es:</p>
+
+[2025-08-21 06:57:28] SMTP: CLIENT -> SERVER:                 <div style='font-size: 2em; font-weight: bold; color: #0066cc; margin: 20px 0;'>749487</div>
+
+[2025-08-21 06:57:28] SMTP: CLIENT -> SERVER:                 <p>Ingresa este código en la página para continuar con el proceso de recuperación.</p>
+
+[2025-08-21 06:57:28] SMTP: CLIENT -> SERVER:                 <hr>
+
+[2025-08-21 06:57:28] SMTP: CLIENT -> SERVER:                 <small>Si no solicitaste este código, puedes ignorar este mensaje.</small>
+
+[2025-08-21 06:57:28] SMTP: CLIENT -> SERVER:             </div>
+
+[2025-08-21 06:57:28] SMTP: CLIENT -> SERVER:         
+
+[2025-08-21 06:57:28] SMTP: CLIENT -> SERVER: 
+
+[2025-08-21 06:57:28] SMTP: CLIENT -> SERVER: .
+
+[2025-08-21 06:57:29] SMTP: SERVER -> CLIENT: 250 2.0.0 OK  1755752249 00721157ae682-71e6deb96fdsm41825737b3.23 - gsmtp
+
+[2025-08-21 06:57:29] SMTP: CLIENT -> SERVER: QUIT
+
+[2025-08-21 06:57:29] SMTP: SERVER -> CLIENT: 221 2.0.0 closing connection 00721157ae682-71e6deb96fdsm41825737b3.23 - gsmtp
+
+[2025-08-21 06:59:10] SMTP: SERVER -> CLIENT: 220 smtp.gmail.com ESMTP 00721157ae682-71e84367526sm29654687b3.61 - gsmtp
+
+[2025-08-21 06:59:10] SMTP: CLIENT -> SERVER: EHLO localhost
+
+[2025-08-21 06:59:10] SMTP: SERVER -> CLIENT: 250-smtp.gmail.com at your service, [191.106.129.36]
+250-SIZE 35882577
+250-8BITMIME
+250-STARTTLS
+250-ENHANCEDSTATUSCODES
+250-PIPELINING
+250-CHUNKING
+250 SMTPUTF8
+
+[2025-08-21 06:59:10] SMTP: CLIENT -> SERVER: STARTTLS
+
+[2025-08-21 06:59:10] SMTP: SERVER -> CLIENT: 220 2.0.0 Ready to start TLS
+
+[2025-08-21 06:59:10] SMTP: CLIENT -> SERVER: EHLO localhost
+
+[2025-08-21 06:59:10] SMTP: SERVER -> CLIENT: 250-smtp.gmail.com at your service, [191.106.129.36]
+250-SIZE 35882577
+250-8BITMIME
+250-AUTH LOGIN PLAIN XOAUTH2 PLAIN-CLIENTTOKEN OAUTHBEARER XOAUTH
+250-ENHANCEDSTATUSCODES
+250-PIPELINING
+250-CHUNKING
+250 SMTPUTF8
+
+[2025-08-21 06:59:10] SMTP: CLIENT -> SERVER: AUTH LOGIN
+
+[2025-08-21 06:59:11] SMTP: SERVER -> CLIENT: 334 VXNlcm5hbWU6
+
+[2025-08-21 06:59:11] SMTP: CLIENT -> SERVER: [credentials hidden]
+[2025-08-21 06:59:11] SMTP: SERVER -> CLIENT: 334 UGFzc3dvcmQ6
+
+[2025-08-21 06:59:11] SMTP: CLIENT -> SERVER: [credentials hidden]
+[2025-08-21 06:59:11] SMTP: SERVER -> CLIENT: 235 2.7.0 Accepted
+
+[2025-08-21 06:59:11] SMTP: CLIENT -> SERVER: MAIL FROM:<ticketproofficial@gmail.com>
+
+[2025-08-21 06:59:11] SMTP: SERVER -> CLIENT: 250 2.1.0 OK 00721157ae682-71e84367526sm29654687b3.61 - gsmtp
+
+[2025-08-21 06:59:11] SMTP: CLIENT -> SERVER: RCPT TO:<martinrobinsofficial@gmail.com>
+
+[2025-08-21 06:59:11] SMTP: SERVER -> CLIENT: 250 2.1.5 OK 00721157ae682-71e84367526sm29654687b3.61 - gsmtp
+
+[2025-08-21 06:59:11] SMTP: CLIENT -> SERVER: DATA
+
+[2025-08-21 06:59:11] SMTP: SERVER -> CLIENT: 354 Go ahead 00721157ae682-71e84367526sm29654687b3.61 - gsmtp
+
+[2025-08-21 06:59:11] SMTP: CLIENT -> SERVER: Date: Thu, 21 Aug 2025 06:59:09 +0200
+
+[2025-08-21 06:59:11] SMTP: CLIENT -> SERVER: To: martinrobinsofficial@gmail.com
+
+[2025-08-21 06:59:11] SMTP: CLIENT -> SERVER: From: TicketPro+ <ticketproofficial@gmail.com>
+
+[2025-08-21 06:59:11] SMTP: CLIENT -> SERVER: Subject: =?UTF-8?Q?Recuperaci=C3=B3n_de_contrase=C3=B1a_-_TicketPro+?=
+
+[2025-08-21 06:59:11] SMTP: CLIENT -> SERVER: Message-ID: <RL0GEp2zQYRb10CkIbZSQcP3Uexy4JRkEmqzJIxws@localhost>
+
+[2025-08-21 06:59:11] SMTP: CLIENT -> SERVER: X-Mailer: PHPMailer 6.10.0 (https://github.com/PHPMailer/PHPMailer)
+
+[2025-08-21 06:59:11] SMTP: CLIENT -> SERVER: MIME-Version: 1.0
+
+[2025-08-21 06:59:11] SMTP: CLIENT -> SERVER: Content-Type: text/html; charset=UTF-8
+
+[2025-08-21 06:59:11] SMTP: CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
+
+[2025-08-21 06:59:11] SMTP: CLIENT -> SERVER: 
+
+[2025-08-21 06:59:11] SMTP: CLIENT -> SERVER: 
+
+[2025-08-21 06:59:11] SMTP: CLIENT -> SERVER:             <div style='font-family: Arial, sans-serif; color: #222;'>
+
+[2025-08-21 06:59:11] SMTP: CLIENT -> SERVER:                 <h2 style='color: #0066cc;'>Recuperación de contraseña</h2>
+
+[2025-08-21 06:59:11] SMTP: CLIENT -> SERVER:                 <p>Hola Jonathan,</p>
+
+[2025-08-21 06:59:11] SMTP: CLIENT -> SERVER:                 <p>Tu código para recuperar la contraseña es:</p>
+
+[2025-08-21 06:59:11] SMTP: CLIENT -> SERVER:                 <div style='font-size: 2em; font-weight: bold; color: #0066cc; margin: 20px 0;'>399192</div>
+
+[2025-08-21 06:59:11] SMTP: CLIENT -> SERVER:                 <p>Ingresa este código en la página para continuar con el proceso de recuperación.</p>
+
+[2025-08-21 06:59:11] SMTP: CLIENT -> SERVER:                 <hr>
+
+[2025-08-21 06:59:11] SMTP: CLIENT -> SERVER:                 <small>Si no solicitaste este código, puedes ignorar este mensaje.</small>
+
+[2025-08-21 06:59:11] SMTP: CLIENT -> SERVER:             </div>
+
+[2025-08-21 06:59:11] SMTP: CLIENT -> SERVER:         
+
+[2025-08-21 06:59:11] SMTP: CLIENT -> SERVER: 
+
+[2025-08-21 06:59:11] SMTP: CLIENT -> SERVER: .
+
+[2025-08-21 06:59:12] SMTP: SERVER -> CLIENT: 250 2.0.0 OK  1755752352 00721157ae682-71e84367526sm29654687b3.61 - gsmtp
+
+[2025-08-21 06:59:12] SMTP: CLIENT -> SERVER: QUIT
+
+[2025-08-21 06:59:12] SMTP: SERVER -> CLIENT: 221 2.0.0 closing connection 00721157ae682-71e84367526sm29654687b3.61 - gsmtp
+
+[2025-08-21 07:00:15] SMTP: SERVER -> CLIENT: 220 smtp.gmail.com ESMTP 3f1490d57ef6-e94fdd695c9sm1018354276.27 - gsmtp
+
+[2025-08-21 07:00:15] SMTP: CLIENT -> SERVER: EHLO localhost
+
+[2025-08-21 07:00:15] SMTP: SERVER -> CLIENT: 250-smtp.gmail.com at your service, [191.106.129.36]
+250-SIZE 35882577
+250-8BITMIME
+250-STARTTLS
+250-ENHANCEDSTATUSCODES
+250-PIPELINING
+250-CHUNKING
+250 SMTPUTF8
+
+[2025-08-21 07:00:15] SMTP: CLIENT -> SERVER: STARTTLS
+
+[2025-08-21 07:00:15] SMTP: SERVER -> CLIENT: 220 2.0.0 Ready to start TLS
+
+[2025-08-21 07:00:15] SMTP: CLIENT -> SERVER: EHLO localhost
+
+[2025-08-21 07:00:16] SMTP: SERVER -> CLIENT: 250-smtp.gmail.com at your service, [191.106.129.36]
+250-SIZE 35882577
+250-8BITMIME
+250-AUTH LOGIN PLAIN XOAUTH2 PLAIN-CLIENTTOKEN OAUTHBEARER XOAUTH
+250-ENHANCEDSTATUSCODES
+250-PIPELINING
+250-CHUNKING
+250 SMTPUTF8
+
+[2025-08-21 07:00:16] SMTP: CLIENT -> SERVER: AUTH LOGIN
+
+[2025-08-21 07:00:16] SMTP: SERVER -> CLIENT: 334 VXNlcm5hbWU6
+
+[2025-08-21 07:00:16] SMTP: CLIENT -> SERVER: [credentials hidden]
+[2025-08-21 07:00:16] SMTP: SERVER -> CLIENT: 334 UGFzc3dvcmQ6
+
+[2025-08-21 07:00:16] SMTP: CLIENT -> SERVER: [credentials hidden]
+[2025-08-21 07:00:16] SMTP: SERVER -> CLIENT: 235 2.7.0 Accepted
+
+[2025-08-21 07:00:16] SMTP: CLIENT -> SERVER: MAIL FROM:<ticketproofficial@gmail.com>
+
+[2025-08-21 07:00:16] SMTP: SERVER -> CLIENT: 250 2.1.0 OK 3f1490d57ef6-e94fdd695c9sm1018354276.27 - gsmtp
+
+[2025-08-21 07:00:16] SMTP: CLIENT -> SERVER: RCPT TO:<martinrobinsofficial@gmail.com>
+
+[2025-08-21 07:00:16] SMTP: SERVER -> CLIENT: 250 2.1.5 OK 3f1490d57ef6-e94fdd695c9sm1018354276.27 - gsmtp
+
+[2025-08-21 07:00:16] SMTP: CLIENT -> SERVER: DATA
+
+[2025-08-21 07:00:16] SMTP: SERVER -> CLIENT: 354 Go ahead 3f1490d57ef6-e94fdd695c9sm1018354276.27 - gsmtp
+
+[2025-08-21 07:00:16] SMTP: CLIENT -> SERVER: Date: Thu, 21 Aug 2025 07:00:15 +0200
+
+[2025-08-21 07:00:16] SMTP: CLIENT -> SERVER: To: martinrobinsofficial@gmail.com
+
+[2025-08-21 07:00:16] SMTP: CLIENT -> SERVER: From: TicketPro+ <ticketproofficial@gmail.com>
+
+[2025-08-21 07:00:16] SMTP: CLIENT -> SERVER: Subject: =?UTF-8?Q?Recuperaci=C3=B3n_de_contrase=C3=B1a_-_TicketPro+?=
+
+[2025-08-21 07:00:16] SMTP: CLIENT -> SERVER: Message-ID: <3LWmXBGHbUBiK3xrYYnl1OECo2l2oco6Jcrt2STbIc@localhost>
+
+[2025-08-21 07:00:16] SMTP: CLIENT -> SERVER: X-Mailer: PHPMailer 6.10.0 (https://github.com/PHPMailer/PHPMailer)
+
+[2025-08-21 07:00:16] SMTP: CLIENT -> SERVER: MIME-Version: 1.0
+
+[2025-08-21 07:00:16] SMTP: CLIENT -> SERVER: Content-Type: text/html; charset=UTF-8
+
+[2025-08-21 07:00:16] SMTP: CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
+
+[2025-08-21 07:00:16] SMTP: CLIENT -> SERVER: 
+
+[2025-08-21 07:00:16] SMTP: CLIENT -> SERVER: 
+
+[2025-08-21 07:00:16] SMTP: CLIENT -> SERVER:             <div style='font-family: Arial, sans-serif; color: #222;'>
+
+[2025-08-21 07:00:16] SMTP: CLIENT -> SERVER:                 <h2 style='color: #0066cc;'>Recuperación de contraseña</h2>
+
+[2025-08-21 07:00:16] SMTP: CLIENT -> SERVER:                 <p>Hola Jonathan,</p>
+
+[2025-08-21 07:00:16] SMTP: CLIENT -> SERVER:                 <p>Tu código para recuperar la contraseña es:</p>
+
+[2025-08-21 07:00:16] SMTP: CLIENT -> SERVER:                 <div style='font-size: 2em; font-weight: bold; color: #0066cc; margin: 20px 0;'>618757</div>
+
+[2025-08-21 07:00:16] SMTP: CLIENT -> SERVER:                 <p>Ingresa este código en la página para continuar con el proceso de recuperación.</p>
+
+[2025-08-21 07:00:16] SMTP: CLIENT -> SERVER:                 <hr>
+
+[2025-08-21 07:00:16] SMTP: CLIENT -> SERVER:                 <small>Si no solicitaste este código, puedes ignorar este mensaje.</small>
+
+[2025-08-21 07:00:16] SMTP: CLIENT -> SERVER:             </div>
+
+[2025-08-21 07:00:16] SMTP: CLIENT -> SERVER:         
+
+[2025-08-21 07:00:16] SMTP: CLIENT -> SERVER: 
+
+[2025-08-21 07:00:16] SMTP: CLIENT -> SERVER: .
+
+[2025-08-21 07:00:17] SMTP: SERVER -> CLIENT: 250 2.0.0 OK  1755752417 3f1490d57ef6-e94fdd695c9sm1018354276.27 - gsmtp
+
+[2025-08-21 07:00:17] SMTP: CLIENT -> SERVER: QUIT
+
+[2025-08-21 07:00:17] SMTP: SERVER -> CLIENT: 221 2.0.0 closing connection 3f1490d57ef6-e94fdd695c9sm1018354276.27 - gsmtp
+

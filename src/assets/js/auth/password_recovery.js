@@ -134,12 +134,12 @@ document.addEventListener("DOMContentLoaded", function () {
     if (formRecuperacion) {
         formRecuperacion.addEventListener("submit", async function (e) {
             e.preventDefault();
-            const email = document.getElementById("emailRecuperacion").value.trim();
+            const identificador = document.getElementById("identificador").value.trim();
             const errorDiv = document.getElementById("error-recuperacion");
             errorDiv.textContent = "";
 
-            if (!email) {
-                errorDiv.textContent = "Ingresa tu correo electrónico.";
+            if (!identificador) {
+                errorDiv.textContent = "Ingresa tu correo electrónico o documento.";
                 return;
             }
 
@@ -147,7 +147,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 const res = await fetch("/tk/server/routes/api.php?module=usuarios&action=sendRecoveryCode", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ email })
+                    body: JSON.stringify({ identificador })
                 });
 
                 if (!res.ok) {
@@ -172,11 +172,11 @@ document.addEventListener("DOMContentLoaded", function () {
     $(document).on("submit", "#codigoRecuperacionForm", async function (e) {
         e.preventDefault();
         const codigo = document.getElementById("codigo").value.trim();
-        const email = document.getElementById("emailRecuperacion").value.trim();
+        const identificador = document.getElementById("identificador").value.trim();
         const errorDiv = document.getElementById("error-codigo-recuperacion");
         errorDiv.textContent = "";
 
-        if (!codigo || !email) {
+        if (!codigo || !identificador) {
             errorDiv.textContent = "Ingresa el código de verificación.";
             return;
         }
@@ -185,7 +185,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const res = await fetch("/tk/server/routes/api.php?module=usuarios&action=verifyRecoveryCode", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, codigo })
+                body: JSON.stringify({ identificador, codigo })
             });
 
             if (!res.ok) {
@@ -213,7 +213,7 @@ document.addEventListener("DOMContentLoaded", function () {
         e.preventDefault();
         const nuevaPassword = document.getElementById("nuevaPassword").value.trim();
         const confirmarPassword = document.getElementById("confirmarPassword").value.trim();
-        const email = document.getElementById("emailRecuperacion").value.trim();
+        const identificador = document.getElementById("identificador").value.trim();
         const codigo = document.getElementById("codigo").value.trim();
         const errorDiv = document.getElementById("error-nueva-contraseña");
         errorDiv.textContent = "";
@@ -238,7 +238,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const res = await fetch("/tk/server/routes/api.php?module=usuarios&action=changePassword", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, codigo, password: nuevaPassword })
+                body: JSON.stringify({ identificador, codigo, password: nuevaPassword })
             });
 
             if (!res.ok) {
