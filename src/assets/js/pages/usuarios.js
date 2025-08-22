@@ -1,8 +1,16 @@
 import { fetchUsuarios as apiFetchUsuarios, fetchUsuarioById, getRoles } from "../api/api.js";
 
-/**
- * Utilidad para cargar roles en un select
- */
+// Mapeo de tipos de documento para mostrar nombres amigables
+const tipoDocumentoLabels = {
+    "CC": "Cédula de Ciudadanía",
+    "TI": "Tarjeta de Identidad",
+    "CE": "Cédula de Extranjería",
+    "PS": "Pasaporte",
+    "DNI": "DNI",
+    "NIT": "NIT"
+};
+
+// Carga los roles en un elemento select (crear/editar usuario)
 async function cargarRolesEnSelect(selectId, selectedRolId = null) {
     const select = document.getElementById(selectId);
     if (!select) return;
@@ -30,19 +38,150 @@ async function cargarRolesEnSelect(selectId, selectedRolId = null) {
     }
 }
 
-/**
- * Inicializa el módulo de usuarios: renderiza vistas, maneja eventos de CRUD, paginación y mensajes.
- * @param {string} vista - Vista inicial ('tabla' o 'tarjetas')
- * @param {string} filtro - Filtro de búsqueda (opcional)
- */
+// Carga los tipos de documento en un elemento select (crear/editar usuario)
+async function cargarTiposDocumentoEnSelect(selectId, selectedTipo = null) {
+    const select = document.getElementById(selectId);
+    if (!select) return;
+    select.innerHTML = '<option value="">Cargando tipos...</option>';
+    try {
+        const response = await fetch("/tk/server/routes/api.php?module=usuarios&action=get_catalogos");
+        const data = await response.json();
+        if (data.success && Array.isArray(data.tipos_documento)) {
+            select.innerHTML = '';
+            data.tipos_documento.forEach(tipo => {
+                const option = document.createElement('option');
+                option.value = tipo;
+                option.textContent = tipoDocumentoLabels[tipo] || tipo;
+                if (selectedTipo && tipo === selectedTipo) {
+                    option.selected = true;
+                }
+                select.appendChild(option);
+            });
+        } else {
+            select.innerHTML = '<option value="">No hay tipos disponibles</option>';
+        }
+    } catch (error) {
+        select.innerHTML = '<option value="">Error al cargar tipos</option>';
+        mostrarMensaje("error", "No se pudieron cargar los tipos de documento.");
+    }
+}
+
+// Inicializa el módulo de usuarios: estructura visual, eventos, renderizado y lógica principal
 function iniciarModuloUsuarios(vista, filtro = "") {
-    // Estado y referencias
+    // Configura la vista inicial
     if (!vista) {
-        vista = localStorage.getItem('usuariosVista') || 'tabla';
+        vista = 'tarjetas';
+        localStorage.setItem('usuariosVista', 'tarjetas');
     } else {
         localStorage.setItem('usuariosVista', vista);
     }
 
+    // Responsive: tamaños de texto e íconos según ancho de pantalla
+    const mainContent = document.getElementById('main-content');
+    let textoSize = "text-xs";
+    let nombreSize = "text-base font-bold";
+    let iconSize = "text-xl";
+    const width = window.innerWidth;
+    if (width < 640) {
+        textoSize = "text-xs";
+        nombreSize = "text-base font-bold";
+        iconSize = "text-lg";
+    } else if (width < 768) {
+        textoSize = "text-sm";
+        nombreSize = "text-sm font-bold";
+        iconSize = "text-xl";
+    } else if (width < 1024) {
+        textoSize = "text-base";
+        nombreSize = "text-base font-bold";
+        iconSize = "text-2xl";
+    } else {
+        textoSize = "text-base";
+        nombreSize = "text-lg font-bold";
+        iconSize = "text-3xl";
+    }
+
+    // Header de usuarios (buscador, botones de vista, agregar usuario)
+    let usuariosHeaderHtml = "";
+    if (width < 768) {
+        usuariosHeaderHtml = `
+        <div class="flex flex-col gap-2 my-2">
+            <div class="flex justify-center mb-1">
+                <span class="text-color4 text-xs text-center">
+                    <i class="fas fa-info-circle text-color6 mr-1"></i>
+                    Consulta, busca y gestiona los usuarios registrados en el sistema.
+                </span>
+            </div>
+            <button id="openModal" class="bg-color5 text-white px-4 py-2 rounded ${textoSize} flex items-center gap-2 w-full justify-center">
+                <i class="fas fa-user-plus ${iconSize}"></i>
+                <span>Agregar Usuario</span>
+            </button>
+            <input
+                type="text"
+                id="busquedaUsuarios"
+                placeholder="Buscar usuario..."
+                class="border border-gray-300 rounded px-3 py-2 ${textoSize} w-full text-center"
+                autocomplete="off"
+                style="outline:none;"
+                onfocus="this.style.borderColor='#22c55e';"
+                onblur="this.style.borderColor='#d1d5db';"
+            >
+        </div>
+        `;
+    } else {
+        usuariosHeaderHtml = `
+        <div class="flex flex-col gap-2 my-2">
+            <div class="flex justify-center mb-1">
+                <span class="text-color4 text-xs text-center">
+                    <i class="fas fa-info-circle text-color6 mr-1"></i>
+                    Consulta, busca y gestiona los usuarios registrados en el sistema.
+                </span>
+            </div>
+            <div class="flex flex-row items-center gap-2">
+                <div class="flex-shrink-0">
+                    <button id="openModal" class="bg-color5 text-white px-4 py-2 rounded ${textoSize} flex items-center gap-2">
+                        <i class="fas fa-user-plus ${iconSize}"></i>
+                        <span>Agregar Usuario</span>
+                    </button>
+                </div>
+                <div class="flex-grow flex justify-center">
+                    <input
+                        type="text"
+                        id="busquedaUsuarios"
+                        placeholder="Buscar usuario..."
+                        class="border border-gray-300 rounded px-3 py-2 ${textoSize} w-full sm:w-80 text-center"
+                        autocomplete="off"
+                        style="outline:none;"
+                        onfocus="this.style.borderColor='#22c55e';"
+                        onblur="this.style.borderColor='#d1d5db';"
+                    >
+                </div>
+                <div class="flex-shrink-0 flex justify-end gap-2 mx-12" style="min-width:100px;">
+                    <button id="btnVistaTarjetas" class="bg-color5 text-white p-2 rounded shadow hover:bg-green-600 transition" title="Vista tarjetas">
+                        <i class="fas fa-th-large"></i>
+                    </button>
+                    <button id="btnVistaTabla" class="bg-color6 text-white p-2 rounded shadow hover:bg-orange-600 transition" title="Vista tabla">
+                        <i class="fa-solid fa-list"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        `;
+    }
+
+    // Renderiza la estructura principal
+    mainContent.innerHTML = `
+    <div class="flex flex-col gap-2 my-1">
+        <div class="flex justify-center items-center gap-2">
+            <i class="fas fa-users text-color6 text-2xl"></i>
+            <h2 class="text-color4 text-center text-xl font-semibold">Usuarios</h2>
+        </div>
+        ${usuariosHeaderHtml}
+    </div>
+    <div id="dataTable"></div>
+    <div id="usuariosPaginador" class="mt-4 flex justify-center items-center"></div>
+    `;
+
+    // Elementos principales y variables de estado
     const modalCrear = document.getElementById("modalCrear");
     const modalEditar = document.getElementById("modalEditar");
     const modalVer = document.getElementById("modalVer");
@@ -66,14 +205,17 @@ function iniciarModuloUsuarios(vista, filtro = "") {
     let estadoUsuarioActual = "Activo";
     let usuariosData = [];
     let paginaActual = 1;
-    let usuariosPorPagina = 8; // <-- Cambiado a 8 para tarjetas
+    let usuariosPorPagina = 8;
+    let filtroBusqueda = filtro;
 
-    // --- EVENTOS DE MODALES ---
+    // Evento para abrir el modal de creación de usuario
     if (abrirModalCrear) {
         abrirModalCrear.addEventListener("click", async () => {
             modalCrear.classList.remove("hidden");
             dataFormCrear.reset();
             document.getElementById("id_usuarioCrear").value = "";
+            await cargarTiposDocumentoEnSelect("tipo_documentoCrear");
+            await cargarRolesEnSelect("rolCrear");
             if (typeof cargarDepartamentosMunicipios === "function") {
                 cargarDepartamentosMunicipios("departamentoCrear", "municipioCrear");
             }
@@ -83,9 +225,9 @@ function iniciarModuloUsuarios(vista, filtro = "") {
                     cargarDepartamentosMunicipios("departamentoCrear", "municipioCrear", this.value);
                 };
             }
-            await cargarRolesEnSelect("rolCrear");
         });
     }
+    // Eventos para cerrar modales
     if (cerrarModalCrear) cerrarModalCrear.addEventListener("click", () => modalCrear.classList.add("hidden"));
     if (cerrarModalEditar) cerrarModalEditar.addEventListener("click", () => modalEditar.classList.add("hidden"));
     if (cerrarModalVer) cerrarModalVer.addEventListener("click", () => modalVer.classList.add("hidden"));
@@ -94,11 +236,11 @@ function iniciarModuloUsuarios(vista, filtro = "") {
         currentIdToEstado = null;
     });
 
-    // --- FORMULARIOS ---
+    // Eventos de envío de formularios (crear/editar usuario)
     if (dataFormCrear) dataFormCrear.addEventListener("submit", enviarDatosCrear);
     if (dataFormEditar) dataFormEditar.addEventListener("submit", enviarDatosEditar);
 
-    // --- CAMBIAR ESTADO DE USUARIO ---
+    // Evento para confirmar cambio de estado de usuario (activo/inactivo)
     if (btnEstadoUsuarioConfirmar) {
         btnEstadoUsuarioConfirmar.addEventListener("click", async () => {
             if (currentIdToEstado) {
@@ -129,6 +271,7 @@ function iniciarModuloUsuarios(vista, filtro = "") {
         });
     }
 
+    // Cierra los modales al hacer click fuera de ellos
     window.addEventListener("click", function (event) {
         if (event.target === modalCrear) modalCrear.classList.add("hidden");
         if (event.target === modalEditar) modalEditar.classList.add("hidden");
@@ -136,7 +279,7 @@ function iniciarModuloUsuarios(vista, filtro = "") {
         if (event.target === modalEstadoUsuario) modalEstadoUsuario.classList.add("hidden");
     });
 
-    // --- FUNCIONES DE ENVÍO DE FORMULARIOS ---
+    // Envío de datos para crear usuario
     function enviarDatosCrear(event) {
         event.preventDefault();
         try {
@@ -164,11 +307,13 @@ function iniciarModuloUsuarios(vista, filtro = "") {
             formData.delete("passwordCrear");
             formData.delete("confirmarPasswordCrear");
 
+            // Validación de contraseñas
             if (formData.get("password") !== dataFormCrear.confirmarPasswordCrear.value) {
                 mostrarMensaje("error", "Las contraseñas no coinciden.");
                 return;
             }
 
+            // Mensaje de éxito para mostrar y guardar en localStorage
             const cambios = [
                 `Usuario creado: ${formData.get("nombre")} ${formData.get("apellido")}`,
                 `Email: ${formData.get("email")}`,
@@ -187,7 +332,6 @@ function iniciarModuloUsuarios(vista, filtro = "") {
                 .then((data) => {
                     if (data.success) {
                         modalCrear.classList.add("hidden");
-                        // Mostrar el mensaje antes de recargar
                         mostrarMensaje("exito", `¡Usuario creado exitosamente!\n${cambios.join('\n')}`);
                         setTimeout(() => {
                             window.location.reload();
@@ -206,6 +350,7 @@ function iniciarModuloUsuarios(vista, filtro = "") {
         }
     }
 
+    // Envío de datos para editar usuario
     function enviarDatosEditar(event) {
         event.preventDefault();
         try {
@@ -227,6 +372,7 @@ function iniciarModuloUsuarios(vista, filtro = "") {
             formData.append("telefono", formData.get("telefonoEditar"));
             formData.append("id_rol", formData.get("rolEditar"));
 
+            // Foto de perfil (si se actualiza)
             const fotoInput = document.getElementById("fotoEditar");
             if (fotoInput && fotoInput.files && fotoInput.files[0]) {
                 formData.append("foto", fotoInput.files[0]);
@@ -245,6 +391,7 @@ function iniciarModuloUsuarios(vista, filtro = "") {
             formData.delete("telefonoEditar");
             formData.delete("rolEditar");
 
+            // Detecta cambios para mostrar en el mensaje
             const cambios = [];
             if (usuarioActualEditar.nombre !== dataFormEditar.nombreEditar.value) cambios.push("Nombre");
             if (usuarioActualEditar.apellido !== dataFormEditar.apellidoEditar.value) cambios.push("Apellido");
@@ -289,7 +436,6 @@ function iniciarModuloUsuarios(vista, filtro = "") {
                                 img.src = "/tk/src/" + data.foto + "?t=" + new Date().getTime();
                             }
                         }
-                        // Mostrar el mensaje antes de recargar
                         mostrarMensaje("exito", mensaje);
                         setTimeout(() => {
                             window.location.reload();
@@ -308,22 +454,22 @@ function iniciarModuloUsuarios(vista, filtro = "") {
         }
     }
 
-    // --- RENDER DE USUARIOS ---
+    // Renderiza la lista de usuarios en tarjetas o tabla según la vista seleccionada
     function renderUsuarios() {
         dataTable.innerHTML = "";
-        let vistaActual = localStorage.getItem('usuariosVista') || 'tabla';
+        let vistaActual = localStorage.getItem('usuariosVista') || 'tarjetas';
         let tarjetasPorPagina = 8;
         let tablaPorPagina = 10;
         let usuariosFiltrados = usuariosData;
-        if (filtro && filtro.length > 0) {
+        // Aplica filtro de búsqueda
+        if (filtroBusqueda && filtroBusqueda.length > 0) {
             usuariosFiltrados = usuariosData.filter(usuario =>
-                (usuario.nombre && usuario.nombre.toLowerCase().includes(filtro)) ||
-                (usuario.apellido && usuario.apellido.toLowerCase().includes(filtro)) ||
-                (usuario.email && usuario.email.toLowerCase().includes(filtro))
+                (usuario.nombre && usuario.nombre.toLowerCase().includes(filtroBusqueda)) ||
+                (usuario.apellido && usuario.apellido.toLowerCase().includes(filtroBusqueda)) ||
+                (usuario.email && usuario.email.toLowerCase().includes(filtroBusqueda))
             );
         }
 
-        // Ajusta usuariosPorPagina según la vista
         if (vistaActual === 'tarjetas') {
             usuariosPorPagina = tarjetasPorPagina;
         } else {
@@ -331,8 +477,9 @@ function iniciarModuloUsuarios(vista, filtro = "") {
         }
 
         const totalPaginas = Math.max(1, Math.ceil(usuariosFiltrados.length / usuariosPorPagina));
-        if (paginaActual > totalPaginas) paginaActual = 1; // Reinicia si la página actual es mayor al total
+        if (paginaActual > totalPaginas) paginaActual = 1;
 
+        // Vista tarjetas
         if (vistaActual === 'tarjetas') {
             dataTable.className = `grid grid-cols-1 sm:grid-cols-4 gap-4`;
             const inicio = (paginaActual - 1) * usuariosPorPagina;
@@ -372,7 +519,9 @@ function iniciarModuloUsuarios(vista, filtro = "") {
                 `;
                 dataTable.appendChild(card);
             });
-        } else if (vistaActual === 'tabla') {
+        }
+        // Vista tabla
+        else if (vistaActual === 'tabla') {
             dataTable.className = "overflow-x-auto";
             const inicio = (paginaActual - 1) * usuariosPorPagina;
             const fin = inicio + usuariosPorPagina;
@@ -427,14 +576,11 @@ function iniciarModuloUsuarios(vista, filtro = "") {
         renderPaginador(usuariosFiltrados.length);
     }
 
-    // --- PAGINADOR ---
-    // Esta función SIEMPRE muestra el paginador en el módulo de usuarios
+    // Renderiza el paginador para la lista de usuarios
     function renderPaginador(totalUsuarios) {
         if (!paginador) return;
         paginador.innerHTML = "";
         const totalPaginas = Math.max(1, Math.ceil(totalUsuarios / usuariosPorPagina));
-
-        // SIEMPRE muestra el paginador
         paginador.style.display = "flex";
 
         let html = `<nav class="flex justify-center items-center gap-1 m-1">`;
@@ -466,14 +612,15 @@ function iniciarModuloUsuarios(vista, filtro = "") {
         });
     }
 
-    // --- CARGA DE USUARIOS DESDE EL SERVIDOR ---
+    // Carga los usuarios desde el servidor y los muestra
     function fetchUsuarios() {
         apiFetchUsuarios()
             .then((data) => {
                 usuariosData = data;
-                paginaActual = 1; // Reinicia la página al cargar usuarios
+                paginaActual = 1;
                 renderUsuarios();
 
+                // Muestra mensaje guardado en localStorage (por ejemplo, tras crear/editar usuario)
                 const mensajeGuardado = localStorage.getItem("usuariosMensaje");
                 if (mensajeGuardado) {
                     const obj = JSON.parse(mensajeGuardado);
@@ -487,7 +634,7 @@ function iniciarModuloUsuarios(vista, filtro = "") {
             });
     }
 
-    // --- FUNCIONES GLOBALES PARA ACCIONES DE USUARIO ---
+    // Función global para editar usuario (abre modal y carga datos)
     window.editUsuario = async function (id) {
         try {
             const usuario = await fetchUsuarioById(id);
@@ -528,6 +675,7 @@ function iniciarModuloUsuarios(vista, filtro = "") {
         }
     };
 
+    // Función global para confirmar cambio de estado de usuario (abre modal)
     window.confirmEstadoUsuario = async function (id) {
         try {
             currentIdToEstado = id;
@@ -557,6 +705,7 @@ function iniciarModuloUsuarios(vista, filtro = "") {
         }
     };
 
+    // Función global para ver usuario (abre modal y muestra datos)
     window.viewUsuario = async function (id, id_rol) {
         try {
             const usuario = await fetchUsuarioById(id);
@@ -582,7 +731,7 @@ function iniciarModuloUsuarios(vista, filtro = "") {
         }
     };
 
-    // --- MENSAJES EMERGENTES ---
+    // Muestra mensajes emergentes en pantalla (éxito/error)
     function mostrarMensaje(tipo, mensaje) {
         mensajeTexto.innerHTML = mensaje;
         if (tipo === "exito") {
@@ -606,9 +755,27 @@ function iniciarModuloUsuarios(vista, filtro = "") {
         }, 2200);
     }
 
-    // --- INICIALIZACIÓN ---
+    // Buscador de usuarios (filtra en tiempo real)
+    document.getElementById('busquedaUsuarios')?.addEventListener('input', function () {
+        filtroBusqueda = this.value.trim().toLowerCase();
+        renderUsuarios();
+    });
+
+    // Botón para cambiar a vista tarjetas
+    document.getElementById('btnVistaTarjetas')?.addEventListener('click', function () {
+        localStorage.setItem('usuariosVista', 'tarjetas');
+        renderUsuarios();
+    });
+
+    // Botón para cambiar a vista tabla
+    document.getElementById('btnVistaTabla')?.addEventListener('click', function () {
+        localStorage.setItem('usuariosVista', 'tabla');
+        renderUsuarios();
+    });
+
+    // Carga inicial de usuarios
     fetchUsuarios();
 }
 
-// Exporta la función para que pueda ser llamada desde dashboard.js
+// Exporta la función para inicializar el módulo desde otros archivos
 window.iniciarModuloUsuarios = iniciarModuloUsuarios;

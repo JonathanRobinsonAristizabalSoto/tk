@@ -6,6 +6,7 @@ require_once("../controller/UsuariosController.php");
 require_once("../controller/DashboardController.php");
 require_once("../controller/RegisterController.php");
 require_once("../controller/LoginController.php");
+require_once("../controller/PermisosController.php"); // <-- Agrega el controlador de permisos
 
 // Obtiene el módulo y la acción solicitados de forma segura (GET, POST o JSON)
 $action = $_GET['action'] ?? $_POST['action'] ?? '';
@@ -29,6 +30,7 @@ $validModules = [
     'dashboard'  => DashboardController::class,
     'register'   => RegisterController::class,
     'login'      => LoginController::class,
+    'permisos'   => PermisosController::class, // <-- Agrega el módulo permisos
     // Agrega aquí otros módulos si los necesitas
 ];
 

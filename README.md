@@ -1,6 +1,23 @@
 # TicketPro+
 
-TicketPro+ es una plataforma para gestionar solicitudes y tickets de manera eficiente. Nuestra aplicación está diseñada para facilitar la comunicación entre usuarios y administradores, ofreciendo una solución integral para el soporte técnico.
+TicketPro+ es una plataforma cliente-servidor para gestionar solicitudes y tickets de manera eficiente. Nuestra aplicación está diseñada para facilitar la comunicación entre usuarios y administradores, ofreciendo una solución integral para el soporte técnico.
+
+## Tecnologías Utilizadas
+
+- **Frontend:** HTML5, CSS3 (Tailwind CSS), JavaScript (ES6), jQuery.
+- **Backend:** PHP 8+, Composer para gestión de dependencias.
+- **Base de datos:** MySQL.
+- **Gestión de estilos:** Tailwind CSS, PostCSS.
+- **Control de dependencias:** npm (Node.js) para frontend, Composer para backend.
+- **Autenticación y seguridad:** Manejo de sesiones PHP, validación y recuperación de contraseñas, verificación por correo electrónico.
+- **API REST:** Comunicación entre frontend y backend mediante rutas definidas en PHP.
+- **Modularidad:** Estructura MVC para el backend y componentes reutilizables en el frontend.
+
+## Arquitectura Cliente-Servidor
+
+TicketPro+ sigue una arquitectura cliente-servidor:
+- El **frontend** se ejecuta en el navegador del usuario y realiza peticiones HTTP a la API del backend.
+- El **backend** procesa las solicitudes, gestiona la base de datos y responde con datos en formato JSON o HTML según corresponda.
 
 ## Estructura del Proyecto
 
@@ -18,10 +35,12 @@ Tk/                                                       # Nombre del proyecto 
 │   │   ├── DashboardController.php                       # Controlador para proteger el acceso al dashboard y servir datos del usuario autenticado (HTML y JSON)
 │   │   ├── LoginController.php                           # Controlador para autenticación de usuarios y creación de sesión
 │   │   ├── LogoutController.php                          # Controlador para cerrar la sesión del usuario
+│   │   ├── PermisosController.php                        # Controlador para gestión de permisos: CRUD, matriz de roles-permisos y actualización de estado
 │   │   ├── RegisterController.php                        # Controlador para registro de nuevos usuarios
 │   │   ├── RolesController.php                           # Controlador PHP para consultar y actualizar roles.
 │   │   └── UsuariosController.php                        # Controlador para gestión de usuarios: crear, actualizar, consultar y cambiar estado
 │   ├── model/                                            # Modelos del backend en PHP (acceso y lógica de datos)
+│   │   ├── Permisos.php                                  # Modelo para la entidad Permisos
 │   │   ├── Rol.php                                       # Modelo para la entidad Rol
 │   │   ├── Usuario.php                                   # Modelo para la entidad Usuario
 │   ├── routes/                                           # Rutas de la API backend
@@ -48,7 +67,7 @@ Tk/                                                       # Nombre del proyecto 
 │   │       │   └── api.js                                # Funciones JavaScript para interactuar con la API backend (consultas y acciones de usuarios, roles, dashboard)
 │   │       ├── auth/                                     # Scripts relacionados con autenticación y registro
 │   │       │   ├── login.js                              # Lógica de autenticación y envío de credenciales al backend
-│   │       │   ├── password_recovery.js                  #
+│   │       │   ├── password_recovery.js                  # Lógica para recuperación de contraseña y envío de código de verificación
 │   │       │   ├── register.js                           # Lógica para el registro de nuevos usuarios
 │   │       │   └── verify-code.js                        # Verificación de códigos para recuperación y registro
 │   │       ├── jquery/                                   # Librerías externas
@@ -59,6 +78,7 @@ Tk/                                                       # Nombre del proyecto 
 │   │       │   └── modal-verificacion.js                 # Modal para verificación de usuario
 │   │       ├── pages/                                    # Scripts específicos de páginas principales
 │   │       │   ├── dashboard.js                          # Lógica y funcionalidades del dashboard principal del usuario
+│   │       │   ├── permisos.js                           # Lógica para mostrar y actualizar la matriz de permisos por rol
 │   │       │   ├── profile.js                            # Lógica para mostrar y editar el perfil del usuario
 │   │       │   ├── roles.js                              # Módulo de gestión de Roles: CRUD, vistas y paginación
 │   │       │   └── usuarios.js                           # Módulo de gestión de usuarios: CRUD, vistas y paginación
@@ -83,19 +103,19 @@ Tk/                                                       # Nombre del proyecto 
 │   │   │   ├── modal-exito-login.html                    # Modal para éxito en inicio de sesión
 │   │   │   ├── modal-exito-registro.html                 # Modal para éxito en registro
 │   │   │   ├── modal-logout.html                         # Modal para cierre de sesión
-│   │   │   ├── modal-nueva-contraseña.html               # 
-│   │   │   ├── modal-nuevo-pass-exitoso.html             # 
+│   │   │   ├── modal-nueva-contraseña.html               # Modal para ingresar y confirmar nueva contraseña del usuario
+│   │   │   ├── modal-nuevo-pass-exitoso.html             # Modal de confirmación para contraseña cambiada 
 │   │   │   ├── modal-privacidad.html                     # Modal con la política de privacidad
 │   │   │   ├── modal-verificacion-codigo.html            # Modal para verificación de código
-│   │   │   └── modal-verificar-codigo-recuperacion.html  # 
+│   │   │   └── modal-verificar-codigo-recuperacion.html  # Modal para ingresar y verificar el código de recuperación enviado por correo 
 │   │   ├── partials/                                     # Fragmentos HTML reutilizables
 │   │   │   ├── departamentos.html                        # Campos de selección de departamento y municipio para formularios
 │   │   │   ├── header.html                               # Encabezado principal con logo y menú de navegación
 │   │   │   ├── footer.html                               # Pie de página con enlaces legales y redes sociales
 │       └── dashboard.html                                # Dashboard principal del usuario autenticado
-├── vendor/                                               #
-├── composer.json                                         #
-├── composer.lock                                         #
+├── vendor/                                               # Dependencias externas instaladas por Composer (backend PHP)
+├── composer.json                                         # Configuración de dependencias y paquetes PHP del proyecto
+├── composer.lock                                         # Archivo de bloqueo que garantiza versiones exactas de dependencias PHP instaladas
 ├── index.html                                            # Página principal de inicio y bienvenida para los usuarios
 ├── package-lock.json                                     # Archivo de bloqueo de dependencias npm, garantiza la instalación exacta de versiones usadas en el frontend
 ├── package.json                                          # Configuración del proyecto frontend y scripts de npm

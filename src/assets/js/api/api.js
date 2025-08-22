@@ -75,4 +75,97 @@ export async function apiPost(data) {
     return await res.json();
 }
 
+/**
+ * --- PERMISOS ---
+ * Solicita la lista de permisos
+ */
+export async function fetchPermisos() {
+    const res = await fetch(`${API_BASE}?module=permisos&action=fetch`, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: "action=fetch"
+    });
+    return await res.json();
+}
+
+/**
+ * Solicita los datos de un permiso por ID
+ */
+export async function fetchPermisoById(id) {
+    const res = await fetch(`${API_BASE}?module=permisos&action=fetch`, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `action=fetch&id_permiso=${id}`
+    });
+    return await res.json();
+}
+
+/**
+ * Actualiza el estado de un permiso (activar/inactivar)
+ */
+export async function updateEstadoPermiso(id_permiso, estado) {
+    const res = await fetch(`${API_BASE}?module=permisos&action=update_estado`, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `id_permiso=${encodeURIComponent(id_permiso)}&estado=${encodeURIComponent(estado)}`
+    });
+    return await res.json();
+}
+
+/**
+ * Actualiza la descripción de un permiso
+ */
+export async function updateDescripcionPermiso(id_permiso, descripcion) {
+    const res = await fetch(`${API_BASE}?module=permisos&action=update_descripcion`, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `id_permiso=${encodeURIComponent(id_permiso)}&descripcion=${encodeURIComponent(descripcion)}`
+    });
+    return await res.json();
+}
+
+/**
+ * Crea un nuevo permiso
+ */
+export async function createPermiso(data) {
+    const res = await fetch(`${API_BASE}?module=permisos&action=create`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+    });
+    return await res.json();
+}
+
+/**
+ * Elimina un permiso por ID
+ */
+export async function deletePermiso(id_permiso) {
+    const res = await fetch(`${API_BASE}?module=permisos&action=delete`, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `id_permiso=${encodeURIComponent(id_permiso)}`
+    });
+    return await res.json();
+}
+
+/**
+ * Consulta la matriz de roles y permisos
+ */
+export async function fetchRolesPermisosMatrix() {
+    const res = await fetch(`${API_BASE}?module=permisos&action=fetch_matrix`);
+    return await res.json();
+}
+
+/**
+ * Actualiza el permiso de un rol (activo/inactivo)
+ */
+export async function updateRolPermiso(id_rol, id_permiso, activo) {
+    const res = await fetch(`${API_BASE}?module=permisos&action=update_rol_permiso`, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `id_rol=${encodeURIComponent(id_rol)}&id_permiso=${encodeURIComponent(id_permiso)}&activo=${activo ? 1 : 0}`
+    });
+    return await res.json();
+}
+
 // ...agrega aquí más funciones para otros módulos y acciones...

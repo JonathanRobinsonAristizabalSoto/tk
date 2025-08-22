@@ -122,6 +122,13 @@
                             </a>
                         </li>
                         <li>
+                            <a href="#" id="sidebar-permisos-btn"
+                                class="sidebar-link block p-2 text-color1 hover:text-color6 rounded-lg flex items-center text-base md:text-sm">
+                                <i class="fas fa-key mr-2 text-base md:text-sm"></i>
+                                <span class="text-base md:text-sm">Permisos</span>
+                            </a>
+                        </li>
+                        <li>
                             <a href="../pages/tickets.html" id="sidebar-tickets-btn"
                                 class="sidebar-link block p-2 text-color1 hover:text-color6 rounded-lg flex items-center text-base md:text-sm">
                                 <i class="fas fa-ticket-alt mr-2 text-base md:text-sm"></i>
@@ -150,13 +157,7 @@
 
         <!-- Contenido Principal -->
         <main class="flex-1 relative bg-gray-100 p-6 overflow-y-auto">
-            <section class="flex-1 mx-6" id="main-content">
-                <h2 class="text-2xl font-semibold text-color4 mb-4 text-center">Mis Tickets</h2>
-                <!-- Aquí se pintarán los usuarios dinámicamente -->
-                <div id="dataTable"></div>
-                <!-- Paginador SOLO para usuarios, SIEMPRE visible en el módulo de usuarios -->
-                <div id="usuariosPaginador" class="mt-4 flex justify-center items-center"></div>
-            </section>
+            <div class="flex-1 mx-6" id="main-content"></div>
         </main>
     </div>
 
@@ -658,6 +659,7 @@
 
     <script type="module" src="/tk/src/assets/js/pages/usuarios.js"></script>
     <script type="module" src="/tk/src/assets/js/pages/roles.js"></script>
+    <script type="module" src="/tk/src/assets/js/pages/permisos.js"></script>
     <script type="module" src="/tk/src/assets/js/pages/dashboard.js"></script>
     <script type="module" src="/tk/src/assets/js/pages/profile.js"></script>
     <script type="module" src="/tk/src/assets/js/modals/modal-logout.js"></script>
