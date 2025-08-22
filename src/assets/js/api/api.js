@@ -168,4 +168,78 @@ export async function updateRolPermiso(id_rol, id_permiso, activo) {
     return await res.json();
 }
 
+/**
+ * --- TIPOLOGIAS ---
+ * Solicita la lista de tipologías
+ */
+export async function fetchTipologias() {
+    const res = await fetch(`${API_BASE}?module=tipologias&action=fetch`, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: "action=fetch"
+    });
+    return await res.json();
+}
+
+/**
+ * Solicita los datos de una tipología por ID
+ */
+export async function fetchTipologiaById(id) {
+    const res = await fetch(`${API_BASE}?module=tipologias&action=fetch`, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `action=fetch&id_tipologia=${id}`
+    });
+    return await res.json();
+}
+
+/**
+ * Crea una nueva tipología
+ */
+export async function createTipologia(data) {
+    const res = await fetch(`${API_BASE}?module=tipologias&action=add`, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams(data).toString()
+    });
+    return await res.json();
+}
+
+/**
+ * Actualiza una tipología
+ */
+export async function updateTipologia(id, data) {
+    data.id_tipologia = id;
+    const res = await fetch(`${API_BASE}?module=tipologias&action=update`, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams(data).toString()
+    });
+    return await res.json();
+}
+
+/**
+ * Elimina una tipología por ID (eliminación lógica)
+ */
+export async function deleteTipologia(id) {
+    const res = await fetch(`${API_BASE}?module=tipologias&action=delete`, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `id_tipologia=${id}`
+    });
+    return await res.json();
+}
+
+/**
+ * Cambia el estado de una tipología (activar/inactivar)
+ */
+export async function toggleEstadoTipologia(id, estado) {
+    const res = await fetch(`${API_BASE}?module=tipologias&action=toggle_estado`, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `id_tipologia=${id}&estado_tipologia=${estado}`
+    });
+    return await res.json();
+}
+
 // ...agrega aquí más funciones para otros módulos y acciones...

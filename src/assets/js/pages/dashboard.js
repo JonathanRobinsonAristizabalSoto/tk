@@ -1,4 +1,4 @@
-import { getDashboardUser} from "../api/api.js";
+import { getDashboardUser } from "../api/api.js";
 
 document.addEventListener("DOMContentLoaded", async function () {
     let data;
@@ -183,7 +183,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         });
     }
 
-    // Sidebar: otros módulos (solo activa el botón)
+    // Sidebar: muestra tickets (solo activa el botón)
     const ticketsBtn = document.getElementById('sidebar-tickets-btn');
     if (ticketsBtn) {
         ticketsBtn.addEventListener('click', function () {
@@ -191,13 +191,16 @@ document.addEventListener("DOMContentLoaded", async function () {
         });
     }
 
+    // Sidebar: muestra tipologías
     const tipologiasBtn = document.getElementById('sidebar-tipologias-btn');
     if (tipologiasBtn) {
         tipologiasBtn.addEventListener('click', function () {
             setSidebarActive('sidebar-tipologias-btn');
+            window.iniciarModuloTipologias("tarjetas", "");
         });
     }
 
+    // Sidebar: muestra programas (solo activa el botón)
     const programasBtn = document.getElementById('sidebar-programas-btn');
     if (programasBtn) {
         programasBtn.addEventListener('click', function () {
@@ -214,19 +217,15 @@ document.addEventListener("DOMContentLoaded", async function () {
         toggleModal('modalEditar', false);
     });
 
-    // Evita que el usuario salga accidentalmente del dashboard
-    if (window.history && window.history.pushState) {
-        window.history.pushState({ dashboard: true }, '', window.location.href);
-    }
+    // Elimina el comportamiento de mostrar el modal de logout al presionar "Atrás"
+    // window.addEventListener('popstate', function (event) {
+    //     if (location.pathname.includes('dashboard.html')) {
+    //         mostrarModalLogoutConfirm();
+    //         window.history.pushState({ dashboard: true }, '', window.location.href);
+    //     }
+    // });
 
-    window.addEventListener('popstate', function (event) {
-        if (location.pathname.includes('dashboard.html')) {
-            mostrarModalLogoutConfirm();
-            window.history.pushState({ dashboard: true }, '', window.location.href);
-        }
-    });
-
-    // Muestra el modal de confirmación de logout
+    // Muestra el modal de confirmación de logout solo cuando el usuario lo solicita
     function mostrarModalLogoutConfirm() {
         const modal = document.getElementById('modal-logout-confirm');
         if (modal) {
