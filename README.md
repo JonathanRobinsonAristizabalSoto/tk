@@ -1,6 +1,17 @@
 # TicketPro+
 
-TicketPro+ es una plataforma cliente-servidor para gestionar solicitudes y tickets de manera eficiente. Nuestra aplicación está diseñada para facilitar la comunicación entre usuarios y administradores, ofreciendo una solución integral para el soporte técnico.
+TicketPro+ es una plataforma cliente-servidor para la gestión eficiente de solicitudes y tickets de soporte técnico. Está diseñada para optimizar la comunicación entre usuarios y administradores, permitiendo el registro, seguimiento y resolución de incidencias de manera ágil y segura.
+
+## Características Principales
+
+- Autenticación y registro de usuarios con verificación por correo electrónico.
+- Dashboard personalizado para cada usuario.
+- Gestión de usuarios, roles y permisos con CRUD completo.
+- Recuperación y cambio de contraseña.
+- Asignación de roles y matriz de permisos.
+- Interfaz moderna, responsiva y modular.
+- Seguridad: manejo de sesiones, validación de datos y protección de endpoints.
+- Base de datos robusta con historial, auditoría y notificaciones.
 
 ## Tecnologías Utilizadas
 
@@ -9,15 +20,14 @@ TicketPro+ es una plataforma cliente-servidor para gestionar solicitudes y ticke
 - **Base de datos:** MySQL.
 - **Gestión de estilos:** Tailwind CSS, PostCSS.
 - **Control de dependencias:** npm (Node.js) para frontend, Composer para backend.
-- **Autenticación y seguridad:** Manejo de sesiones PHP, validación y recuperación de contraseñas, verificación por correo electrónico.
-- **API REST:** Comunicación entre frontend y backend mediante rutas definidas en PHP.
-- **Modularidad:** Estructura MVC para el backend y componentes reutilizables en el frontend.
+- **API REST:** Comunicación entre frontend y backend mediante rutas PHP.
+- **Modularidad:** Estructura MVC en backend y componentes reutilizables en frontend.
 
 ## Arquitectura Cliente-Servidor
 
 TicketPro+ sigue una arquitectura cliente-servidor:
-- El **frontend** se ejecuta en el navegador del usuario y realiza peticiones HTTP a la API del backend.
-- El **backend** procesa las solicitudes, gestiona la base de datos y responde con datos en formato JSON o HTML según corresponda.
+- El **frontend** se ejecuta en el navegador y realiza peticiones HTTP a la API del backend.
+- El **backend** procesa las solicitudes, gestiona la base de datos y responde con datos en formato JSON o HTML.
 
 ## Estructura del Proyecto
 
