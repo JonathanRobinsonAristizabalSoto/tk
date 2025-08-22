@@ -132,3 +132,20 @@ Tk/                                                       # Nombre del proyecto 
 ├── postcss.config.js                                     # Configuración de PostCSS para procesar y optimizar CSS
 ├── README.md                                             # Descripción y estructura del proyecto
 └── tailwind.config.js                                    # Configuración personalizada de Tailwind CSS
+
+## Instalación y Ejecución
+
+1. Clona el repositorio en tu entorno local.
+2. Instala dependencias del frontend con `npm install`.
+3. Instala dependencias del backend con `composer install`.
+4. Configura la base de datos usando los scripts en `db/`.
+5. Ajusta las variables de entorno en `server/.env`.
+6. Inicia el servidor local (XAMPP, Apache, etc.) y accede a `index.html` desde el navegador.
+
+## Créditos y Contacto
+
+Desarrollado por Jonathan Aristizabal  
+Correo: jhonatan901230@hotmail.com  
+Teléfono: 3187542709
+
+---
