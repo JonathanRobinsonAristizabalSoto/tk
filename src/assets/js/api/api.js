@@ -286,4 +286,60 @@ export async function deleteSubtipologia(id) {
         body: `id_subtipologia=${id}`
     });
     return await res.json();
-}// ...agrega aquí más funciones para otros módulos y acciones...
+}
+
+/**
+ * --- PROGRAMAS ---
+ * Solicita la lista de programas
+ */
+export async function fetchProgramas() {
+    const res = await fetch(`${API_BASE}?module=programas&action=getAll`);
+    return await res.json();
+}
+
+/**
+ * Solicita los datos de un programa por ID
+ */
+export async function fetchProgramaById(id) {
+    const res = await fetch(`${API_BASE}?module=programas&action=getById&id=${id}`);
+    return await res.json();
+}
+
+/**
+ * Crea un nuevo programa
+ */
+export async function createPrograma(data) {
+    const res = await fetch(`${API_BASE}?module=programas&action=create`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+    });
+    return await res.json();
+}
+
+/**
+ * Actualiza un programa
+ */
+export async function updatePrograma(id, data) {
+    data.id = id;
+    const res = await fetch(`${API_BASE}?module=programas&action=update`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+    });
+    return await res.json();
+}
+
+/**
+ * Elimina (soft delete) un programa
+ */
+export async function deletePrograma(id) {
+    const res = await fetch(`${API_BASE}?module=programas&action=delete`, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `id=${id}`
+    });
+    return await res.json();
+}
+
+// ...agrega aquí más funciones para otros módulos y acciones...

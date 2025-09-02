@@ -143,6 +143,19 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
     }
 
+    // Renderiza el módulo de programas
+    function renderProgramasModule(vista = "tarjetas") {
+        const mainContent = document.getElementById('main-content');
+        mainContent.innerHTML = "";
+        if (typeof window.iniciarModuloProgramas === "function") {
+            window.iniciarModuloProgramas(vista, "");
+        } else if (typeof iniciarModuloProgramas === "function") {
+            iniciarModuloProgramas(vista, "");
+        } else {
+            mainContent.innerHTML = "<div class='text-center text-red-600 font-bold'>No se pudo cargar el módulo de programas.</div>";
+        }
+    }
+
     // Marca el botón activo en el sidebar
     function setSidebarActive(id) {
         document.querySelectorAll('.sidebar-link').forEach(link => {
@@ -211,11 +224,12 @@ document.addEventListener("DOMContentLoaded", async function () {
         });
     }
 
-    // Sidebar: muestra programas (solo activa el botón)
+    // Sidebar: muestra programas
     const programasBtn = document.getElementById('sidebar-programas-btn');
     if (programasBtn) {
         programasBtn.addEventListener('click', function () {
             setSidebarActive('sidebar-programas-btn');
+            renderProgramasModule(localStorage.getItem('programasVista') || 'tarjetas');
         });
     }
 

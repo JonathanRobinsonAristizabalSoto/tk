@@ -85,7 +85,7 @@
 
     <!-- Contenedor principal con flex para sidebar y contenido -->
     <div class="flex flex-1 min-h-0 h-[calc(100vh-5rem)] relative">
-        <!-- Sidebar y overlay -->
+
         <!-- Sidebar y overlay -->
         <aside id="sidebar"
             class="sidebar bg-color4 p-4 w-48 fixed top-20 left-0 bottom-0 h-auto min-h-0 max-h-none shadow-lg transition-all duration-300 flex-shrink-0 flex flex-col z-50 hidden overflow-y-auto">
@@ -144,7 +144,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="../pages/programas.html" id="sidebar-programas-btn"
+                            <a href="#" id="sidebar-programas-btn"
                                 class="sidebar-link block p-2 text-color1 hover:text-color6 rounded-lg flex items-center text-base md:text-sm">
                                 <i class="fas fa-laptop mr-2 text-base md:text-sm"></i>
                                 <span class="text-base md:text-sm">Programas</span>
@@ -169,7 +169,9 @@
         </main>
     </div>
 
+    <!-------------------------------------->
     <!-- Modal Mi Perfil Usuario editable -->
+    <!------------------------------------->
     <div id="modalPerfil" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
         <div class="bg-white p-2 sm:p-4 rounded-lg shadow-lg w-full h-full max-w-full sm:max-w-lg border-2 border-color5 relative
         flex flex-col justify-center
@@ -1039,6 +1041,340 @@ bg-color1 hover:bg-color2 text-color4 border-2 border-color4">
         </div>
     </div>
 
+    <!-- -------------------------------------->
+    <!-- Modales para CRUD de Programas -->
+    <!-- -------------------------------------->
+
+    <!-- Modal Crear Programa -->
+    <div id="modalCrearPrograma"
+        class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <form id="formCrearPrograma"
+            class="bg-white p-4 sm:p-8 rounded-lg shadow-lg w-full max-w-xl border-2 border-color5 flex flex-col items-center overflow-y-auto h-full max-h-screen md:h-auto md:max-h-[93vh]">
+            <h2
+                class="text-lg sm:text-xl font-bold text-color5 mt-2 flex items-center justify-center text-center w-full">
+                <i class="fas fa-graduation-cap mr-2"></i> Crear Programa
+            </h2>
+            <p class="text-center text-color6 mb-4 text-sm sm:text-base w-full">Registra un nuevo programa en TicketPro+
+            </p>
+            <div class="mb-2 w-full">
+                <label for="codigoProgramaCrear"
+                    class="font-bold text-color4 mb-1 block text-sm text-center w-full">Código</label>
+                <input type="text" id="codigoProgramaCrear" name="codigo" required placeholder="Código del programa"
+                    class="mb-2 w-full rounded bg-gray-100 p-2 text-color4 font-medium text-sm text-center">
+            </div>
+            <div class="mb-2 w-full">
+                <label for="versionProgramaCrear"
+                    class="font-bold text-color4 mb-1 block text-sm text-center w-full">Versión</label>
+                <input type="text" id="versionProgramaCrear" name="version" required placeholder="Versión"
+                    class="mb-2 w-full rounded bg-gray-100 p-2 text-color4 font-medium text-sm text-center">
+            </div>
+            <div class="mb-2 w-full">
+                <label for="nombreProgramaCrear"
+                    class="font-bold text-color4 mb-1 block text-sm text-center w-full">Nombre</label>
+                <input type="text" id="nombreProgramaCrear" name="nombre" required placeholder="Nombre del programa"
+                    class="mb-2 w-full rounded bg-gray-100 p-2 text-color4 font-medium text-sm text-center">
+            </div>
+            <div class="mb-2 w-full">
+                <label for="descripcionProgramaCrear"
+                    class="font-bold text-color4 mb-1 block text-sm text-center w-full">Descripción</label>
+                <textarea id="descripcionProgramaCrear" name="descripcion" placeholder="Descripción"
+                    class="mb-2 w-full rounded bg-gray-100 p-2 text-color4 font-medium text-sm text-center"></textarea>
+            </div>
+            <div class="mb-2 w-full">
+                <label for="duracionProgramaCrear"
+                    class="font-bold text-color4 mb-1 block text-sm text-center w-full">Duración (horas)</label>
+                <input type="number" id="duracionProgramaCrear" name="duracion" required placeholder="Duración"
+                    class="mb-2 w-full rounded bg-gray-100 p-2 text-color4 font-medium text-sm text-center">
+            </div>
+            <div class="mb-2 w-full">
+                <label for="lineaTecnologicaProgramaCrear"
+                    class="font-bold text-color4 mb-1 block text-sm text-center w-full">Línea Tecnológica</label>
+                <input type="text" id="lineaTecnologicaProgramaCrear" name="linea_tecnologica" required
+                    placeholder="Línea tecnológica"
+                    class="mb-2 w-full rounded bg-gray-100 p-2 text-color4 font-medium text-sm text-center">
+            </div>
+            <div class="mb-2 w-full">
+                <label for="redTecnologicaProgramaCrear"
+                    class="font-bold text-color4 mb-1 block text-sm text-center w-full">Red Tecnológica</label>
+                <input type="text" id="redTecnologicaProgramaCrear" name="red_tecnologica" required
+                    placeholder="Red tecnológica"
+                    class="mb-2 w-full rounded bg-gray-100 p-2 text-color4 font-medium text-sm text-center">
+            </div>
+            <div class="mb-2 w-full">
+                <label for="redConocimientoProgramaCrear"
+                    class="font-bold text-color4 mb-1 block text-sm text-center w-full">Red de Conocimiento</label>
+                <input type="text" id="redConocimientoProgramaCrear" name="red_de_conocimiento" required
+                    placeholder="Red de conocimiento"
+                    class="mb-2 w-full rounded bg-gray-100 p-2 text-color4 font-medium text-sm text-center">
+            </div>
+            <div class="mb-2 w-full">
+                <label for="modalidadProgramaCrear"
+                    class="font-bold text-color4 mb-1 block text-sm text-center w-full">Modalidad</label>
+                <input type="text" id="modalidadProgramaCrear" name="modalidad" required placeholder="Modalidad"
+                    class="mb-2 w-full rounded bg-gray-100 p-2 text-color4 font-medium text-sm text-center">
+            </div>
+            <div class="mb-2 w-full">
+                <label for="tipologiaProgramaCrear"
+                    class="font-bold text-color4 mb-1 block text-sm text-center w-full">Tipología</label>
+                <select id="tipologiaProgramaCrear" name="id_tipologia"
+                    class="mb-2 w-full rounded bg-gray-100 p-2 text-color4 font-medium text-sm text-center">
+                    <option value="" selected disabled>Selecciona una tipología</option>
+                </select>
+            </div>
+            <div class="mb-2 w-full">
+                <label for="subtipologiaProgramaCrear"
+                    class="font-bold text-color4 mb-1 block text-sm text-center w-full">Subtipología</label>
+                <select id="subtipologiaProgramaCrear" name="id_subtipologia"
+                    class="mb-2 w-full rounded bg-gray-100 p-2 text-color4 font-medium text-sm text-center">
+                    <option value="" selected disabled>Selecciona una subtipología</option>
+                </select>
+            </div>
+            <div class="mb-2 w-full">
+                <label for="estadoProgramaCrear"
+                    class="font-bold text-color4 mb-1 block text-sm text-center w-full">Estado</label>
+                <select id="estadoProgramaCrear" name="estado"
+                    class="mb-2 w-full rounded bg-gray-100 p-2 text-color4 font-medium text-sm text-center">
+                    <option value="Activo">Activo</option>
+                    <option value="Inactivo">Inactivo</option>
+                </select>
+            </div>
+            <div class="flex gap-2 mt-2 w-full items-center justify-center">
+                <button type="submit"
+                    class="bg-color5 text-white p-2 rounded w-full font-bold hover:bg-color6 transition text-sm text-center">Crear</button>
+                <button type="button" id="closeModalCrearPrograma"
+                    class="bg-gray-300 p-2 rounded w-full font-bold text-color4 hover:bg-gray-400 transition text-sm text-center">Cancelar</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Modal Editar Programa -->
+    <div id="modalEditarPrograma"
+        class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <form id="formEditarPrograma"
+            class="bg-white p-4 sm:p-8 rounded-lg shadow-lg w-full max-w-xl border-2 border-color5 flex flex-col items-center overflow-y-auto h-full max-h-screen md:h-auto md:max-h-[93vh]">
+            <h2
+                class="text-lg sm:text-xl font-bold text-color5 mt-2 flex items-center justify-center text-center w-full">
+                <i class="fas fa-edit mr-2"></i> Editar Programa
+            </h2>
+            <p class="text-center text-color6 mb-4 text-sm sm:text-base w-full">Modifica los datos del programa en
+                TicketPro+</p>
+            <input type="hidden" id="id_programaEditar" name="id_programa">
+            <div class="mb-2 w-full">
+                <label for="codigoProgramaEditar"
+                    class="font-bold text-color4 mb-1 block text-sm text-center w-full">Código</label>
+                <input type="text" id="codigoProgramaEditar" name="codigo" required
+                    class="mb-2 w-full rounded bg-gray-100 p-2 text-color4 font-medium text-sm text-center">
+            </div>
+            <div class="mb-2 w-full">
+                <label for="versionProgramaEditar"
+                    class="font-bold text-color4 mb-1 block text-sm text-center w-full">Versión</label>
+                <input type="text" id="versionProgramaEditar" name="version" required
+                    class="mb-2 w-full rounded bg-gray-100 p-2 text-color4 font-medium text-sm text-center">
+            </div>
+            <div class="mb-2 w-full">
+                <label for="nombreProgramaEditar"
+                    class="font-bold text-color4 mb-1 block text-sm text-center w-full">Nombre</label>
+                <input type="text" id="nombreProgramaEditar" name="nombre" required
+                    class="mb-2 w-full rounded bg-gray-100 p-2 text-color4 font-medium text-sm text-center">
+            </div>
+            <div class="mb-2 w-full">
+                <label for="descripcionProgramaEditar"
+                    class="font-bold text-color4 mb-1 block text-sm text-center w-full">Descripción</label>
+                <textarea id="descripcionProgramaEditar" name="descripcion"
+                    class="mb-2 w-full rounded bg-gray-100 p-2 text-color4 font-medium text-sm text-center"></textarea>
+            </div>
+            <div class="mb-2 w-full">
+                <label for="duracionProgramaEditar"
+                    class="font-bold text-color4 mb-1 block text-sm text-center w-full">Duración (horas)</label>
+                <input type="number" id="duracionProgramaEditar" name="duracion" required
+                    class="mb-2 w-full rounded bg-gray-100 p-2 text-color4 font-medium text-sm text-center">
+            </div>
+            <div class="mb-2 w-full">
+                <label for="lineaTecnologicaProgramaEditar"
+                    class="font-bold text-color4 mb-1 block text-sm text-center w-full">Línea Tecnológica</label>
+                <input type="text" id="lineaTecnologicaProgramaEditar" name="linea_tecnologica" required
+                    class="mb-2 w-full rounded bg-gray-100 p-2 text-color4 font-medium text-sm text-center">
+            </div>
+            <div class="mb-2 w-full">
+                <label for="redTecnologicaProgramaEditar"
+                    class="font-bold text-color4 mb-1 block text-sm text-center w-full">Red Tecnológica</label>
+                <input type="text" id="redTecnologicaProgramaEditar" name="red_tecnologica" required
+                    class="mb-2 w-full rounded bg-gray-100 p-2 text-color4 font-medium text-sm text-center">
+            </div>
+            <div class="mb-2 w-full">
+                <label for="redConocimientoProgramaEditar"
+                    class="font-bold text-color4 mb-1 block text-sm text-center w-full">Red de Conocimiento</label>
+                <input type="text" id="redConocimientoProgramaEditar" name="red_de_conocimiento" required
+                    class="mb-2 w-full rounded bg-gray-100 p-2 text-color4 font-medium text-sm text-center">
+            </div>
+            <div class="mb-2 w-full">
+                <label for="modalidadProgramaEditar"
+                    class="font-bold text-color4 mb-1 block text-sm text-center w-full">Modalidad</label>
+                <input type="text" id="modalidadProgramaEditar" name="modalidad" required
+                    class="mb-2 w-full rounded bg-gray-100 p-2 text-color4 font-medium text-sm text-center">
+            </div>
+            <div class="mb-2 w-full">
+                <label for="tipologiaProgramaEditar"
+                    class="font-bold text-color4 mb-1 block text-sm text-center w-full">Tipología</label>
+                <select id="tipologiaProgramaEditar" name="id_tipologia"
+                    class="mb-2 w-full rounded bg-gray-100 p-2 text-color4 font-medium text-sm text-center">
+                    <option value="" selected disabled>Selecciona una tipología</option>
+                </select>
+            </div>
+            <div class="mb-2 w-full">
+                <label for="subtipologiaProgramaEditar"
+                    class="font-bold text-color4 mb-1 block text-sm text-center w-full">Subtipología</label>
+                <select id="subtipologiaProgramaEditar" name="id_subtipologia"
+                    class="mb-2 w-full rounded bg-gray-100 p-2 text-color4 font-medium text-sm text-center">
+                    <option value="" selected disabled>Selecciona una subtipología</option>
+                </select>
+            </div>
+            <div class="mb-2 w-full">
+                <label for="estadoProgramaEditar"
+                    class="font-bold text-color4 mb-1 block text-sm text-center w-full">Estado</label>
+                <select id="estadoProgramaEditar" name="estado"
+                    class="mb-2 w-full rounded bg-gray-100 p-2 text-color4 font-medium text-sm text-center">
+                    <option value="Activo">Activo</option>
+                    <option value="Inactivo">Inactivo</option>
+                </select>
+            </div>
+            <div class="flex gap-2 mt-2 w-full items-center justify-center">
+                <button type="submit"
+                    class="bg-color5 text-white p-2 rounded w-full font-bold hover:bg-color6 transition text-sm text-center">Guardar</button>
+                <button type="button" id="closeModalEditarPrograma"
+                    class="bg-gray-300 p-2 rounded w-full font-bold text-color4 hover:bg-gray-400 transition text-sm text-center">Cancelar</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Modal Ver Programa -->
+    <div id="modalVerPrograma"
+        class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div
+            class="bg-white p-6 sm:p-10 rounded-2xl shadow-2xl w-full max-w-lg border-2 border-color5 flex flex-col items-center overflow-y-auto h-full max-h-screen md:h-auto md:max-h-[93vh] relative">
+            <button type="button" id="closeModalVerPrograma"
+                class="absolute top-4 right-4 text-color7 text-xl sm:text-2xl font-bold hover:text-color7 transition">&times;</button>
+            <div class="flex flex-col items-center mb-4 w-full">
+                <div class="flex items-center justify-center w-full mb-2 gap-3">
+                    <i class="fas fa-eye text-green-600 text-3xl"></i>
+                    <h2 class="text-xl sm:text-2xl font-bold text-color4 text-center mb-0">
+                        Ver Programa
+                    </h2>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full mb-4">
+                <div class="bg-gray-100 rounded-lg p-4 border border-color5 text-center flex flex-col items-center">
+                    <label class="font-bold text-color4 mb-1 text-base">Código</label>
+                    <div id="verCodigoPrograma" class="text-sm text-color4"></div>
+                </div>
+                <div class="bg-gray-100 rounded-lg p-4 border border-color5 text-center flex flex-col items-center">
+                    <label class="font-bold text-color4 mb-1 text-base">Versión</label>
+                    <div id="verVersionPrograma" class="text-sm text-color4"></div>
+                </div>
+                <div class="bg-gray-100 rounded-lg p-4 border border-color5 text-center flex flex-col items-center">
+                    <label class="font-bold text-color4 mb-1 text-base">Nombre</label>
+                    <div id="verNombrePrograma" class="text-sm text-color4"></div>
+                </div>
+                <div class="bg-gray-100 rounded-lg p-4 border border-color5 text-center flex flex-col items-center">
+                    <label class="font-bold text-color4 mb-1 text-base">Duración</label>
+                    <div id="verDuracionPrograma" class="text-sm text-color4"></div>
+                </div>
+            </div>
+            <div class="bg-gray-50 rounded-lg p-4 border border-color5 text-center w-full mb-4">
+                <label class="font-bold text-color4 mb-1 text-base">Descripción</label>
+                <div id="verDescripcionPrograma" class="text-sm text-color4"></div>
+            </div>
+            <div class="bg-gray-50 rounded-lg p-4 border border-color5 text-center w-full mb-4">
+                <label class="font-bold text-color4 mb-1 text-base">Línea Tecnológica</label>
+                <div id="verLineaTecnologicaPrograma" class="text-sm text-color4"></div>
+            </div>
+            <div class="bg-gray-50 rounded-lg p-4 border border-color5 text-center w-full mb-4">
+                <label class="font-bold text-color4 mb-1 text-base">Red Tecnológica</label>
+                <div id="verRedTecnologicaPrograma" class="text-sm text-color4"></div>
+            </div>
+            <div class="bg-gray-50 rounded-lg p-4 border border-color5 text-center w-full mb-4">
+                <label class="font-bold text-color4 mb-1 text-base">Red de Conocimiento</label>
+                <div id="verRedConocimientoPrograma" class="text-sm text-color4"></div>
+            </div>
+            <div class="bg-gray-50 rounded-lg p-4 border border-color5 text-center w-full mb-4">
+                <label class="font-bold text-color4 mb-1 text-base">Modalidad</label>
+                <div id="verModalidadPrograma" class="text-sm text-color4"></div>
+            </div>
+            <div class="bg-gray-50 rounded-lg p-4 border border-color5 text-center w-full mb-4">
+                <label class="font-bold text-color4 mb-1 text-base">Tipología</label>
+                <div id="verTipologiaPrograma" class="text-sm text-color4"></div>
+            </div>
+            <div class="bg-gray-50 rounded-lg p-4 border border-color5 text-center w-full mb-4">
+                <label class="font-bold text-color4 mb-1 text-base">Subtipología</label>
+                <div id="verSubtipologiaPrograma" class="text-sm text-color4"></div>
+            </div>
+            <div class="bg-gray-50 rounded-lg p-4 border border-color5 text-center w-full mb-4">
+                <label class="font-bold text-color4 mb-1 text-base">Estado</label>
+                <div id="verEstadoPrograma" class="text-sm text-color4"></div>
+            </div>
+            <div class="flex gap-2 mt-2 w-full items-center justify-center">
+                <button type="button" id="closeModalVerPrograma"
+                    class="bg-color5 text-white p-2 rounded w-full font-bold hover:bg-color6 transition text-sm text-center">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Cambiar Estado Programa -->
+    <div id="modalEstadoPrograma"
+        class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div
+            class="bg-white p-4 sm:p-8 rounded-lg shadow-lg w-full max-w-xl border-2 border-color5 flex flex-col items-center overflow-y-auto h-full max-h-screen md:h-auto md:max-h-[93vh]">
+            <div class="flex items-center justify-center mb-4">
+                <span id="modalEstadoProgramaIcon" class="text-4xl"></span>
+            </div>
+            <h2 class="font-bold text-color5 text-base mb-2">Cambiar estado del programa</h2>
+            <p id="modalEstadoProgramaTexto" class="text-color4 text-sm mb-6">
+                ¿Seguro que deseas cambiar el estado de este programa?
+            </p>
+            <div class="flex justify-center gap-4 w-full">
+                <button id="btnEstadoProgramaConfirmar"
+                    class="flex items-center justify-center gap-2 px-5 py-2 rounded-lg font-semibold text-sm transition duration-200 shadow bg-green-600 hover:bg-green-700 text-white border-2 border-green-600">
+                    <i id="modalEstadoProgramaConfirmarIcon" class="fas fa-check"></i>
+                    <span id="modalEstadoProgramaConfirmarText">Activar</span>
+                </button>
+                <button id="btnEstadoProgramaCancelar"
+                    class="flex items-center justify-center gap-2 px-5 py-2 rounded-lg font-semibold text-sm transition duration-200 shadow bg-color1 hover:bg-color2 text-color4 border-2 border-color4">
+                    <i class="fas fa-times"></i>
+                    Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Eliminar Programa -->
+    <div id="modalEliminarPrograma"
+        class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div
+            class="bg-white p-4 sm:p-8 rounded-lg shadow-lg w-full max-w-xl border-2 border-red-500 flex flex-col items-center overflow-y-auto h-full max-h-screen md:h-auto md:max-h-[93vh]">
+            <div class="flex items-center justify-center mb-4">
+                <span class="text-4xl text-red-600"><i class="fas fa-trash"></i></span>
+            </div>
+            <h2 class="font-bold text-red-600 text-base mb-2">Eliminar programa</h2>
+            <p class="text-color4 text-sm mb-6">
+                ¿Seguro que deseas eliminar este programa? Esta acción no se puede deshacer.
+            </p>
+            <div class="flex justify-center gap-4 w-full">
+                <button id="btnEliminarProgramaConfirmar" class="flex items-center justify-center gap-2 px-5 py-2 rounded-lg font-semibold text-sm transition duration-200 shadow
+bg-red-600 hover:bg-red-700 text-white border-2 border-red-600">
+                    <i class="fas fa-trash"></i>
+                    Eliminar
+                </button>
+                <button id="btnEliminarProgramaCancelar" class="flex items-center justify-center gap-2 px-5 py-2 rounded-lg font-semibold text-sm transition duration-200 shadow
+bg-color1 hover:bg-color2 text-color4 border-2 border-color4">
+                    <i class="fas fa-times"></i>
+                    Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+
 
     <!-- Modal de confirmación para cerrar sesión al presionar atrás -->
     <div id="modal-logout-confirm"
@@ -1052,6 +1388,7 @@ bg-color1 hover:bg-color2 text-color4 border-2 border-color4">
             </div>
         </div>
     </div>
+
 
     <!-- ------------------------->
     <!-- Modal cierre de sesion -->
@@ -1067,6 +1404,7 @@ bg-color1 hover:bg-color2 text-color4 border-2 border-color4">
     <script type="module" src="/tk/src/assets/js/pages/profile.js"></script>
     <script type="module" src="/tk/src/assets/js/pages/tipologias.js"></script>
     <script type="module" src="/tk/src/assets/js/pages/subtipologias.js"></script>
+    <script type="module" src="/tk/src/assets/js/pages/programas.js"></script>
     <script type="module" src="/tk/src/assets/js/modals/modal-logout.js"></script>
 
 
