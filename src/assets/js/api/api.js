@@ -242,4 +242,48 @@ export async function toggleEstadoTipologia(id, estado) {
     return await res.json();
 }
 
-// ...agrega aquí más funciones para otros módulos y acciones...
+/**
+ * --- SUBTIPOLOGIAS ---
+ * Solicita la lista de subtipologías con su tipología principal
+ */
+export async function fetchSubtipologias() {
+    const res = await fetch(`${API_BASE}?module=subtipologias&action=listar`);
+    return await res.json();
+}
+
+/**
+ * Crea una nueva subtipología
+ */
+export async function createSubtipologia(data) {
+    const res = await fetch(`${API_BASE}?module=subtipologias&action=crear`, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams(data).toString()
+    });
+    return await res.json();
+}
+
+/**
+ * Actualiza una subtipología
+ */
+export async function updateSubtipologia(id, data) {
+    data.id_subtipologia = id;
+    const res = await fetch(`${API_BASE}?module=subtipologias&action=actualizar`, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams(data).toString()
+    });
+    return await res.json();
+}
+
+/**
+ * Elimina una subtipología (soft delete)
+ */
+export async function deleteSubtipologia(id) {
+    const res = await fetch(`${API_BASE}?module=subtipologias&action=eliminar`, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `id_subtipologia=${id}`
+    });
+    return await res.json();
+}// ...agrega aquí más funciones para otros módulos y acciones...

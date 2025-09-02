@@ -106,8 +106,7 @@ function iniciarModuloUsuarios(vista, filtro = "") {
         usuariosHeaderHtml = `
         <div class="flex flex-col gap-2 my-2">
             <div class="flex justify-center mb-1">
-                <span class="text-color4 text-xs text-center">
-                    <i class="fas fa-info-circle text-color6 mr-1"></i>
+                <span class="text-color4 text-sm text-center">
                     Consulta, busca y gestiona los usuarios registrados en el sistema.
                 </span>
             </div>
@@ -131,8 +130,7 @@ function iniciarModuloUsuarios(vista, filtro = "") {
         usuariosHeaderHtml = `
         <div class="flex flex-col gap-2 my-2">
             <div class="flex justify-center mb-1">
-                <span class="text-color4 text-xs text-center">
-                    <i class="fas fa-info-circle text-color6 mr-1"></i>
+                <span class="text-color4 text-sm text-center">
                     Consulta, busca y gestiona los usuarios registrados en el sistema.
                 </span>
             </div>

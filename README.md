@@ -48,11 +48,15 @@ Tk/                                                       # Nombre del proyecto 
 │   │   ├── PermisosController.php                        # Controlador para gestión de permisos: CRUD, matriz de roles-permisos y actualización de estado
 │   │   ├── RegisterController.php                        # Controlador para registro de nuevos usuarios
 │   │   ├── RolesController.php                           # Controlador PHP para consultar y actualizar roles.
+│   │   ├── SubtipologiasController.php                   # Controlador para gestión de subtipologias: crear, actualizar, consultar y cambiar estado
+│   │   ├── TipologiasController.php                      # Controlador para gestión de tipologias: crear, actualizar, consultar y cambiar estado
 │   │   └── UsuariosController.php                        # Controlador para gestión de usuarios: crear, actualizar, consultar y cambiar estado
 │   ├── model/                                            # Modelos del backend en PHP (acceso y lógica de datos)
 │   │   ├── Permisos.php                                  # Modelo para la entidad Permisos
 │   │   ├── Rol.php                                       # Modelo para la entidad Rol
-│   │   ├── Usuario.php                                   # Modelo para la entidad Usuario
+│   │   ├── Subtipologias.php                             # Modelo para la entidad Subtipologia
+│   │   ├── Tipologias.php                                # Modelo para la entidad tipologia
+│   │   └── Usuario.php                                   # Modelo para la entidad Usuario
 │   ├── routes/                                           # Rutas de la API backend
 │   │   ├── api.php                                       # Archivo principal de rutas; gestiona peticiones y conecta módulos con sus controladores
 │   ├── utils/                                            # Utilidades y helpers para el backend
@@ -91,6 +95,8 @@ Tk/                                                       # Nombre del proyecto 
 │   │       │   ├── permisos.js                           # Lógica para mostrar y actualizar la matriz de permisos por rol
 │   │       │   ├── profile.js                            # Lógica para mostrar y editar el perfil del usuario
 │   │       │   ├── roles.js                              # Módulo de gestión de Roles: CRUD, vistas y paginación
+│   │       │   ├── subtipologias.js                      # Módulo de gestión de Subtipologias: CRUD, vistas y paginación
+│   │       │   ├── tipologias.js                         # Módulo de gestión de Tipologias: CRUD, vistas y paginación
 │   │       │   └── usuarios.js                           # Módulo de gestión de usuarios: CRUD, vistas y paginación
 │   │       ├── utils/                                    # Scripts de utilidades generales
 │   │       │   ├── departamentos.js                      # Lógica para cargar departamentos y municipios en formularios de usuario

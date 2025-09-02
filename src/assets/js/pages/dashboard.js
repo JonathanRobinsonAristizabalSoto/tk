@@ -191,12 +191,23 @@ document.addEventListener("DOMContentLoaded", async function () {
         });
     }
 
-    // Sidebar: muestra tipologías
+    // Sidebar: muestra tipologías (ajustado para iniciar como tabla y guardar preferencia)
     const tipologiasBtn = document.getElementById('sidebar-tipologias-btn');
     if (tipologiasBtn) {
         tipologiasBtn.addEventListener('click', function () {
             setSidebarActive('sidebar-tipologias-btn');
-            window.iniciarModuloTipologias("tarjetas", "");
+            // Obtiene la vista guardada o inicia en tabla
+            const vista = localStorage.getItem('tipologiasVista') || "tabla";
+            window.iniciarModuloTipologias(vista, "");
+        });
+    }
+
+    // Sidebar: muestra subtipologías
+    const subtipologiasBtn = document.getElementById('sidebar-subtipologias-btn');
+    if (subtipologiasBtn) {
+        subtipologiasBtn.addEventListener('click', function () {
+            setSidebarActive('sidebar-subtipologias-btn');
+            window.iniciarModuloSubtipologias(localStorage.getItem('subtipologiasVista') || 'tarjetas');
         });
     }
 
@@ -216,14 +227,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     document.getElementById('closeModalEditar').addEventListener('click', function () {
         toggleModal('modalEditar', false);
     });
-
-    // Elimina el comportamiento de mostrar el modal de logout al presionar "Atrás"
-    // window.addEventListener('popstate', function (event) {
-    //     if (location.pathname.includes('dashboard.html')) {
-    //         mostrarModalLogoutConfirm();
-    //         window.history.pushState({ dashboard: true }, '', window.location.href);
-    //     }
-    // });
 
     // Muestra el modal de confirmación de logout solo cuando el usuario lo solicita
     function mostrarModalLogoutConfirm() {

@@ -1,65 +1,94 @@
-import { fetchTipologias, fetchTipologiaById, createTipologia, updateTipologia, deleteTipologia, toggleEstadoTipologia } from "../api/api.js";
-
-// Cargar roles dinámicamente en los selects de los modales
-async function cargarRolesEnSelectTipologia(selectId, selectedRolId = null) {
-    const res = await fetch("/tk/server/routes/api.php?module=roles&action=fetch", { method: "POST" });
-    const roles = await res.json();
-    const select = document.getElementById(selectId);
-    select.innerHTML = "";
-    if (Array.isArray(roles)) {
-        roles.forEach(rol => {
-            const option = document.createElement("option");
-            option.value = rol.id_rol;
-            option.textContent = rol.nombre;
-            if (selectedRolId && rol.id_rol == selectedRolId) option.selected = true;
-            select.appendChild(option);
-        });
-    }
-}
-
-// Cargar tipologías base (enum) en los selects de los modales
-function cargarTipologiasBaseEnSelect(selectId, selectedTipologia = null) {
-    const tipologiasBase = ["Formacion", "Consultas", "Certificacion", "PQRSF", "Otro"];
-    const labels = {
-        "Formacion": "Formación",
-        "Consultas": "Consultas",
-        "Certificacion": "Certificación",
-        "PQRSF": "PQRSF",
-        "Otro": "Otro"
-    };
-    const select = document.getElementById(selectId);
-    select.innerHTML = "";
-    tipologiasBase.forEach(tipo => {
-        const option = document.createElement("option");
-        option.value = tipo;
-        option.textContent = labels[tipo];
-        if (selectedTipologia && tipo === selectedTipologia) option.selected = true;
-        select.appendChild(option);
-    });
-}
+import {
+    fetchTipologias,
+    fetchTipologiaById,
+    createTipologia,
+    updateTipologia,
+    deleteTipologia,
+    toggleEstadoTipologia
+} from "../api/api.js";
 
 // Renderizado principal y gestión de modales
-function iniciarModuloTipologias(vista = "tarjetas", filtro = "") {
+function iniciarModuloTipologias(vista = null, filtro = "") {
+    let vistaActual = localStorage.getItem('tipologiasVista');
+    if (!vistaActual) {
+        vistaActual = "tabla";
+        localStorage.setItem('tipologiasVista', vistaActual);
+    }
+    if (vista) {
+        vistaActual = vista;
+        localStorage.setItem('tipologiasVista', vistaActual);
+    }
+
     const mainContent = document.getElementById('main-content');
     let tipologiasData = [];
     let paginaActual = 1;
-    let tipologiasPorPagina = 8;
+    let tipologiasPorPagina = 9;
     let filtroBusqueda = filtro;
 
+    // Responsive: tamaños de texto e íconos según ancho de pantalla
+    let textoSize = "text-xs";
+    let iconSize = "text-xl";
+    const width = window.innerWidth;
+    if (width < 640) {
+        textoSize = "text-xs";
+        iconSize = "text-lg";
+    } else if (width < 768) {
+        textoSize = "text-sm";
+        iconSize = "text-xl";
+    } else if (width < 1024) {
+        textoSize = "text-base";
+        iconSize = "text-2xl";
+    } else {
+        textoSize = "text-base";
+        iconSize = "text-3xl";
+    }
+
     // Header y estructura
+    let tipologiasHeaderHtml = `
+        <div class="flex flex-col gap-2 my-2">
+            <div class="flex justify-center mb-1">
+                <span class="text-color4 text-sm text-center">
+                    Consulta, busca y gestiona las tipologías registradas en el sistema.
+                </span>
+            </div>
+            <div class="flex flex-row items-center gap-2">
+                <div class="flex-shrink-0">
+                    <button id="openModalTipologia" class="bg-color5 text-white px-4 py-2 rounded ${textoSize} flex items-center gap-2">
+                        <i class="fas fa-layer-group ${iconSize}"></i>
+                        <span>Agregar Tipología</span>
+                    </button>
+                </div>
+                <div class="flex-grow flex justify-center">
+                    <input
+                        type="text"
+                        id="busquedaTipologias"
+                        placeholder="Buscar tipología..."
+                        class="border border-gray-300 rounded px-3 py-2 ${textoSize} w-full sm:w-80 text-center"
+                        autocomplete="off"
+                        style="outline:none;"
+                        onfocus="this.style.borderColor='#22c55e';"
+                        onblur="this.style.borderColor='#d1d5db';"
+                    >
+                </div>
+                <div class="flex-shrink-0 flex justify-end gap-2 mx-12" style="min-width:100px;">
+                    <button id="btnVistaTarjetasTipologias" class="bg-color5 text-white p-2 rounded shadow hover:bg-green-600 transition" title="Vista tarjetas">
+                        <i class="fas fa-th-large"></i>
+                    </button>
+                    <button id="btnVistaTablaTipologias" class="bg-color6 text-white p-2 rounded shadow hover:bg-orange-600 transition" title="Vista tabla">
+                        <i class="fa-solid fa-list"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+
     mainContent.innerHTML = `
         <div class="flex flex-col gap-2 my-1">
             <div class="flex justify-center items-center gap-2">
                 <i class="fas fa-tags text-color6 text-2xl"></i>
                 <h2 class="text-color4 text-center text-xl font-semibold">Tipologías</h2>
             </div>
-            <div class="flex flex-row items-center gap-2">
-                <button id="openModalTipologia" class="bg-color5 text-white px-4 py-2 rounded flex items-center gap-2">
-                    <i class="fas fa-plus"></i>
-                    <span>Agregar Tipología</span>
-                </button>
-                <input type="text" id="busquedaTipologias" placeholder="Buscar tipología..." class="border border-gray-300 rounded px-3 py-2 w-full sm:w-80 text-center" autocomplete="off">
-            </div>
+            ${tipologiasHeaderHtml}
         </div>
         <div id="dataTableTipologias"></div>
         <div id="tipologiasPaginador" class="mt-4 flex justify-center items-center"></div>
@@ -68,14 +97,14 @@ function iniciarModuloTipologias(vista = "tarjetas", filtro = "") {
     const dataTable = document.getElementById("dataTableTipologias");
     const paginador = document.getElementById("tipologiasPaginador");
 
-    // Renderiza la lista de tipologías
+    // Renderiza la lista de tipologías en tarjetas o tabla
     function renderTipologias() {
         dataTable.innerHTML = "";
-        let tipologiasFiltradas = tipologiasData;
+        let tipologiasFiltradas = Array.isArray(tipologiasData) ? tipologiasData : [];
         if (filtroBusqueda && filtroBusqueda.length > 0) {
-            tipologiasFiltradas = tipologiasData.filter(t =>
-                (t.tipologia && t.tipologia.toLowerCase().includes(filtroBusqueda)) ||
-                (t.subtipologia && t.subtipologia.toLowerCase().includes(filtroBusqueda))
+            tipologiasFiltradas = tipologiasFiltradas.filter(t =>
+                (t.nombre && t.nombre.toLowerCase().includes(filtroBusqueda)) ||
+                (t.descripcion && t.descripcion.toLowerCase().includes(filtroBusqueda))
             );
         }
         const totalPaginas = Math.max(1, Math.ceil(tipologiasFiltradas.length / tipologiasPorPagina));
@@ -84,46 +113,96 @@ function iniciarModuloTipologias(vista = "tarjetas", filtro = "") {
         const fin = inicio + tipologiasPorPagina;
         const mostrar = tipologiasFiltradas.slice(inicio, fin);
 
-        dataTable.className = `grid grid-cols-1 sm:grid-cols-4 gap-4`;
-        mostrar.forEach((t) => {
-            const isActivo = t.estado_tipologia === "Activo";
-            const btnColor = isActivo ? "bg-green-600 hover:bg-green-700" : "bg-red-600 hover:bg-red-700";
-            const btnIcon = isActivo ? '<i class="fas fa-check"></i>' : '<i class="fas fa-times"></i>';
-            const btnTitle = isActivo ? "Inhabilitar" : "Habilitar";
-            const card = document.createElement("div");
-            card.className = `bg-white border border-gray-200 rounded-lg shadow-sm p-3 flex flex-col items-center text-xs`;
-            card.innerHTML = `
-                <div class="text-sm font-bold text-color4 text-center">${t.tipologia} - ${t.subtipologia}</div>
-                <div class="text-xs text-color6 text-center">${t.rol_nombre || ""}</div>
-                <div class="text-xs text-color3 text-center">${t.estado_tipologia}</div>
-                <div class="flex justify-center mt-2 space-x-1">
-                    <button class="flex bg-color5 text-white p-2 rounded-lg hover:bg-color6 transition duration-300" data-id="${t.id_tipologia}" data-action="ver" title="Ver">
-                        <i class="fas fa-eye"></i>
-                    </button>
-                    <button class="flex bg-color6 text-white p-2 rounded-lg hover:bg-color6 transition duration-300" data-id="${t.id_tipologia}" data-action="editar" title="Editar">
-                        <i class="fas fa-edit"></i>
-                    </button>
-                    <button class="flex ${btnColor} text-white p-2 rounded-lg transition duration-300 items-center" data-id="${t.id_tipologia}" data-action="estado" title="${btnTitle}">
-                        ${btnIcon}
-                    </button>
-                    <button class="flex bg-red-500 text-white p-2 rounded-lg transition duration-300 items-center" data-id="${t.id_tipologia}" data-action="eliminar" title="Eliminar">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-            `;
-            dataTable.appendChild(card);
-        });
+        vistaActual = localStorage.getItem('tipologiasVista') || "tabla";
 
+        if (vistaActual === "tarjetas") {
+            dataTable.className = `grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4`;
+            mostrar.forEach((t) => {
+                const isActivo = t.estado_tipologia === "Activo";
+                const btnEstadoColor = isActivo ? "bg-green-600 hover:bg-green-700" : "bg-red-600 hover:bg-red-700";
+                const btnEstadoIcon = isActivo ? '<i class="fas fa-check text-xs"></i>' : '<i class="fas fa-times text-xs"></i>';
+                const btnEstadoTitle = isActivo ? "Inhabilitar" : "Habilitar";
+                const estadoColor = isActivo ? "bg-green-100 text-green-700 px-2 py-1 rounded font-semibold text-xs" : "bg-red-100 text-red-700 px-2 py-1 rounded font-semibold text-xs";
+                const card = document.createElement("div");
+                card.className = `bg-white border border-gray-200 rounded-lg shadow-sm p-4 flex flex-col items-center text-xs mb-2`;
+                card.innerHTML = `
+                    <div class="text-base font-bold text-color4 text-center mb-1">${t.nombre}</div>
+                    <div class="text-xs font-semibold text-color6 text-center mb-1">Descripción:</div>
+                    <div class="text-xs text-gray-500 text-center mb-2">${t.descripcion || ""}</div>
+                    <div class="text-xs font-semibold text-color6 text-center mb-1">Estado:</div>
+                    <div class="${estadoColor} text-center mb-2">${t.estado_tipologia}</div>
+                    <div class="flex justify-center mt-2 gap-1">
+                        <button class="flex p-2 bg-green-600 hover:bg-green-700 text-white rounded-lg items-center justify-center" style="width:24px;height:24px;" data-id="${t.id_tipologia}" data-action="ver" title="Ver">
+                            <i class="fas fa-eye text-xs"></i>
+                        </button>
+                        <button class="flex p-2 bg-orange-400 hover:bg-orange-500 text-white rounded-lg items-center justify-center" style="width:24px;height:24px;" data-id="${t.id_tipologia}" data-action="editar" title="Editar">
+                            <i class="fas fa-edit text-xs"></i>
+                        </button>
+                        <button class="flex p-2 ${btnEstadoColor} text-white rounded-lg items-center justify-center" style="width:24px;height:24px;" data-id="${t.id_tipologia}" data-action="estado" title="${btnEstadoTitle}">
+                            ${btnEstadoIcon}
+                        </button>
+                        <button class="flex p-2 bg-red-500 hover:bg-red-600 text-white rounded-lg items-center justify-center" style="width:24px;height:24px;" data-id="${t.id_tipologia}" data-action="eliminar" title="Eliminar">
+                            <i class="fas fa-trash text-xs"></i>
+                        </button>
+                    </div>
+                `;
+                dataTable.appendChild(card);
+            });
+        }
+        if (vistaActual === "tabla") {
+            dataTable.className = "overflow-x-auto";
+            const tabla = document.createElement("table");
+            tabla.className = "min-w-full bg-white border border-gray-200 rounded-lg shadow-sm text-xs";
+            tabla.innerHTML = `
+        <thead>
+            <tr>
+                <th class="p-2 border-b border-r text-center">Nombre</th>
+                <th class="p-2 border-b border-r text-center">Descripción</th>
+                <th class="p-2 border-b border-r text-center">Estado</th>
+                <th class="p-2 border-b text-center">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            ${mostrar.map(t => {
+                const isActivo = t.estado_tipologia === "Activo";
+                const btnEstadoColor = isActivo ? "bg-green-600 hover:bg-green-700" : "bg-red-600 hover:bg-red-700";
+                const btnEstadoIcon = isActivo ? '<i class="fas fa-check text-xs"></i>' : '<i class="fas fa-times text-xs"></i>';
+                const btnEstadoTitle = isActivo ? "Inhabilitar" : "Habilitar";
+                const estadoColor = isActivo ? "bg-green-100 text-green-700 px-2 py-1 rounded font-semibold text-xs" : "bg-red-100 text-red-700 px-2 py-1 rounded font-semibold text-xs";
+                return `
+                    <tr>
+                        <td class="p-2 border-b border-r text-center">${t.nombre}</td>
+                        <td class="p-2 border-b border-r text-center">${t.descripcion || ""}</td>
+                        <td class="p-2 border-b border-r text-center"><span class="${estadoColor}">${t.estado_tipologia}</span></td>
+                        <td class="p-2 border-b text-center">
+                            <div class="flex justify-center gap-2">
+                                <button class="flex p-2 bg-green-600 hover:bg-green-700 text-white rounded-lg items-center justify-center" style="width:24px;height:24px;" data-id="${t.id_tipologia}" data-action="ver" title="Ver"><i class="fas fa-eye text-xs"></i></button>
+                                <button class="flex p-2 bg-orange-400 hover:bg-orange-500 text-white rounded-lg items-center justify-center" style="width:24px;height:24px;" data-id="${t.id_tipologia}" data-action="editar" title="Editar"><i class="fas fa-edit text-xs"></i></button>
+                                <button class="flex p-2 ${btnEstadoColor} text-white rounded-lg items-center justify-center" style="width:24px;height:24px;" data-id="${t.id_tipologia}" data-action="estado" title="${btnEstadoTitle}">
+                                    ${btnEstadoIcon}
+                                </button>
+                                <button class="flex p-2 bg-red-500 hover:bg-red-600 text-white rounded-lg items-center justify-center" style="width:24px;height:24px;" data-id="${t.id_tipologia}" data-action="eliminar" title="Eliminar">
+                                    <i class="fas fa-trash text-xs"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('')}
+        </tbody>
+    `;
+            dataTable.appendChild(tabla);
+        }
         renderPaginador(tipologiasFiltradas.length);
 
-        // Eventos de acciones en las tarjetas
+        // Eventos de acciones en las tarjetas/tabla
         dataTable.querySelectorAll("button[data-action]").forEach(btn => {
             const id = btn.getAttribute("data-id");
             const action = btn.getAttribute("data-action");
             if (action === "ver") btn.onclick = () => viewTipologia(id);
             if (action === "editar") btn.onclick = () => editTipologia(id);
             if (action === "estado") btn.onclick = () => confirmEstadoTipologia(id);
-            if (action === "eliminar") btn.onclick = () => eliminarTipologia(id);
+            if (action === "eliminar") btn.onclick = () => showModalEliminarTipologia(id);
         });
     }
 
@@ -166,6 +245,20 @@ function iniciarModuloTipologias(vista = "tarjetas", filtro = "") {
         renderTipologias();
     });
 
+    // Botón para cambiar a vista tarjetas
+    document.getElementById('btnVistaTarjetasTipologias')?.addEventListener('click', function () {
+        vistaActual = "tarjetas";
+        localStorage.setItem('tipologiasVista', "tarjetas");
+        renderTipologias();
+    });
+
+    // Botón para cambiar a vista tabla
+    document.getElementById('btnVistaTablaTipologias')?.addEventListener('click', function () {
+        vistaActual = "tabla";
+        localStorage.setItem('tipologiasVista', "tabla");
+        renderTipologias();
+    });
+
     // Modal Crear Tipología
     const modalCrear = document.getElementById("modalCrearTipologia");
     const abrirModalCrear = document.getElementById("openModalTipologia");
@@ -175,7 +268,6 @@ function iniciarModuloTipologias(vista = "tarjetas", filtro = "") {
     if (abrirModalCrear) {
         abrirModalCrear.addEventListener("click", async () => {
             cargarTipologiasBaseEnSelect("tipologiaCrear");
-            await cargarRolesEnSelectTipologia("rolCrearTipologia");
             formCrear.reset();
             modalCrear.classList.remove("hidden");
         });
@@ -185,10 +277,10 @@ function iniciarModuloTipologias(vista = "tarjetas", filtro = "") {
         formCrear.addEventListener("submit", async function (e) {
             e.preventDefault();
             const data = {
-                tipologia: document.getElementById("tipologiaCrear").value,
-                subtipologia: document.getElementById("subtipologiaCrear").value,
-                id_rol: document.getElementById("rolCrearTipologia").value,
-                estado_tipologia: document.getElementById("estadoTipologiaCrear").value
+                nombre: document.getElementById("tipologiaCrear").value,
+                descripcion: document.getElementById("descripcionTipologiaCrear").value,
+                estado_tipologia: document.getElementById("estadoTipologiaCrear").value,
+                id_rol: document.getElementById("idRolTipologiaCrear")?.value || 1 // Ajusta según tu formulario
             };
             const res = await createTipologia(data);
             if (res.success) {
@@ -196,7 +288,7 @@ function iniciarModuloTipologias(vista = "tarjetas", filtro = "") {
                 mostrarMensajeTipologia("exito", "Tipología creada exitosamente.");
                 cargarTipologias();
             } else {
-                mostrarMensajeTipologia("error", res.message || "Error al crear tipología.");
+                mostrarMensajeTipologia("error", res.error || "Error al crear tipología.");
             }
         });
     }
@@ -208,11 +300,11 @@ function iniciarModuloTipologias(vista = "tarjetas", filtro = "") {
 
     async function editTipologia(id) {
         const t = await fetchTipologiaById(id);
-        cargarTipologiasBaseEnSelect("tipologiaEditar", t.tipologia);
-        await cargarRolesEnSelectTipologia("rolEditarTipologia", t.id_rol);
-        document.getElementById("subtipologiaEditar").value = t.subtipologia;
+        cargarTipologiasBaseEnSelect("tipologiaEditar", t.nombre);
+        document.getElementById("descripcionTipologiaEditar").value = t.descripcion;
         document.getElementById("estadoTipologiaEditar").value = t.estado_tipologia;
         document.getElementById("id_tipologiaEditar").value = t.id_tipologia;
+        document.getElementById("idRolTipologiaEditar") && (document.getElementById("idRolTipologiaEditar").value = t.id_rol || 1);
         modalEditar.classList.remove("hidden");
     }
     if (cerrarModalEditar) cerrarModalEditar.addEventListener("click", () => modalEditar.classList.add("hidden"));
@@ -221,10 +313,10 @@ function iniciarModuloTipologias(vista = "tarjetas", filtro = "") {
             e.preventDefault();
             const id = document.getElementById("id_tipologiaEditar").value;
             const data = {
-                tipologia: document.getElementById("tipologiaEditar").value,
-                subtipologia: document.getElementById("subtipologiaEditar").value,
-                id_rol: document.getElementById("rolEditarTipologia").value,
-                estado_tipologia: document.getElementById("estadoTipologiaEditar").value
+                nombre: document.getElementById("tipologiaEditar").value,
+                descripcion: document.getElementById("descripcionTipologiaEditar").value,
+                estado_tipologia: document.getElementById("estadoTipologiaEditar").value,
+                id_rol: document.getElementById("idRolTipologiaEditar")?.value || 1
             };
             const res = await updateTipologia(id, data);
             if (res.success) {
@@ -232,23 +324,34 @@ function iniciarModuloTipologias(vista = "tarjetas", filtro = "") {
                 mostrarMensajeTipologia("exito", "Tipología actualizada exitosamente.");
                 cargarTipologias();
             } else {
-                mostrarMensajeTipologia("error", res.message || "Error al actualizar tipología.");
+                mostrarMensajeTipologia("error", res.error || "Error al actualizar tipología.");
             }
         });
     }
 
     // Modal Ver Tipología
     const modalVer = document.getElementById("modalVerTipologia");
-    const cerrarModalVer = document.getElementById("closeModalVerTipologia");
+    document.querySelectorAll("#closeModalVerTipologia").forEach(btn => {
+        btn.addEventListener("click", () => {
+            modalVer.classList.add("hidden");
+        });
+    });
+    const cerrarModalVerTop = document.getElementById("closeModalVerTipologiaTop");
     async function viewTipologia(id) {
         const t = await fetchTipologiaById(id);
-        document.getElementById("verTipologia").textContent = t.tipologia;
-        document.getElementById("verSubtipologia").textContent = t.subtipologia;
-        document.getElementById("verRolTipologia").textContent = t.rol_nombre;
-        document.getElementById("verEstadoTipologia").textContent = t.estado_tipologia;
+        document.getElementById("verTipologia").textContent = t.nombre;
+        document.getElementById("verDescripcionTipologia").textContent = t.descripcion;
+        const estadoContainer = document.getElementById("verEstadoTipologia");
+        if (estadoContainer) {
+            if (t.estado_tipologia === "Activo") {
+                estadoContainer.innerHTML = `<span class="bg-green-100 text-green-700 px-2 py-1 rounded font-semibold text-xs">${t.estado_tipologia}</span>`;
+            } else {
+                estadoContainer.innerHTML = `<span class="bg-red-100 text-red-700 px-2 py-1 rounded font-semibold text-xs">${t.estado_tipologia}</span>`;
+            }
+        }
         modalVer.classList.remove("hidden");
     }
-    if (cerrarModalVer) cerrarModalVer.addEventListener("click", () => modalVer.classList.add("hidden"));
+    if (cerrarModalVerTop) cerrarModalVerTop.addEventListener("click", () => modalVer.classList.add("hidden"));
 
     // Modal Estado Tipología
     const modalEstado = document.getElementById("modalEstadoTipologia");
@@ -279,7 +382,7 @@ function iniciarModuloTipologias(vista = "tarjetas", filtro = "") {
                 mostrarMensajeTipologia("exito", "Estado actualizado correctamente.");
                 cargarTipologias();
             } else {
-                mostrarMensajeTipologia("error", res.message || "Error al actualizar estado.");
+                mostrarMensajeTipologia("error", res.error || "Error al actualizar estado.");
             }
             currentIdToEstado = null;
         }
@@ -289,18 +392,35 @@ function iniciarModuloTipologias(vista = "tarjetas", filtro = "") {
         currentIdToEstado = null;
     });
 
-    // Eliminar tipología
-    async function eliminarTipologia(id) {
-        if (confirm("¿Seguro que deseas eliminar esta tipología?")) {
-            const res = await deleteTipologia(id);
+    // Modal Eliminar Tipología
+    const modalEliminar = document.getElementById("modalEliminarTipologia");
+    const btnEliminarConfirmar = document.getElementById("btnEliminarTipologiaConfirmar");
+    const btnEliminarCancelar = document.getElementById("btnEliminarTipologiaCancelar");
+    let currentIdToEliminar = null;
+
+    function showModalEliminarTipologia(id) {
+        currentIdToEliminar = id;
+        modalEliminar.classList.remove("hidden");
+    }
+
+    if (btnEliminarConfirmar) btnEliminarConfirmar.addEventListener("click", async () => {
+        if (currentIdToEliminar) {
+            const res = await deleteTipologia(currentIdToEliminar);
             if (res.success) {
+                modalEliminar.classList.add("hidden");
                 mostrarMensajeTipologia("exito", "Tipología eliminada correctamente.");
                 cargarTipologias();
             } else {
-                mostrarMensajeTipologia("error", res.message || "Error al eliminar tipología.");
+                mostrarMensajeTipologia("error", res.error || "Error al eliminar tipología.");
             }
+            currentIdToEliminar = null;
         }
-    }
+    });
+
+    if (btnEliminarCancelar) btnEliminarCancelar.addEventListener("click", () => {
+        modalEliminar.classList.add("hidden");
+        currentIdToEliminar = null;
+    });
 
     // Mensaje emergente para tipologías
     function mostrarMensajeTipologia(tipo, mensaje) {
@@ -335,13 +455,14 @@ function iniciarModuloTipologias(vista = "tarjetas", filtro = "") {
         if (event.target === modalEditar) modalEditar.classList.add("hidden");
         if (event.target === modalVer) modalVer.classList.add("hidden");
         if (event.target === modalEstado) modalEstado.classList.add("hidden");
+        if (event.target === modalEliminar) modalEliminar.classList.add("hidden");
     });
 
     // Carga inicial de tipologías
     function cargarTipologias() {
         fetchTipologias()
             .then((data) => {
-                tipologiasData = data;
+                tipologiasData = Array.isArray(data) ? data : [];
                 paginaActual = 1;
                 renderTipologias();
             })
@@ -353,6 +474,27 @@ function iniciarModuloTipologias(vista = "tarjetas", filtro = "") {
 
     // Inicializa la carga
     cargarTipologias();
+}
+
+// Cargar tipologías base (enum) en los selects de los modales
+function cargarTipologiasBaseEnSelect(selectId, selectedTipologia = null) {
+    const tipologiasBase = ["Formacion", "Consultas", "Certificacion", "PQRSF", "Otro"];
+    const labels = {
+        "Formacion": "Formación",
+        "Consultas": "Consultas",
+        "Certificacion": "Certificación",
+        "PQRSF": "PQRSF",
+        "Otro": "Otro"
+    };
+    const select = document.getElementById(selectId);
+    select.innerHTML = "";
+    tipologiasBase.forEach(tipo => {
+        const option = document.createElement("option");
+        option.value = tipo;
+        option.textContent = labels[tipo];
+        if (selectedTipologia && tipo === selectedTipologia) option.selected = true;
+        select.appendChild(option);
+    });
 }
 
 // Exporta la función para inicializar el módulo desde dashboard.js
