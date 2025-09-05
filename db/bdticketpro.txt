@@ -328,3 +328,10 @@ INSERT INTO programas (codigo, version, nombre, descripcion, duracion, linea_tec
 ('22620442', '3', 'BASICO OPERATIVO TRABAJO SEGURO EN ALTURAS', 'Capacitación para trabajos en altura.', 48, 'MATERIALES HERRAMIENTAS', 'MATERIALES PARA LA CONSTRUCCIÓN', 'Construcción', 'Presencial', 1, 1, 'Activo', NOW()),
 ('22620443', '2', 'ADMINISTRATIVO PARA JEFES DE AREA TRABAJO SEGURO EN ALTURAS', 'Capacitación para trabajos en altura.', 10, 'MATERIALES HERRAMIENTAS', 'MATERIALES PARA LA CONSTRUCCIÓN', 'Construcción', 'Presencial', 1, 1, 'Activo', NOW()),
 ('22620444', '1', 'GESTION DEL RIESGO EN ALTURAS', 'Capacitación en gestión del riesgo.', 6, 'MATERIALES HERRAMIENTAS', 'MATERIALES PARA LA CONSTRUCCIÓN', 'Construcción', 'Presencial', 1, 1, 'Activo', NOW());
+
+-- Volcado de datos para la tabla ticket
+INSERT INTO ticket (id_usuario, numero_ticket, descripcion, prioridad, estado, id_rol, id_programa, id_tipologia, id_subtipologia)
+VALUES
+(1, 'TK-0001', 'Primer ticket de prueba', 'Alta', 'Abierto', 1, 1, 1, 1),
+(2, 'TK-0002', 'Segundo ticket de prueba', 'Media', 'Progreso', 2, 2, 2, 2),
+(3, 'TK-0003', 'Tercer ticket de prueba', 'Baja', 'Pendiente', 3, 3, 3, 3);

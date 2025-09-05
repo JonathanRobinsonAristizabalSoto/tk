@@ -151,7 +151,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="../pages/tickets.html" id="sidebar-tickets-btn"
+                            <a href="#" id="sidebar-tickets-btn"
                                 class="sidebar-link block p-2 text-color1 hover:text-color6 rounded-lg flex items-center text-base md:text-sm">
                                 <i class="fas fa-ticket-alt mr-2 text-base md:text-sm"></i>
                                 <span class="text-base md:text-sm">Tickets</span>
@@ -1057,18 +1057,6 @@ bg-color1 hover:bg-color2 text-color4 border-2 border-color4">
             <p class="text-center text-color6 mb-4 text-sm sm:text-base w-full">Registra un nuevo programa en TicketPro+
             </p>
             <div class="mb-2 w-full">
-                <label for="codigoProgramaCrear"
-                    class="font-bold text-color4 mb-1 block text-sm text-center w-full">Código</label>
-                <input type="text" id="codigoProgramaCrear" name="codigo" required placeholder="Código del programa"
-                    class="mb-2 w-full rounded bg-gray-100 p-2 text-color4 font-medium text-sm text-center">
-            </div>
-            <div class="mb-2 w-full">
-                <label for="versionProgramaCrear"
-                    class="font-bold text-color4 mb-1 block text-sm text-center w-full">Versión</label>
-                <input type="text" id="versionProgramaCrear" name="version" required placeholder="Versión"
-                    class="mb-2 w-full rounded bg-gray-100 p-2 text-color4 font-medium text-sm text-center">
-            </div>
-            <div class="mb-2 w-full">
                 <label for="nombreProgramaCrear"
                     class="font-bold text-color4 mb-1 block text-sm text-center w-full">Nombre</label>
                 <input type="text" id="nombreProgramaCrear" name="nombre" required placeholder="Nombre del programa"
@@ -1079,6 +1067,18 @@ bg-color1 hover:bg-color2 text-color4 border-2 border-color4">
                     class="font-bold text-color4 mb-1 block text-sm text-center w-full">Descripción</label>
                 <textarea id="descripcionProgramaCrear" name="descripcion" placeholder="Descripción"
                     class="mb-2 w-full rounded bg-gray-100 p-2 text-color4 font-medium text-sm text-center"></textarea>
+            </div>
+            <div class="mb-2 w-full">
+                <label for="codigoProgramaCrear"
+                    class="font-bold text-color4 mb-1 block text-sm text-center w-full">Código</label>
+                <input type="text" id="codigoProgramaCrear" name="codigo" required placeholder="Código del programa"
+                    class="mb-2 w-full rounded bg-gray-100 p-2 text-color4 font-medium text-sm text-center">
+            </div>
+            <div class="mb-2 w-full">
+                <label for="versionProgramaCrear"
+                    class="font-bold text-color4 mb-1 block text-sm text-center w-full">Versión</label>
+                <input type="text" id="versionProgramaCrear" name="version" required placeholder="Versión"
+                    class="mb-2 w-full rounded bg-gray-100 p-2 text-color4 font-medium text-sm text-center">
             </div>
             <div class="mb-2 w-full">
                 <label for="duracionProgramaCrear"
@@ -1374,6 +1374,390 @@ bg-color1 hover:bg-color2 text-color4 border-2 border-color4">
     </div>
 
 
+    <!--------------------------------------->
+    <!-- Modales para el módulo de Tickets -->
+    <!--------------------------------------->
+
+    <!-- Modal Crear Ticket -->
+    <div id="modalCrearTicket"
+        class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <form id="formCrearTicket"
+            class="bg-white p-4 sm:p-8 rounded-lg shadow-lg w-full max-w-xl border-2 border-color5 flex flex-col items-center overflow-y-auto h-full max-h-screen md:h-auto md:max-h-[93vh]">
+            <h2
+                class="text-lg sm:text-xl font-bold text-color5 mt-2 flex items-center justify-center text-center w-full">
+                <i class="fas fa-ticket-alt mr-2"></i> Crear Ticket
+            </h2>
+            <p class="text-center text-color6 mb-4 text-sm sm:text-base w-full">Registra una nueva solicitud o
+                incidencia.</p>
+            <div class="mb-2 w-full">
+                <label for="descripcionTicketCrear"
+                    class="font-bold text-color4 mb-1 block text-sm text-center w-full">Descripción</label>
+                <textarea id="descripcionTicketCrear" name="descripcion" required
+                    class="mb-2 w-full rounded bg-gray-100 p-2 text-color4 font-medium text-sm text-center"
+                    placeholder="Describe el problema o solicitud"></textarea>
+            </div>
+            <div class="mb-2 w-full">
+                <label for="prioridadTicketCrear"
+                    class="font-bold text-color4 mb-1 block text-sm text-center w-full">Prioridad</label>
+                <select id="prioridadTicketCrear" name="prioridad" required
+                    class="mb-2 w-full rounded bg-gray-100 p-2 text-color4 font-medium text-sm text-center">
+                    <option value="" selected disabled>Selecciona prioridad</option>
+                    <option value="Alta">Alta</option>
+                    <option value="Media">Media</option>
+                    <option value="Baja">Baja</option>
+                </select>
+            </div>
+            <div class="mb-2 w-full">
+                <label for="estadoTicketCrear"
+                    class="font-bold text-color4 mb-1 block text-sm text-center w-full">Estado</label>
+                <select id="estadoTicketCrear" name="estado" required
+                    class="mb-2 w-full rounded bg-gray-100 p-2 text-color4 font-medium text-sm text-center">
+                    <option value="Abierto">Abierto</option>
+                    <option value="Progreso">Progreso</option>
+                    <option value="Pendiente">Pendiente</option>
+                    <option value="Resuelto">Resuelto</option>
+                    <option value="Cerrado">Cerrado</option>
+                </select>
+            </div>
+            <div class="mb-2 w-full">
+                <label for="programaTicketCrear"
+                    class="font-bold text-color4 mb-1 block text-sm text-center w-full">Programa</label>
+                <select id="programaTicketCrear" name="id_programa"
+                    class="mb-2 w-full rounded bg-gray-100 p-2 text-color4 font-medium text-sm text-center"></select>
+            </div>
+            <div class="mb-2 w-full">
+                <label for="tipologiaTicketCrear"
+                    class="font-bold text-color4 mb-1 block text-sm text-center w-full">Tipología</label>
+                <select id="tipologiaTicketCrear" name="id_tipologia"
+                    class="mb-2 w-full rounded bg-gray-100 p-2 text-color4 font-medium text-sm text-center"></select>
+            </div>
+            <div class="mb-2 w-full">
+                <label for="subtipologiaTicketCrear"
+                    class="font-bold text-color4 mb-1 block text-sm text-center w-full">Subtipología</label>
+                <select id="subtipologiaTicketCrear" name="id_subtipologia"
+                    class="mb-2 w-full rounded bg-gray-100 p-2 text-color4 font-medium text-sm text-center"></select>
+            </div>
+            <div class="mb-2 w-full">
+                <label for="adjuntosTicketCrear"
+                    class="font-bold text-color4 mb-1 block text-sm text-center w-full">Adjuntos</label>
+                <input type="file" id="adjuntosTicketCrear" name="adjuntos[]" multiple
+                    class="mb-2 w-full rounded bg-gray-100 p-2 text-color4 font-medium text-sm text-center" />
+            </div>
+            <div class="flex gap-2 mt-2 w-full items-center justify-center">
+                <button type="submit"
+                    class="bg-color5 text-white p-2 rounded w-full font-bold hover:bg-color6 transition text-sm text-center">Crear</button>
+                <button type="button" id="closeModalCrearTicket"
+                    class="bg-gray-300 p-2 rounded w-full font-bold text-color4 hover:bg-gray-400 transition text-sm text-center">Cancelar</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Modal Editar Ticket -->
+    <div id="modalEditarTicket"
+        class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <form id="formEditarTicket"
+            class="bg-white p-4 sm:p-8 rounded-lg shadow-lg w-full max-w-xl border-2 border-color5 flex flex-col items-center overflow-y-auto h-full max-h-screen md:h-auto md:max-h-[93vh]">
+            <h2
+                class="text-lg sm:text-xl font-bold text-color5 mt-2 flex items-center justify-center text-center w-full">
+                <i class="fas fa-edit mr-2"></i> Editar Ticket
+            </h2>
+            <input type="hidden" id="id_ticketEditar" name="id_ticket">
+            <div class="mb-2 w-full">
+                <label for="descripcionTicketEditar"
+                    class="font-bold text-color4 mb-1 block text-sm text-center w-full">Descripción</label>
+                <textarea id="descripcionTicketEditar" name="descripcion" required
+                    class="mb-2 w-full rounded bg-gray-100 p-2 text-color4 font-medium text-sm text-center"></textarea>
+            </div>
+            <div class="mb-2 w-full">
+                <label for="prioridadTicketEditar"
+                    class="font-bold text-color4 mb-1 block text-sm text-center w-full">Prioridad</label>
+                <select id="prioridadTicketEditar" name="prioridad" required
+                    class="mb-2 w-full rounded bg-gray-100 p-2 text-color4 font-medium text-sm text-center">
+                    <option value="Alta">Alta</option>
+                    <option value="Media">Media</option>
+                    <option value="Baja">Baja</option>
+                </select>
+            </div>
+            <div class="mb-2 w-full">
+                <label for="estadoTicketEditar"
+                    class="font-bold text-color4 mb-1 block text-sm text-center w-full">Estado</label>
+                <select id="estadoTicketEditar" name="estado" required
+                    class="mb-2 w-full rounded bg-gray-100 p-2 text-color4 font-medium text-sm text-center">
+                    <option value="Abierto">Abierto</option>
+                    <option value="Progreso">Progreso</option>
+                    <option value="Pendiente">Pendiente</option>
+                    <option value="Resuelto">Resuelto</option>
+                    <option value="Cerrado">Cerrado</option>
+                </select>
+            </div>
+            <div class="mb-2 w-full">
+                <label for="programaTicketEditar"
+                    class="font-bold text-color4 mb-1 block text-sm text-center w-full">Programa</label>
+                <select id="programaTicketEditar" name="id_programa"
+                    class="mb-2 w-full rounded bg-gray-100 p-2 text-color4 font-medium text-sm text-center"></select>
+            </div>
+            <div class="mb-2 w-full">
+                <label for="tipologiaTicketEditar"
+                    class="font-bold text-color4 mb-1 block text-sm text-center w-full">Tipología</label>
+                <select id="tipologiaTicketEditar" name="id_tipologia"
+                    class="mb-2 w-full rounded bg-gray-100 p-2 text-color4 font-medium text-sm text-center"></select>
+            </div>
+            <div class="mb-2 w-full">
+                <label for="subtipologiaTicketEditar"
+                    class="font-bold text-color4 mb-1 block text-sm text-center w-full">Subtipología</label>
+                <select id="subtipologiaTicketEditar" name="id_subtipologia"
+                    class="mb-2 w-full rounded bg-gray-100 p-2 text-color4 font-medium text-sm text-center"></select>
+            </div>
+            <div class="mb-2 w-full">
+                <label for="adjuntosTicketEditar"
+                    class="font-bold text-color4 mb-1 block text-sm text-center w-full">Adjuntos</label>
+                <input type="file" id="adjuntosTicketEditar" name="adjuntos[]" multiple
+                    class="mb-2 w-full rounded bg-gray-100 p-2 text-color4 font-medium text-sm text-center" />
+            </div>
+            <div class="flex gap-2 mt-2 w-full items-center justify-center">
+                <button type="submit"
+                    class="bg-color5 text-white p-2 rounded w-full font-bold hover:bg-color6 transition text-sm text-center">Guardar</button>
+                <button type="button" id="closeModalEditarTicket"
+                    class="bg-gray-300 p-2 rounded w-full font-bold text-color4 hover:bg-gray-400 transition text-sm text-center">Cancelar</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Modal Ver Ticket -->
+    <div id="modalVerTicket" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div
+            class="bg-white p-4 sm:p-8 rounded-lg shadow-lg w-full max-w-2xl border-2 border-color5 flex flex-col items-center overflow-y-auto h-full max-h-screen md:h-auto md:max-h-[93vh] relative">
+            <button type="button" id="closeModalVerTicket"
+                class="absolute top-4 right-4 text-color7 text-xl sm:text-2xl font-bold hover:text-red-700">&times;</button>
+            <h2
+                class="text-lg sm:text-xl font-bold text-color5 mt-2 flex items-center justify-center text-center w-full">
+                <i class="fas fa-ticket-alt mr-2"></i> Detalle del Ticket
+            </h2>
+            <div class="w-full mt-2 mb-2">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full mb-2">
+                    <div>
+                        <label class="font-bold text-color4 mb-1 text-sm">Número Ticket:</label>
+                        <div id="verNumeroTicket" class="text-sm text-color4"></div>
+                    </div>
+                    <div>
+                        <label class="font-bold text-color4 mb-1 text-sm">Estado:</label>
+                        <div id="verEstadoTicket" class="text-sm text-color4"></div>
+                    </div>
+                    <div>
+                        <label class="font-bold text-color4 mb-1 text-sm">Prioridad:</label>
+                        <div id="verPrioridadTicket" class="text-sm text-color4"></div>
+                    </div>
+                    <div>
+                        <label class="font-bold text-color4 mb-1 text-sm">Programa:</label>
+                        <div id="verProgramaTicket" class="text-sm text-color4"></div>
+                    </div>
+                    <div>
+                        <label class="font-bold text-color4 mb-1 text-sm">Tipología:</label>
+                        <div id="verTipologiaTicket" class="text-sm text-color4"></div>
+                    </div>
+                    <div>
+                        <label class="font-bold text-color4 mb-1 text-sm">Subtipología:</label>
+                        <div id="verSubtipologiaTicket" class="text-sm text-color4"></div>
+                    </div>
+                    <div>
+                        <label class="font-bold text-color4 mb-1 text-sm">Usuario:</label>
+                        <div id="verUsuarioTicket" class="text-sm text-color4"></div>
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <label class="font-bold text-color4 mb-1 text-sm">Descripción:</label>
+                    <div id="verDescripcionTicket" class="text-sm text-color4"></div>
+                </div>
+                <div class="mb-2">
+                    <label class="font-bold text-color4 mb-1 text-sm">Adjuntos:</label>
+                    <div id="verAdjuntosTicket" class="flex flex-wrap gap-2"></div>
+                </div>
+                <div class="mb-2">
+                    <label class="font-bold text-color4 mb-1 text-sm">Historial de Estados:</label>
+                    <div id="verHistorialEstadosTicket" class="text-xs text-gray-600"></div>
+                </div>
+                <div class="mb-2">
+                    <label class="font-bold text-color4 mb-1 text-sm">Comentarios:</label>
+                    <div id="verComentariosTicket" class="text-xs text-gray-600"></div>
+                </div>
+                <div class="mb-2">
+                    <label class="font-bold text-color4 mb-1 text-sm">Asignaciones:</label>
+                    <div id="verAsignacionesTicket" class="text-xs text-gray-600"></div>
+                </div>
+                <div class="mb-2">
+                    <label class="font-bold text-color4 mb-1 text-sm">Eventos:</label>
+                    <div id="verEventosTicket" class="text-xs text-gray-600"></div>
+                </div>
+            </div>
+            <div class="flex gap-2 mt-2 w-full items-center justify-center">
+                <button type="button" id="closeModalVerTicketBtn"
+                    class="bg-gray-300 p-2 rounded w-full font-bold text-color4 hover:bg-gray-400 transition text-sm text-center">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Eliminar Ticket -->
+    <div id="modalEliminarTicket"
+        class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div
+            class="bg-white p-4 sm:p-8 rounded-lg shadow-lg w-full max-w-md border-2 border-red-500 flex flex-col items-center overflow-y-auto h-full max-h-screen md:h-auto md:max-h-[93vh]">
+            <div class="flex items-center justify-center mb-4">
+                <span class="text-4xl text-red-600"><i class="fas fa-trash"></i></span>
+            </div>
+            <h2 class="font-bold text-red-600 text-base mb-2">Eliminar Ticket</h2>
+            <p class="text-color4 text-sm mb-6">
+                ¿Seguro que deseas eliminar este ticket? Esta acción no se puede deshacer.
+            </p>
+            <div class="flex justify-center gap-4 w-full">
+                <button id="btnEliminarTicketConfirmar"
+                    class="flex items-center justify-center gap-2 px-5 py-2 rounded-lg font-semibold text-sm transition duration-200 shadow bg-red-600 hover:bg-red-700 text-white border-2 border-red-600">
+                    <i class="fas fa-trash"></i>
+                    Eliminar
+                </button>
+                <button id="btnEliminarTicketCancelar"
+                    class="flex items-center justify-center gap-2 px-5 py-2 rounded-lg font-semibold text-sm transition duration-200 shadow bg-color1 hover:bg-color2 text-color4 border-2 border-color4">
+                    <i class="fas fa-times"></i>
+                    Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Cambiar Estado Ticket -->
+    <div id="modalEstadoTicket"
+        class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div
+            class="bg-white p-4 sm:p-8 rounded-lg shadow-lg w-full max-w-md border-2 border-color5 flex flex-col items-center overflow-y-auto h-full max-h-screen md:h-auto md:max-h-[93vh]">
+            <div class="flex items-center justify-center mb-4">
+                <span id="modalEstadoTicketIcon" class="text-4xl"></span>
+            </div>
+            <h2 class="font-bold text-color5 text-base mb-2">Cambiar estado del ticket</h2>
+            <p id="modalEstadoTicketTexto" class="text-color4 text-sm mb-6">
+                ¿Seguro que deseas cambiar el estado de este ticket?
+            </p>
+            <div class="flex justify-center gap-4 w-full">
+                <button id="btnEstadoTicketConfirmar"
+                    class="flex items-center justify-center gap-2 px-5 py-2 rounded-lg font-semibold text-sm transition duration-200 shadow bg-green-600 hover:bg-green-700 text-white border-2 border-green-600">
+                    <i id="modalEstadoTicketConfirmarIcon" class="fas fa-check"></i>
+                    <span id="modalEstadoTicketConfirmarText">Cambiar</span>
+                </button>
+                <button id="btnEstadoTicketCancelar"
+                    class="flex items-center justify-center gap-2 px-5 py-2 rounded-lg font-semibold text-sm transition duration-200 shadow bg-color1 hover:bg-color2 text-color4 border-2 border-color4">
+                    <i class="fas fa-times"></i>
+                    Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Agregar Comentario -->
+    <div id="modalComentarioTicket"
+        class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <form id="formComentarioTicket"
+            class="bg-white p-4 sm:p-8 rounded-lg shadow-lg w-full max-w-md border-2 border-color5 flex flex-col items-center overflow-y-auto h-full max-h-screen md:h-auto md:max-h-[93vh]">
+            <h2
+                class="text-lg sm:text-xl font-bold text-color5 mt-2 flex items-center justify-center text-center w-full">
+                <i class="fas fa-comment-dots mr-2"></i> Agregar Comentario
+            </h2>
+            <input type="hidden" id="id_ticketComentario" name="id_ticket">
+            <div class="mb-2 w-full">
+                <label for="comentarioTicket"
+                    class="font-bold text-color4 mb-1 block text-sm text-center w-full">Comentario</label>
+                <textarea id="comentarioTicket" name="comentario" required
+                    class="mb-2 w-full rounded bg-gray-100 p-2 text-color4 font-medium text-sm text-center"
+                    placeholder="Escribe tu comentario"></textarea>
+            </div>
+            <div class="mb-2 w-full">
+                <label for="prioridadComentarioTicket"
+                    class="font-bold text-color4 mb-1 block text-sm text-center w-full">Prioridad</label>
+                <select id="prioridadComentarioTicket" name="prioridad"
+                    class="mb-2 w-full rounded bg-gray-100 p-2 text-color4 font-medium text-sm text-center">
+                    <option value="" selected disabled>Selecciona prioridad</option>
+                    <option value="Alta">Alta</option>
+                    <option value="Media">Media</option>
+                    <option value="Baja">Baja</option>
+                </select>
+            </div>
+            <div class="mb-2 w-full">
+                <label for="categoriaComentarioTicket"
+                    class="font-bold text-color4 mb-1 block text-sm text-center w-full">Categoría</label>
+                <input type="text" id="categoriaComentarioTicket" name="categoria"
+                    class="mb-2 w-full rounded bg-gray-100 p-2 text-color4 font-medium text-sm text-center"
+                    placeholder="Categoría (opcional)">
+            </div>
+            <div class="flex gap-2 mt-2 w-full items-center justify-center">
+                <button type="submit"
+                    class="bg-color5 text-white p-2 rounded w-full font-bold hover:bg-color6 transition text-sm text-center">Agregar</button>
+                <button type="button" id="closeModalComentarioTicket"
+                    class="bg-gray-300 p-2 rounded w-full font-bold text-color4 hover:bg-gray-400 transition text-sm text-center">Cancelar</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Modal Agregar Adjunto -->
+    <div id="modalAdjuntoTicket"
+        class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <form id="formAdjuntoTicket"
+            class="bg-white p-4 sm:p-8 rounded-lg shadow-lg w-full max-w-md border-2 border-color5 flex flex-col items-center overflow-y-auto h-full max-h-screen md:h-auto md:max-h-[93vh]">
+            <h2
+                class="text-lg sm:text-xl font-bold text-color5 mt-2 flex items-center justify-center text-center w-full">
+                <i class="fas fa-paperclip mr-2"></i> Agregar Adjunto
+            </h2>
+            <input type="hidden" id="id_ticketAdjunto" name="id_ticket">
+            <input type="hidden" id="id_comentarioAdjunto" name="id_comentario">
+            <div class="mb-2 w-full">
+                <label for="nombreAdjuntoTicket"
+                    class="font-bold text-color4 mb-1 block text-sm text-center w-full">Nombre del archivo</label>
+                <input type="text" id="nombreAdjuntoTicket" name="nombre_archivo" required
+                    class="mb-2 w-full rounded bg-gray-100 p-2 text-color4 font-medium text-sm text-center"
+                    placeholder="Nombre del archivo">
+            </div>
+            <div class="mb-2 w-full">
+                <label for="archivoAdjuntoTicket"
+                    class="font-bold text-color4 mb-1 block text-sm text-center w-full">Archivo</label>
+                <input type="file" id="archivoAdjuntoTicket" name="archivo" required
+                    class="mb-2 w-full rounded bg-gray-100 p-2 text-color4 font-medium text-sm text-center" />
+            </div>
+            <div class="mb-2 w-full">
+                <label for="tipoAdjuntoTicket" class="font-bold text-color4 mb-1 block text-sm text-center w-full">Tipo
+                    de archivo</label>
+                <input type="text" id="tipoAdjuntoTicket" name="tipo_archivo"
+                    class="mb-2 w-full rounded bg-gray-100 p-2 text-color4 font-medium text-sm text-center"
+                    placeholder="Ejemplo: pdf, jpg, png">
+            </div>
+            <div class="flex gap-2 mt-2 w-full items-center justify-center">
+                <button type="submit"
+                    class="bg-color5 text-white p-2 rounded w-full font-bold hover:bg-color6 transition text-sm text-center">Agregar</button>
+                <button type="button" id="closeModalAdjuntoTicket"
+                    class="bg-gray-300 p-2 rounded w-full font-bold text-color4 hover:bg-gray-400 transition text-sm text-center">Cancelar</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Modal Asignar Responsable -->
+    <div id="modalAsignarTicket"
+        class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <form id="formAsignarTicket"
+            class="bg-white p-4 sm:p-8 rounded-lg shadow-lg w-full max-w-md border-2 border-color5 flex flex-col items-center overflow-y-auto h-full max-h-screen md:h-auto md:max-h-[93vh]">
+            <h2
+                class="text-lg sm:text-xl font-bold text-color5 mt-2 flex items-center justify-center text-center w-full">
+                <i class="fas fa-user-check mr-2"></i> Asignar Responsable
+            </h2>
+            <input type="hidden" id="id_ticketAsignar" name="id_ticket">
+            <div class="mb-2 w-full">
+                <label for="usuarioAsignarTicket"
+                    class="font-bold text-color4 mb-1 block text-sm text-center w-full">Usuario Responsable</label>
+                <select id="usuarioAsignarTicket" name="id_usuario" required
+                    class="mb-2 w-full rounded bg-gray-100 p-2 text-color4 font-medium text-sm text-center"></select>
+            </div>
+            <div class="flex gap-2 mt-2 w-full items-center justify-center">
+                <button type="submit"
+                    class="bg-color5 text-white p-2 rounded w-full font-bold hover:bg-color6 transition text-sm text-center">Asignar</button>
+                <button type="button" id="closeModalAsignarTicket"
+                    class="bg-gray-300 p-2 rounded w-full font-bold text-color4 hover:bg-gray-400 transition text-sm text-center">Cancelar</button>
+            </div>
+        </form>
+    </div>
 
 
     <!-- Modal de confirmación para cerrar sesión al presionar atrás -->
@@ -1405,6 +1789,7 @@ bg-color1 hover:bg-color2 text-color4 border-2 border-color4">
     <script type="module" src="/tk/src/assets/js/pages/tipologias.js"></script>
     <script type="module" src="/tk/src/assets/js/pages/subtipologias.js"></script>
     <script type="module" src="/tk/src/assets/js/pages/programas.js"></script>
+    <script type="module" src="/tk/src/assets/js/pages/tickets.js"></script>
     <script type="module" src="/tk/src/assets/js/modals/modal-logout.js"></script>
 
 

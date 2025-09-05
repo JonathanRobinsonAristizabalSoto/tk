@@ -46,13 +46,15 @@ Tk/                                                       # Nombre del proyecto 
 │   │   ├── LoginController.php                           # Controlador para autenticación de usuarios y creación de sesión
 │   │   ├── LogoutController.php                          # Controlador para cerrar la sesión del usuario
 │   │   ├── PermisosController.php                        # Controlador para gestión de permisos: CRUD, matriz de roles-permisos y actualización de estado
-│   │   ├── RegisterController.php                        # Controlador para registro de nuevos usuarios
+│   │   ├── ProgramasController.php                       # Controlador para gestion de programas: crear, actualizar, consultar y cambiar estado.
+│   │   ├── RegisterController.php                        # Controlador para registro de nuevos usuarios.
 │   │   ├── RolesController.php                           # Controlador PHP para consultar y actualizar roles.
 │   │   ├── SubtipologiasController.php                   # Controlador para gestión de subtipologias: crear, actualizar, consultar y cambiar estado
 │   │   ├── TipologiasController.php                      # Controlador para gestión de tipologias: crear, actualizar, consultar y cambiar estado
 │   │   └── UsuariosController.php                        # Controlador para gestión de usuarios: crear, actualizar, consultar y cambiar estado
 │   ├── model/                                            # Modelos del backend en PHP (acceso y lógica de datos)
 │   │   ├── Permisos.php                                  # Modelo para la entidad Permisos
+│   │   ├── Programas.php                                 # Modelo para la entidad Programas
 │   │   ├── Rol.php                                       # Modelo para la entidad Rol
 │   │   ├── Subtipologias.php                             # Modelo para la entidad Subtipologia
 │   │   ├── Tipologias.php                                # Modelo para la entidad tipologia
@@ -94,6 +96,7 @@ Tk/                                                       # Nombre del proyecto 
 │   │       │   ├── dashboard.js                          # Lógica y funcionalidades del dashboard principal del usuario
 │   │       │   ├── permisos.js                           # Lógica para mostrar y actualizar la matriz de permisos por rol
 │   │       │   ├── profile.js                            # Lógica para mostrar y editar el perfil del usuario
+│   │       │   ├── programas.js                          # Módulo de gestión de Programas: CRUD, vistas y paginación
 │   │       │   ├── roles.js                              # Módulo de gestión de Roles: CRUD, vistas y paginación
 │   │       │   ├── subtipologias.js                      # Módulo de gestión de Subtipologias: CRUD, vistas y paginación
 │   │       │   ├── tipologias.js                         # Módulo de gestión de Tipologias: CRUD, vistas y paginación

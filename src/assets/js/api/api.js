@@ -342,4 +342,150 @@ export async function deletePrograma(id) {
     return await res.json();
 }
 
+/**
+ * --- TICKETS ---
+ * Solicita la lista de tickets (puedes pasar filtros como estado, prioridad, usuario, programa, etc.)
+ */
+export async function fetchTickets(filtros = {}) {
+    const res = await fetch(`${API_BASE}?module=tickets&action=listar`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(filtros)
+    });
+    return await res.json();
+}
+
+/**
+ * Solicita los datos de un ticket por ID (incluye detalle, comentarios, adjuntos, historial, eventos, asignaciones)
+ */
+export async function fetchTicketById(id_ticket) {
+    const res = await fetch(`${API_BASE}?module=tickets&action=obtener`, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `id_ticket=${encodeURIComponent(id_ticket)}`
+    });
+    return await res.json();
+}
+
+/**
+ * Crea un nuevo ticket
+ */
+export async function createTicket(data) {
+    const res = await fetch(`${API_BASE}?module=tickets&action=crear`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+    });
+    return await res.json();
+}
+
+/**
+ * Edita un ticket existente
+ */
+export async function updateTicket(id_ticket, data) {
+    const payload = {
+        id_ticket,
+        data
+    };
+    const res = await fetch(`${API_BASE}?module=tickets&action=editar`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+    });
+    return await res.json();
+}
+
+/**
+ * Elimina (soft delete) un ticket
+ */
+export async function deleteTicket(id_ticket) {
+    const res = await fetch(`${API_BASE}?module=tickets&action=eliminar`, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `id_ticket=${encodeURIComponent(id_ticket)}`
+    });
+    return await res.json();
+}
+
+/**
+ * Cambia el estado de un ticket y guarda en historial
+ */
+export async function changeTicketState(id_ticket, estado_nuevo, id_usuario) {
+    const res = await fetch(`${API_BASE}?module=tickets&action=cambiarEstado`, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `id_ticket=${encodeURIComponent(id_ticket)}&estado_nuevo=${encodeURIComponent(estado_nuevo)}&id_usuario=${encodeURIComponent(id_usuario)}`
+    });
+    return await res.json();
+}
+
+/**
+ * Agrega un comentario a un ticket
+ */
+export async function addTicketComment(id_ticket, id_usuario, comentario, prioridad = null, categoria = null) {
+    const params = new URLSearchParams({
+        id_ticket,
+        id_usuario,
+        comentario
+    });
+    if (prioridad) params.append("prioridad", prioridad);
+    if (categoria) params.append("categoria", categoria);
+
+    const res = await fetch(`${API_BASE}?module=tickets&action=agregarComentario`, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: params.toString()
+    });
+    return await res.json();
+}
+
+/**
+ * Agrega un adjunto a un ticket (usa FormData para archivos)
+ */
+export async function addTicketAttachment(id_ticket, id_comentario, archivo, nombre_archivo, tipo_archivo) {
+    const formData = new FormData();
+    formData.append("id_ticket", id_ticket);
+    formData.append("id_comentario", id_comentario);
+    formData.append("nombre_archivo", nombre_archivo);
+    formData.append("tipo_archivo", tipo_archivo);
+    formData.append("archivo", archivo);
+
+    const res = await fetch(`${API_BASE}?module=tickets&action=agregarAdjunto`, {
+        method: "POST",
+        body: formData
+    });
+    return await res.json();
+}
+
+/**
+ * Agrega un evento al ticket
+ */
+export async function addTicketEvent(id_ticket, accion, id_usuario, categoria = null) {
+    const params = new URLSearchParams({
+        id_ticket,
+        accion,
+        id_usuario
+    });
+    if (categoria) params.append("categoria", categoria);
+
+    const res = await fetch(`${API_BASE}?module=tickets&action=agregarEvento`, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: params.toString()
+    });
+    return await res.json();
+}
+
+/**
+ * Asigna responsable a un ticket
+ */
+export async function assignTicketResponsible(id_ticket, id_usuario) {
+    const res = await fetch(`${API_BASE}?module=tickets&action=asignarResponsable`, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `id_ticket=${encodeURIComponent(id_ticket)}&id_usuario=${encodeURIComponent(id_usuario)}`
+    });
+    return await res.json();
+}
+
 // ...agrega aquí más funciones para otros módulos y acciones...

@@ -10,6 +10,7 @@ require_once("../controller/PermisosController.php");
 require_once("../controller/TipologiasController.php");
 require_once("../controller/SubtipologiasController.php");
 require_once("../controller/ProgramasController.php");
+require_once("../controller/TicketsController.php");
 
 // Obtiene el módulo y la acción solicitados de forma segura (GET, POST o JSON)
 $action = $_GET['action'] ?? $_POST['action'] ?? '';
@@ -37,6 +38,7 @@ $validModules = [
     'tipologias' => TipologiasController::class,
     'subtipologias' => SubtipologiasController::class,
     'programas' => ProgramasController::class,
+    'tickets' => TicketsController::class,
     // Agrega aquí otros módulos si los necesitas
 ];
 

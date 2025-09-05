@@ -196,11 +196,12 @@ document.addEventListener("DOMContentLoaded", async function () {
         });
     }
 
-    // Sidebar: muestra tickets (solo activa el botón)
+    // Sidebar: muestra tickets (ajustado para renderizar el módulo)
     const ticketsBtn = document.getElementById('sidebar-tickets-btn');
     if (ticketsBtn) {
         ticketsBtn.addEventListener('click', function () {
             setSidebarActive('sidebar-tickets-btn');
+            window.iniciarModuloTickets(localStorage.getItem('ticketsVista') || 'tarjetas', "");
         });
     }
 
